@@ -138,7 +138,7 @@
             
             <!-- ARQUITETURA -->
             <div class="clickable-card bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 relative" 
-                 onclick="openDashboard('arquitetura')">
+                 onclick="window.open('https://dashboard-arquitetura.vercel.app', '_blank')">
                 <div class="click-indicator">
                     <i class="fas fa-external-link-alt"></i>
                 </div>
@@ -173,7 +173,7 @@
 
             <!-- ESTRUTURAL -->
             <div class="clickable-card bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 relative"
-                 onclick="openDashboard('estrutural')">
+                 onclick="window.open('https://dashboard-estrutural.vercel.app', '_blank')">
                 <div class="click-indicator">
                     <i class="fas fa-external-link-alt"></i>
                 </div>
@@ -422,26 +422,11 @@
     </footer>
 
     <script>
-        // Função para abrir dashboards
-        function openDashboard(type) {
-            console.log('openDashboard chamado com tipo:', type);
-            
-            const urls = {
-                'arquitetura': 'http://localhost:5173',
-                'estrutural': 'http://localhost:5174'
-            };
-            
-            const url = urls[type];
-            console.log('URL para abrir:', url);
-            
-            if (url) {
-                // Abrir dashboard em nova aba
-                const newWindow = window.open(url, '_blank');
-                console.log('Nova janela aberta:', newWindow);
-            } else {
-                console.error('Tipo de dashboard não reconhecido:', type);
-            }
-        }
+        // URLs dos dashboards em produção (Vercel)
+        const dashboardUrls = {
+            'arquitetura': 'https://dashboard-arquitetura.vercel.app',
+            'estrutural': 'https://dashboard-estrutural.vercel.app'
+        };
 
         // Adicionar efeitos de hover e interatividade
         document.addEventListener('DOMContentLoaded', function() {
