@@ -67,6 +67,25 @@ export const useCotacaoStore = create<CotacaoStore>((set, get) => ({
     const totalMaoObra = itens.reduce((acc, item) => acc + (item.sinapiMO * item.quantidade), 0);
     const totalMateriais = itens.reduce((acc, item) => acc + (item.sinapiMat * item.quantidade), 0);
     
+    // Debug logs para verificar os valores
+    console.log('=== DEBUG COTACAO STORE ===');
+    console.log('Total Geral (sinapiTotal):', totalGeral);
+    console.log('Total M.O. (sinapiMO × quantidade):', totalMaoObra);
+    console.log('Total Materiais (sinapiMat × quantidade):', totalMateriais);
+    console.log('Primeiros 3 itens para verificação:');
+    itens.slice(0, 3).forEach((item, index) => {
+      console.log(`Item ${index + 1}:`, {
+        id: item.id,
+        sinapiMO: item.sinapiMO,
+        sinapiMat: item.sinapiMat,
+        quantidade: item.quantidade,
+        sinapiTotal: item.sinapiTotal,
+        calcMO: item.sinapiMO * item.quantidade,
+        calcMat: item.sinapiMat * item.quantidade
+      });
+    });
+    console.log('============================');
+    
     const totalTerreo = itens
       .filter(item => item.categoria === 'Pavimento Térreo')
       .reduce((acc, item) => acc + item.sinapiTotal, 0);
