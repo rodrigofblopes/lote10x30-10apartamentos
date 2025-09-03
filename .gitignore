@@ -42,9 +42,9 @@ coverage/
 tmp/
 temp/
 
-# Dashboard folders (separate repositories)
-DashBoardArquitetura/
-DashboardEstrutural/
+# Dashboard folders (included in main repository)
+# DashBoardArquitetura/
+# DashboardEstrutural/
 
 # Large files
 *.ifc
