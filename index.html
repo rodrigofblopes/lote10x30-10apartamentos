@@ -137,8 +137,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             
             <!-- ARQUITETURA -->
-            <div class="clickable-card bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 relative" 
-                 onclick="window.open('https://dashboard-arquitetura.vercel.app', '_blank')">
+            <div class="clickable-card bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 relative">
                 <div class="click-indicator">
                     <i class="fas fa-external-link-alt"></i>
                 </div>
@@ -172,8 +171,7 @@
             </div>
 
             <!-- ESTRUTURAL -->
-            <div class="clickable-card bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 relative"
-                 onclick="window.open('https://dashboard-estrutural.vercel.app', '_blank')">
+            <div class="clickable-card bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 relative">
                 <div class="click-indicator">
                     <i class="fas fa-external-link-alt"></i>
                 </div>
@@ -459,6 +457,22 @@
                     setTimeout(() => {
                         ripple.remove();
                     }, 600);
+
+                    // REDIRECIONAMENTO - Determinar qual dashboard abrir
+                    let dashboardUrl = '';
+                    if (card.querySelector('h3').textContent.toLowerCase().includes('arquitetura')) {
+                        dashboardUrl = dashboardUrls.arquitetura;
+                    } else if (card.querySelector('h3').textContent.toLowerCase().includes('estrutural')) {
+                        dashboardUrl = dashboardUrls.estrutural;
+                    }
+
+                    if (dashboardUrl) {
+                        console.log('Redirecionando para:', dashboardUrl);
+                        // Aguardar um pouco para o efeito visual
+                        setTimeout(() => {
+                            window.open(dashboardUrl, '_blank');
+                        }, 300);
+                    }
                 });
 
                 // Adicionar feedback visual ao passar o mouse
