@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { File, Download, Plus, X, Maximize2, ZoomIn, ZoomOut, Menu } from 'lucide-react';
+import { File, Download, Plus, X, Maximize2, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface DocumentoProjeto {
   id: string;
@@ -43,7 +43,7 @@ const Projeto: React.FC = () => {
   const [imagemSelecionada, setImagemSelecionada] = useState<DocumentoProjeto | null>(null);
   const [modalAberto, setModalAberto] = useState(false);
   const [zoom, setZoom] = useState(1);
-  const [menuMobileAberto, setMenuMobileAberto] = useState(false);
+
 
   const formatarData = (data: Date) => {
     return data.toLocaleDateString('pt-BR');
