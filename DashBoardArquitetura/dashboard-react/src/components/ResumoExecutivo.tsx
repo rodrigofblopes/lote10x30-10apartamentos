@@ -44,7 +44,7 @@ const ResumoExecutivo: React.FC = () => {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-green-800">Valor Total</h3>
-                <p className="text-sm text-green-600">Custo total do projeto</p>
+                <p className="text-sm text-green-600">MO + Materiais (Total Geral)</p>
               </div>
             </div>
             <div className="text-3xl font-bold text-green-700 mb-2">
@@ -63,7 +63,7 @@ const ResumoExecutivo: React.FC = () => {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-blue-800">Mão de Obra</h3>
-                <p className="text-sm text-blue-600">Custos de mão de obra</p>
+                <p className="text-sm text-blue-600">Apenas custos de MO</p>
               </div>
             </div>
             <div className="text-3xl font-bold text-blue-700 mb-2">
@@ -82,7 +82,7 @@ const ResumoExecutivo: React.FC = () => {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-orange-800">Materiais</h3>
-                <p className="text-sm text-orange-600">Custos de materiais</p>
+                <p className="text-sm text-orange-600">Apenas custos de materiais</p>
               </div>
             </div>
             <div className="text-3xl font-bold text-orange-700 mb-2">
@@ -223,6 +223,33 @@ const ResumoExecutivo: React.FC = () => {
                   className="bg-orange-600 h-2 rounded-full" 
                   style={{ width: `${resumo.percentualMateriais}%` }}
                 ></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Explicação dos Valores */}
+          <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-lg border border-yellow-200 col-span-full">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="p-2 bg-yellow-600 rounded-lg">
+                <Calculator className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-yellow-800">Como os Valores são Calculados</h3>
+                <p className="text-sm text-yellow-600">Entenda a composição dos custos</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-yellow-700">
+              <div>
+                <p className="font-semibold mb-2">📊 Valor Total:</p>
+                <p>Soma de todos os itens (MO + Materiais) × Quantidade</p>
+              </div>
+              <div>
+                <p className="font-semibold mb-2">👷 Mão de Obra:</p>
+                <p>Valor MO por unidade × Quantidade de cada item</p>
+              </div>
+              <div>
+                <p className="font-semibold mb-2">📦 Materiais:</p>
+                <p>Valor Material por unidade × Quantidade de cada item</p>
               </div>
             </div>
           </div>
