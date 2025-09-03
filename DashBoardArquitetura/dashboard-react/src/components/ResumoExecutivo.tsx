@@ -36,7 +36,7 @@ const ResumoExecutivo: React.FC = () => {
         </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Valor Total */}
+          {/* Valor Total - Agora mostra apenas Mão de Obra */}
           <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg border border-green-200">
             <div className="flex items-center space-x-3 mb-3">
               <div className="p-2 bg-green-600 rounded-lg">
@@ -44,11 +44,11 @@ const ResumoExecutivo: React.FC = () => {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-green-800">Valor Total</h3>
-                <p className="text-sm text-green-600">MO + Materiais (Total Geral)</p>
+                <p className="text-sm text-green-600">Apenas Mão de Obra</p>
               </div>
             </div>
             <div className="text-3xl font-bold text-green-700 mb-2">
-              {formatarMoeda(resumo.totalGeral)}
+              {formatarMoeda(resumo.totalMaoObra)}
             </div>
             <div className="text-sm text-green-600">
               {resumo.numItens} itens orçamentários
@@ -241,7 +241,7 @@ const ResumoExecutivo: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-yellow-700">
               <div>
                 <p className="font-semibold mb-2">📊 Valor Total:</p>
-                <p>Soma de todos os itens (MO + Materiais) × Quantidade</p>
+                <p>Apenas o valor da Mão de Obra (R$ 281.948,51)</p>
               </div>
               <div>
                 <p className="font-semibold mb-2">👷 Mão de Obra:</p>
