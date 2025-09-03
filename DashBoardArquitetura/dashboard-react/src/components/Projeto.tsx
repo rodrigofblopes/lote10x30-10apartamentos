@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { File, Download, Trash2, Plus, X, Maximize2, ZoomIn, ZoomOut } from 'lucide-react';
+import { File, Download, Plus, X, Maximize2, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface DocumentoProjeto {
   id: string;
@@ -14,7 +14,7 @@ interface DocumentoProjeto {
 }
 
 const Projeto: React.FC = () => {
-  const [documentos, setDocumentos] = useState<DocumentoProjeto[]>([
+  const [documentos] = useState<DocumentoProjeto[]>([
     {
       id: '1',
       nome: 'Pavimento Térreo.jpg',
@@ -69,9 +69,7 @@ const Projeto: React.FC = () => {
     link.click();
   };
 
-  const handleDelete = (id: string) => {
-    setDocumentos(prev => prev.filter(doc => doc.id !== id));
-  };
+
 
   const fecharModal = () => {
     setModalAberto(false);
