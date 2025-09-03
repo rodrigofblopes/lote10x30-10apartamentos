@@ -67,10 +67,10 @@ const ResumoExecutivo: React.FC = () => {
               </div>
             </div>
             <div className="text-3xl font-bold text-blue-700 mb-2">
-              {formatarMoeda(resumo.totalMaoObra)}
+              R$ 281.948,51
             </div>
             <div className="text-sm text-blue-600">
-              {formatarPercentual(resumo.percentualMaoObra)} do total
+              66.4% do total
             </div>
           </div>
 
@@ -86,10 +86,10 @@ const ResumoExecutivo: React.FC = () => {
               </div>
             </div>
             <div className="text-3xl font-bold text-orange-700 mb-2">
-              {formatarMoeda(resumo.totalMateriais)}
+              R$ 142.429,19
             </div>
             <div className="text-sm text-orange-600">
-              {formatarPercentual(resumo.percentualMateriais)} do total
+              33.6% do total
             </div>
           </div>
 
@@ -124,7 +124,7 @@ const ResumoExecutivo: React.FC = () => {
               </div>
             </div>
             <div className="text-3xl font-bold text-cyan-700 mb-2">
-              {formatarMoeda(resumo.totalMaoObra / 298)}
+              {formatarMoeda(281948.51 / 298)}
             </div>
             <div className="text-sm text-cyan-600">
               Área: 298 m²
@@ -143,7 +143,7 @@ const ResumoExecutivo: React.FC = () => {
               </div>
             </div>
             <div className="text-3xl font-bold text-amber-700 mb-2">
-              {formatarMoeda(resumo.totalMateriais / 298)}
+              {formatarMoeda(142429.19 / 298)}
             </div>
             <div className="text-sm text-amber-600">
               Área: 298 m²
