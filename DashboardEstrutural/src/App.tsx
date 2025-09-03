@@ -1,46 +1,64 @@
-import React, { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useOrcamentoStore } from './store/orcamentoStore';
 import { carregarDados } from './services/orcamentoService';
 import Header from './components/Header';
+import Navigation from './components/Navigation';
 import ResumoExecutivo from './components/ResumoExecutivo';
 import GridOrcamento from './components/GridOrcamento';
+import CotacaoReal from './components/CotacaoReal';
+import Projeto from './components/Projeto';
 import Graficos from './components/Graficos';
 import LoadingSpinner from './components/LoadingSpinner';
 
 function App() {
+  const [activeTab, setActiveTab] = useState('resumo');
   const { setItens } = useOrcamentoStore();
-  const [carregando, setCarregando] = React.useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const inicializar = async () => {
       try {
+        setLoading(true);
         const dados = await carregarDados();
         setItens(dados);
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
       } finally {
-        setCarregando(false);
+        setLoading(false);
       }
     };
 
     inicializar();
   }, [setItens]);
 
-  if (carregando) {
+  if (loading) {
     return <LoadingSpinner />;
   }
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'resumo':
+        return <ResumoExecutivo />;
+      case 'orcamento':
+        return <GridOrcamento />;
+      case 'cotacao':
+        return <CotacaoReal />;
+      case 'projeto':
+        return <Projeto />;
+      case 'graficos':
+        return <Graficos />;
+      default:
+        return <ResumoExecutivo />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
-      <main className="container mx-auto px-4 py-8">
-        <div className="space-y-8">
-          <ResumoExecutivo />
-          <GridOrcamento />
-          <Graficos />
-        </div>
-      </main>
+      <div className="container mx-auto px-4 py-8">
+        <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+        {renderContent()}
+      </div>
     </div>
   );
 }

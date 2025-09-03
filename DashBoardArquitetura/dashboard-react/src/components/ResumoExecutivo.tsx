@@ -1,9 +1,10 @@
 import React from 'react';
-import { useOrcamentoStore } from '../store/orcamentoStore';
+import { useCotacaoStore } from '../store/cotacaoStore';
 import { DollarSign, Users, Package, Ruler, Calculator, TrendingUp } from 'lucide-react';
 
 const ResumoExecutivo: React.FC = () => {
-  const { resumo } = useOrcamentoStore();
+  const { getResumo } = useCotacaoStore();
+  const resumo = getResumo();
 
   const formatarMoeda = (valor: number) => {
     return new Intl.NumberFormat('pt-BR', { 
@@ -16,11 +17,12 @@ const ResumoExecutivo: React.FC = () => {
     return `${valor.toFixed(1)}%`;
   };
 
-  if (!resumo) {
+  if (!resumo || resumo.numItens === 0) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="text-center text-gray-500">
-          Carregando resumo executivo...
+          <p className="mb-2">Nenhum dado de cotação disponível</p>
+          <p className="text-sm">Acesse a aba "Cotação Real" para carregar os dados do projeto</p>
         </div>
       </div>
     );
@@ -33,7 +35,7 @@ const ResumoExecutivo: React.FC = () => {
           📊 Resumo Executivo - Lote 10x30 - 10 Apartamentos
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Valor Total */}
           <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg border border-green-200">
             <div className="flex items-center space-x-3 mb-3">
@@ -88,6 +90,63 @@ const ResumoExecutivo: React.FC = () => {
             </div>
             <div className="text-sm text-orange-600">
               {formatarPercentual(resumo.percentualMateriais)} do total
+            </div>
+          </div>
+
+          {/* Total por m² */}
+          <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 rounded-lg border border-emerald-200">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="p-2 bg-emerald-600 rounded-lg">
+                <Ruler className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-emerald-800">Total por m²</h3>
+                <p className="text-sm text-emerald-600">Custo total por m²</p>
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-emerald-700 mb-2">
+              {formatarMoeda(resumo.totalGeral / 298)}
+            </div>
+            <div className="text-sm text-emerald-600">
+              Área: 298 m²
+            </div>
+          </div>
+
+          {/* M.O. por m² */}
+          <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 p-6 rounded-lg border border-cyan-200">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="p-2 bg-cyan-600 rounded-lg">
+                <Users className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-cyan-800">M.O. por m²</h3>
+                <p className="text-sm text-cyan-600">Mão de obra por m²</p>
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-cyan-700 mb-2">
+              {formatarMoeda(resumo.totalMaoObra / 298)}
+            </div>
+            <div className="text-sm text-cyan-600">
+              Área: 298 m²
+            </div>
+          </div>
+
+          {/* Material por m² */}
+          <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-lg border border-amber-200">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="p-2 bg-amber-600 rounded-lg">
+                <Package className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-amber-800">Material por m²</h3>
+                <p className="text-sm text-amber-600">Materiais por m²</p>
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-amber-700 mb-2">
+              {formatarMoeda(resumo.totalMateriais / 298)}
+            </div>
+            <div className="text-sm text-amber-600">
+              Área: 298 m²
             </div>
           </div>
 
