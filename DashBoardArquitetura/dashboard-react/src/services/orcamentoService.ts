@@ -662,7 +662,7 @@ export const carregarDados = async (): Promise<OrcamentoItem[]> => {
 };
 
 // Função para processar dados reais do Excel (placeholder)
-export const processarDadosExcel = (excelData: ArrayBuffer): OrcamentoItem[] => {
+export const processarDadosExcel = (_excelData: ArrayBuffer): OrcamentoItem[] => {
   // Implementar parsing do Excel baseado na lógica do dashboard.py
   // Por enquanto retorna dados mockados
   return dadosMockados;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useOrcamentoStore } from '../store/orcamentoStore';
-import { Package, Ruler, Calculator, DollarSign, Hash } from 'lucide-react';
+import { Package, Calculator, DollarSign, Hash } from 'lucide-react';
 
 const CardOrcamento: React.FC<{ item: any }> = ({ item }) => {
   const formatarMoeda = (valor: number) => {

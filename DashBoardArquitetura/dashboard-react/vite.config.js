@@ -11,7 +11,6 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false, // Desabilitar sourcemaps para produção
-    minify: 'terser', // Minificação otimizada
     rollupOptions: {
       output: {
         manualChunks: {
