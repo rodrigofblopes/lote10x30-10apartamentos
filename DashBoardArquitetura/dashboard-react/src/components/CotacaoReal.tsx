@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCotacaoStore } from '../store/cotacaoStore';
-import { TrendingUp, TrendingDown, Calculator, Ruler, DollarSign } from 'lucide-react';
+import { Calculator, Ruler } from 'lucide-react';
 
 interface ItemCotacao {
   id: string;
@@ -895,7 +895,7 @@ const CotacaoReal: React.FC = () => {
           </div>
           <div className="bg-green-50 p-4 rounded-lg border border-green-200">
             <div className="flex items-center space-x-2 mb-2">
-              <DollarSign className="h-5 w-5 text-green-600" />
+              <Calculator className="h-5 w-5 text-green-600" />
               <h3 className="font-semibold text-green-800">Total Real</h3>
             </div>
             <p className="text-2xl font-bold text-green-700">{formatarMoeda(totalReal)}</p>
@@ -909,7 +909,7 @@ const CotacaoReal: React.FC = () => {
           </div>
           <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
             <div className="flex items-center space-x-2 mb-2">
-              <TrendingUp className="h-5 w-5 text-orange-600" />
+              <Calculator className="h-5 w-5 text-orange-600" />
               <h3 className="font-semibold text-orange-800">Economia Total</h3>
             </div>
             <p className="text-2xl font-bold text-orange-700">{formatarMoeda(totalEconomia)}</p>
