@@ -1,8 +1,8 @@
-# 🏗️ Vila Andriw - Hub Central de Projetos
+# 🏗️ Lote 10x30 - 10 Apartamentos - Hub Central de Projetos
 
 ## 📋 Descrição
 
-Hub Central integrado para gerenciamento de projetos multidisciplinares de engenharia da Vila Andriw. Interface moderna e responsiva que centraliza o acesso a todos os dashboards e disciplinas do projeto.
+Hub Central integrado para gerenciamento de projetos multidisciplinares de engenharia do Lote 10x30 - 10 Apartamentos. Interface moderna e responsiva que centraliza o acesso a todos os dashboards e disciplinas do projeto.
 
 ## ✨ Funcionalidades
 
@@ -17,13 +17,13 @@ Hub Central integrado para gerenciamento de projetos multidisciplinares de engen
 - Dashboard interativo de orçamento
 - Análise detalhada por pavimento
 - Custos de mão de obra e materiais
-- **URL**: [Dashboard Arquitetura](http://localhost:5173)
+- **URL**: [Dashboard Arquitetura](https://dashboard-arquitetura.vercel.app)
 
 ### 🏗️ **Estrutural**
 - Dashboard interativo de orçamento
 - Análise detalhada por pavimento
 - Custos de mão de obra e materiais
-- **URL**: [Dashboard Estrutural](http://localhost:5174)
+- **URL**: [Dashboard Estrutural](https://dashboard-estrutural.vercel.app)
 
 ### 🔄 **Em Desenvolvimento**
 - Hidrosanitário
@@ -31,29 +31,16 @@ Hub Central integrado para gerenciamento de projetos multidisciplinares de engen
 - HVAC
 - Gerenciamento
 
-## 🚀 Como Executar Localmente
+## 🚀 Deploy e Acesso
 
-### **1. Hub Central**
-```bash
-# Abrir o arquivo index.html no navegador
-start index.html
-```
+### **🌐 Hub Central (Vercel)**
+- **URL**: [https://lote10x30-10apartamentos.vercel.app](https://lote10x30-10apartamentos.vercel.app)
+- **Status**: ✅ Deployado e Funcionando
+- **Acesso**: Direto pelo navegador, sem instalações
 
-### **2. Dashboard Arquitetura**
-```bash
-cd DashBoardArquitetura/dashboard-react
-npm install
-npm run dev
-# Acessar: http://localhost:5173
-```
-
-### **3. Dashboard Estrutural**
-```bash
-cd DashboardEstrutural
-npm install
-npm run dev
-# Acessar: http://localhost:5174
-```
+### **📱 Dashboards Integrados**
+- **Arquitetura**: [https://dashboard-arquitetura.vercel.app](https://dashboard-arquitetura.vercel.app)
+- **Estrutural**: [https://dashboard-estrutural.vercel.app](https://dashboard-estrutural.vercel.app)
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -62,12 +49,13 @@ npm run dev
 - **Ícones**: Font Awesome
 - **Dashboards**: React + TypeScript + Vite
 - **Deploy**: Vercel
+- **Versionamento**: Git + GitHub
 
 ## 📁 Estrutura do Projeto
 
 ```
 lote10x30-10apartamentos/
-├── index.html                 # Hub Central
+├── index.html                 # Hub Central (Deploy Vercel)
 ├── DashBoardArquitetura/     # Dashboard de Arquitetura
 │   └── dashboard-react/      # Aplicação React
 ├── DashboardEstrutural/      # Dashboard Estrutural
@@ -76,25 +64,31 @@ lote10x30-10apartamentos/
 └── README.md                # Documentação do projeto
 ```
 
-## 🌐 Deploy
+## 🌟 **Como Usar (Sem Instalação)**
 
-### **Hub Central**
-- **URL**: [Vila Andriw Hub](https://vila-andriw-hub.vercel.app)
-- **Status**: ✅ Deployado
+### **1. Acesse o Hub Central**
+- Abra: [https://lote10x30-10apartamentos.vercel.app](https://lote10x30-10apartamentos.vercel.app)
+- Navegue pelos cards das disciplinas
 
-### **Dashboards**
-- **Arquitetura**: [Dashboard Arquitetura](https://dashboard-arquitetura.vercel.app)
-- **Estrutural**: [Dashboard Estrutural](https://dashboard-estrutural.vercel.app)
+### **2. Acesse os Dashboards**
+- **Arquitetura**: Clique no card Arquitetura
+- **Estrutural**: Clique no card Estrutural
+- Redirecionamento automático para os dashboards
+
+### **3. Funcionalidades**
+- Visualização de orçamentos
+- Análise por pavimento
+- Custos detalhados
+- Interface responsiva
 
 ## 🔧 Configuração para Produção
 
-Para configurar as URLs de produção, atualize o arquivo `index.html`:
+As URLs de produção estão configuradas no arquivo `index.html`:
 
 ```javascript
-const urls = {
-    'arquitetura': 'https://dashboard-arquitetura.vercel.app',
-    'estrutural': 'https://dashboard-estrutural.vercel.app'
-};
+// URLs dos dashboards em produção
+onclick="window.open('https://dashboard-arquitetura.vercel.app', '_blank')"
+onclick="window.open('https://dashboard-estrutural.vercel.app', '_blank')"
 ```
 
 ## 📱 Responsividade
@@ -110,17 +104,25 @@ const urls = {
 - **Componentes**: Cards, botões, indicadores de status
 - **Animações**: Hover effects, ripple effects, transições suaves
 
+## 🚀 **Vantagens do Deploy Vercel**
+
+- ✅ **Sem Instalação**: Acesso direto pelo navegador
+- ✅ **Sempre Atualizado**: Deploy automático do GitHub
+- ✅ **Performance**: CDN global para carregamento rápido
+- ✅ **Responsivo**: Funciona em qualquer dispositivo
+- ✅ **Seguro**: HTTPS automático e proteções de segurança
+
 ## 📞 Suporte
 
 Para dúvidas ou problemas:
-- Abra uma issue no GitHub
+- Abra uma issue no [GitHub](https://github.com/rodrigofblopes/lote10x30-10apartamentos)
 - Entre em contato com a equipe de desenvolvimento
 
 ## 📄 Licença
 
-© 2024 Vila Andriw - Projeto de Engenharia Integrada
+© 2024 Lote 10x30 - 10 Apartamentos - Projeto de Engenharia Integrada
 Todos os direitos reservados.
 
 ---
 
-**Desenvolvido com ❤️ pela equipe Vila Andriw**
+**Desenvolvido com ❤️ pela equipe de Engenharia Integrada**
