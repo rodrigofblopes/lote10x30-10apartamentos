@@ -10,6 +10,21 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: false, // Desabilitar sourcemaps para produção
+    minify: 'terser', // Minificação otimizada
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          charts: ['chart.js', 'react-chartjs-2']
+        }
+      }
+    }
+  },
+  // Configuração para Vercel
+  base: './',
+  // Otimizações para produção
+  define: {
+    'process.env.NODE_ENV': '"production"'
   }
 })
