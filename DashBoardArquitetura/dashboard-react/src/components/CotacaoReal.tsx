@@ -29,7 +29,7 @@ const CotacaoReal: React.FC = () => {
   const [filtroSubcategoria, setFiltroSubcategoria] = useState<string>('todas');
 
   useEffect(() => {
-    // Dados reais extraídos da planilha SINAPI oficial - 35 itens únicos
+    // Dados reais extraídos da planilha SINAPI oficial - 36 itens únicos
     const dadosReais: ItemCotacao[] = [
       // PAVIMENTO TÉRREO - PAREDES
       {
@@ -106,7 +106,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 22275.16,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 74.75,
+        custoPorM2: 165.59,
         peso: 5.25
       },
       {
@@ -125,7 +125,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 18002.81,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 60.41,
+        custoPorM2: 133.83,
         peso: 4.24
       },
       // PAVIMENTO TÉRREO - REVESTIMENTO PAREDES
@@ -145,7 +145,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 3118.56,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 10.46,
+        custoPorM2: 4.06,
         peso: 0.73
       },
       {
@@ -164,13 +164,13 @@ const CotacaoReal: React.FC = () => {
         realTotal: 25225.06,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 84.65,
+        custoPorM2: 32.84,
         peso: 5.94
       },
       {
         id: '1.3.3',
         codigo: '88423',
-        descricao: 'APLICAÇÃO MANUAL DE PINTURA COM TINTURA TEXTURIZADA ACRÍLICA EM PAREDES EXTERNAS DE CASAS, UMA COR. AF_03/2024',
+        descricao: 'APLICAÇÃO MANUAL DE PINTURA COM TINTA TEXTURIZADA ACRÍLICA EM PAREDES EXTERNAS DE CASAS, UMA COR. AF_03/2024',
         categoria: 'Pavimento Térreo',
         subcategoria: 'Revestimento Paredes',
         quantidade: 768.12,
@@ -183,7 +183,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 17582.26,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 59.01,
+        custoPorM2: 22.89,
         peso: 4.14
       },
       {
@@ -241,7 +241,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 694.12,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 2.33,
+        custoPorM2: 5.16,
         peso: 0.16
       },
       {
@@ -260,7 +260,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 1946.50,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 6.54,
+        custoPorM2: 14.47,
         peso: 0.46
       },
       // PAVIMENTO TÉRREO - ESQUADRIAS
@@ -280,7 +280,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 4083.70,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 13.70,
+        custoPorM2: 816.74,
         peso: 0.96
       },
       {
@@ -299,7 +299,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 5200.80,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 17.45,
+        custoPorM2: 520.08,
         peso: 1.23
       },
       {
@@ -318,7 +318,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 3693.45,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 12.39,
+        custoPorM2: 738.69,
         peso: 0.87
       },
       {
@@ -337,7 +337,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 3806.70,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 12.77,
+        custoPorM2: 761.34,
         peso: 0.90
       },
       {
@@ -356,7 +356,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 4082.00,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 13.70,
+        custoPorM2: 816.40,
         peso: 0.96
       },
       // PAVIMENTO SUPERIOR - PAREDES
@@ -376,7 +376,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 43683.80,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 146.59,
+        custoPorM2: 103.13,
         peso: 10.29
       },
       {
@@ -395,7 +395,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 8192.03,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 27.49,
+        custoPorM2: 9.67,
         peso: 1.93
       },
       {
@@ -414,7 +414,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 26482.22,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 88.87,
+        custoPorM2: 31.26,
         peso: 6.24
       },
       // PAVIMENTO SUPERIOR - PISO
@@ -434,7 +434,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 22275.16,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 74.75,
+        custoPorM2: 165.59,
         peso: 5.25
       },
       {
@@ -453,7 +453,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 18002.81,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 60.41,
+        custoPorM2: 133.83,
         peso: 4.24
       },
       // PAVIMENTO SUPERIOR - REVESTIMENTO PAREDES
@@ -473,7 +473,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 3439.46,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 11.54,
+        custoPorM2: 4.06,
         peso: 0.81
       },
       {
@@ -492,13 +492,13 @@ const CotacaoReal: React.FC = () => {
         realTotal: 27820.73,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 93.41,
+        custoPorM2: 32.84,
         peso: 6.56
       },
       {
         id: '2.3.3',
         codigo: '88423',
-        descricao: 'APLICAÇÃO MANUAL DE PINTURA COM TINTURA TEXTURIZADA ACRÍLICA EM PAREDES EXTERNAS DE CASAS, UMA COR. AF_03/2024',
+        descricao: 'APLICAÇÃO MANUAL DE PINTURA COM TINTA TEXTURIZADA ACRÍLICA EM PAREDES EXTERNAS DE CASAS, UMA COR. AF_03/2024',
         categoria: 'Pavimento Superior',
         subcategoria: 'Revestimento Paredes',
         quantidade: 847.16,
@@ -511,7 +511,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 19391.49,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 65.06,
+        custoPorM2: 22.89,
         peso: 4.57
       },
       {
@@ -569,7 +569,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 694.12,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 2.33,
+        custoPorM2: 5.16,
         peso: 0.16
       },
       {
@@ -588,7 +588,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 1946.50,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 6.54,
+        custoPorM2: 14.47,
         peso: 0.46
       },
       // PAVIMENTO SUPERIOR - ESQUADRIAS
@@ -608,7 +608,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 4083.70,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 13.70,
+        custoPorM2: 816.74,
         peso: 0.96
       },
       {
@@ -627,7 +627,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 5200.80,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 17.45,
+        custoPorM2: 520.08,
         peso: 1.23
       },
       {
@@ -646,7 +646,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 3693.45,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 12.39,
+        custoPorM2: 738.69,
         peso: 0.87
       },
       {
@@ -665,7 +665,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 3806.70,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 12.77,
+        custoPorM2: 761.34,
         peso: 0.90
       },
       {
@@ -684,7 +684,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 4082.00,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 13.70,
+        custoPorM2: 816.40,
         peso: 0.96
       },
       // PAVIMENTO SUPERIOR - TELHADO
@@ -704,7 +704,7 @@ const CotacaoReal: React.FC = () => {
         realTotal: 4182.66,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 14.04,
+        custoPorM2: 24.43,
         peso: 0.99
       },
       {
@@ -723,52 +723,13 @@ const CotacaoReal: React.FC = () => {
         realTotal: 7909.90,
         economia: 0,
         percentualEconomia: 0,
-        custoPorM2: 26.54,
+        custoPorM2: 46.20,
         peso: 1.86
       }
     ];
 
-    // Verificação manual dos totais
-    const totalManual = dadosReais.reduce((acc, item) => acc + item.sinapiTotal, 0);
-    console.log('=== VERIFICAÇÃO MANUAL ===');
-    console.log('Total calculado manualmente:', totalManual);
-    console.log('Total esperado da planilha:', 424377.70);
-    console.log('Diferença:', totalManual - 424377.70);
-    console.log('Número de itens:', dadosReais.length);
-    
-    // Verificar por categoria
-    const totalTerreo = dadosReais
-      .filter(item => item.categoria === 'Pavimento Térreo')
-      .reduce((acc, item) => acc + item.sinapiTotal, 0);
-    const totalSuperior = dadosReais
-      .filter(item => item.categoria === 'Pavimento Superior')
-      .reduce((acc, item) => acc + item.sinapiTotal, 0);
-    
-    console.log('Total Térreo:', totalTerreo);
-    console.log('Total Superior:', totalSuperior);
-    console.log('Soma Térreo + Superior:', totalTerreo + totalSuperior);
-    
-    // Verificar itens com valores altos
-    const itensAltos = dadosReais
-      .filter(item => item.sinapiTotal > 10000)
-      .sort((a, b) => b.sinapiTotal - a.sinapiTotal);
-    console.log('Itens com valor > R$ 10.000:', itensAltos.map(item => ({
-      id: item.id,
-      descricao: item.descricao.substring(0, 50) + '...',
-      valor: item.sinapiTotal
-    })));
-
-    console.log('Dados carregados:', dadosReais.length, 'itens');
-    console.log('Total SINAPI esperado: R$ 424.377,70');
-    
-    // Calcular custo por m² inicial
-    const itensComCustoPorM2 = dadosReais.map(item => ({
-      ...item,
-      custoPorM2: item.sinapiTotal / areaTotal
-    }));
-
-    setItens(itensComCustoPorM2);
-  }, [areaTotal, setItens]);
+    setItens(dadosReais);
+  }, [setItens]);
 
   const handleAreaChange = (novaArea: number) => {
     setAreaTotal(novaArea);
