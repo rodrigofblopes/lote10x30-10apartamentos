@@ -825,6 +825,14 @@ const CotacaoReal: React.FC = () => {
   console.log('Total SINAPI calculado:', totalSINAPI);
   console.log('Total Real calculado:', totalReal);
   console.log('Número de itens:', itensFiltrados.length);
+  
+  // Debug dos valores de M.O. e Materiais
+  const totalMO = itensFiltrados.reduce((acc, item) => acc + item.sinapiMO, 0);
+  const totalMat = itensFiltrados.reduce((acc, item) => acc + item.sinapiMat, 0);
+  console.log('Total M.O. SINAPI:', totalMO);
+  console.log('Total Materiais SINAPI:', totalMat);
+  console.log('Total M.O. Real:', itensFiltrados.reduce((acc, item) => acc + item.realMO, 0));
+  console.log('Total Materiais Real:', itensFiltrados.reduce((acc, item) => acc + item.realMat, 0));
 
   return (
     <div className="space-y-6">
