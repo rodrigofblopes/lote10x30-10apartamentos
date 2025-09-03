@@ -64,8 +64,8 @@ export const useCotacaoStore = create<CotacaoStore>((set, get) => ({
     }
 
     const totalGeral = itens.reduce((acc, item) => acc + item.sinapiTotal, 0);
-    const totalMaoObra = itens.reduce((acc, item) => acc + (item.sinapiMO * item.quantidade), 0);
-    const totalMateriais = itens.reduce((acc, item) => acc + (item.sinapiMat * item.quantidade), 0);
+    const totalMaoObra = itens.reduce((acc, item) => acc + item.sinapiMO, 0);
+    const totalMateriais = itens.reduce((acc, item) => acc + item.sinapiMat, 0);
     
     const totalTerreo = itens
       .filter(item => item.categoria === 'Pavimento Térreo')

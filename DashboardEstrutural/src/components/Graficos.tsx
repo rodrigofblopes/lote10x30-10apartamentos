@@ -280,7 +280,6 @@ const Graficos: React.FC = () => {
             <div className="space-y-4">
               {categoriasOrdenadas.map((categoria) => {
                 const dados = dadosPorCategoria[categoria];
-                const percentual = (dados.total / Object.values(dadosPorCategoria).reduce((sum, d) => sum + d.total, 0)) * 100;
                 
                 return (
                   <div key={categoria} className="bg-gray-50 rounded-lg p-4">

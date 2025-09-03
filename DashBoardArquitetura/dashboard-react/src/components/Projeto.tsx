@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { File, Download, Trash2, Plus, Eye, X } from 'lucide-react';
+import { File, Download, Trash2, Plus, X, Maximize2, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface DocumentoProjeto {
   id: string;
@@ -42,6 +42,7 @@ const Projeto: React.FC = () => {
   const [visualizacao, setVisualizacao] = useState<'grid' | 'list'>('grid');
   const [imagemSelecionada, setImagemSelecionada] = useState<DocumentoProjeto | null>(null);
   const [modalAberto, setModalAberto] = useState(false);
+  const [zoom, setZoom] = useState(1);
 
   const formatarData = (data: Date) => {
     return data.toLocaleDateString('pt-BR');
@@ -57,6 +58,7 @@ const Projeto: React.FC = () => {
   const handleVisualizar = (documento: DocumentoProjeto) => {
     setImagemSelecionada(documento);
     setModalAberto(true);
+    setZoom(1); // Reset zoom ao abrir nova imagem
   };
 
   const handleDownload = (documento: DocumentoProjeto) => {
@@ -74,6 +76,19 @@ const Projeto: React.FC = () => {
   const fecharModal = () => {
     setModalAberto(false);
     setImagemSelecionada(null);
+    setZoom(1);
+  };
+
+  const aumentarZoom = () => {
+    setZoom(prev => Math.min(prev + 0.2, 3));
+  };
+
+  const diminuirZoom = () => {
+    setZoom(prev => Math.max(prev - 0.2, 0.5));
+  };
+
+  const resetZoom = () => {
+    setZoom(1);
   };
 
   return (
@@ -82,10 +97,10 @@ const Projeto: React.FC = () => {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold text-blue-700">
-              📁 Documentos do Projeto
+              🏠 Plantas do Projeto
             </h2>
             <p className="text-gray-600 mt-2">
-              Documentos JPG do projeto arquitetônico - Lote 10x30 - 10 Apartamentos
+              Visualize diretamente as plantas arquitetônicas do Lote 10x30 - 10 Apartamentos
             </p>
           </div>
           <div className="flex items-center space-x-4">
@@ -124,7 +139,7 @@ const Projeto: React.FC = () => {
                 <File className="h-5 w-5 text-white" />
               </div>
               <div>
-                <p className="text-sm text-blue-600">Arquivos JPG</p>
+                <p className="text-sm text-blue-600">Plantas JPG</p>
                 <p className="text-2xl font-bold text-blue-700">{documentos.length}</p>
               </div>
             </div>
@@ -163,63 +178,92 @@ const Projeto: React.FC = () => {
 
         {/* Lista de Documentos */}
         {visualizacao === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {documentos.map((documento) => (
-              <div key={documento.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                {/* Preview da Imagem */}
-                <div className="relative h-48 bg-gray-100 overflow-hidden">
-                  <img
-                    src={documento.caminho || `data:image/jpeg;base64,${btoa('placeholder')}`}
-                    alt={documento.descricao}
-                    className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-200"
-                    onClick={() => handleVisualizar(documento)}
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center">
-                    <Eye className="h-8 w-8 text-white opacity-0 hover:opacity-100 transition-opacity duration-200" />
-                  </div>
-                </div>
-                
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-2">
-                      <div className="p-2 bg-blue-100 rounded-lg">
-                        <svg className="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+              <div key={documento.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                {/* Header do Card */}
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-blue-600 rounded-lg">
+                        <svg className="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
                         </svg>
                       </div>
                       <div>
-                        <h3 className="font-semibold text-gray-900 truncate">{documento.nome}</h3>
-                        <p className="text-sm text-gray-500">{documento.tipo.toUpperCase()}</p>
+                        <h3 className="text-lg font-bold text-gray-900">{documento.nome}</h3>
+                        <p className="text-sm text-blue-600 font-medium">{documento.categoria}</p>
                       </div>
                     </div>
+                    <span className="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                      {documento.tipo.toUpperCase()}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Imagem Principal - Carregada Diretamente */}
+                <div className="relative group">
+                  <div className="h-80 bg-gray-100 overflow-hidden">
+                    <img
+                      src={documento.caminho || `data:image/jpeg;base64,${btoa('placeholder')}`}
+                      alt={documento.descricao}
+                      className="w-full h-full object-contain cursor-pointer group-hover:scale-105 transition-transform duration-300"
+                      onClick={() => handleVisualizar(documento)}
+                    />
                   </div>
                   
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">{documento.descricao}</p>
-                  
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                    <span>{documento.tamanho}</span>
-                    <span>{formatarData(documento.dataModificacao)}</span>
+                  {/* Overlay com Botões */}
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex space-x-3">
+                      <button
+                        onClick={() => handleVisualizar(documento)}
+                        className="bg-white bg-opacity-90 text-gray-800 p-3 rounded-full shadow-lg hover:bg-opacity-100 transition-all duration-200 hover:scale-110"
+                        title="Visualizar em Tela Cheia"
+                      >
+                        <Maximize2 className="h-6 w-6" />
+                      </button>
+                      <button
+                        onClick={() => handleDownload(documento)}
+                        className="bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition-all duration-200 hover:scale-110"
+                        title="Download"
+                      >
+                        <Download className="h-6 w-6" />
+                      </button>
+                    </div>
                   </div>
+                </div>
+
+                {/* Informações do Documento */}
+                <div className="p-6">
+                  <p className="text-gray-700 mb-4 leading-relaxed">{documento.descricao}</p>
                   
-                  <div className="flex space-x-2">
+                  <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
+                    <div>
+                      <span className="font-medium text-gray-700">Tamanho:</span>
+                      <br />
+                      <span className="text-gray-600">{documento.tamanho}</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Data:</span>
+                      <br />
+                      <span className="text-gray-600">{formatarData(documento.dataModificacao)}</span>
+                    </div>
+                  </div>
+
+                  {/* Botões de Ação */}
+                  <div className="flex space-x-3">
                     <button
                       onClick={() => handleVisualizar(documento)}
-                      className="flex-1 bg-blue-600 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center space-x-1"
+                      className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
                     >
-                      <Eye className="h-4 w-4" />
+                      <Maximize2 className="h-4 w-4" />
                       <span>Visualizar</span>
                     </button>
                     <button
                       onClick={() => handleDownload(documento)}
-                      className="px-3 py-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                      className="px-4 py-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors border border-green-200 hover:border-green-300"
                     >
                       <Download className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(documento.id)}
-                      className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    >
-                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
@@ -255,7 +299,7 @@ const Projeto: React.FC = () => {
                 {documentos.map((documento) => (
                   <tr key={documento.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="h-16 w-16 rounded-lg overflow-hidden bg-gray-100 cursor-pointer hover:scale-105 transition-transform duration-200">
+                      <div className="h-20 w-20 rounded-lg overflow-hidden bg-gray-100 cursor-pointer hover:scale-105 transition-transform duration-200">
                         <img
                           src={documento.caminho || `data:image/jpeg;base64,${btoa('placeholder')}`}
                           alt={documento.descricao}
@@ -296,7 +340,7 @@ const Projeto: React.FC = () => {
                           onClick={() => handleVisualizar(documento)}
                           className="text-blue-600 hover:text-blue-900 flex items-center space-x-1"
                         >
-                          <Eye className="h-4 w-4" />
+                          <Maximize2 className="h-4 w-4" />
                           <span>Visualizar</span>
                         </button>
                         <button
@@ -305,12 +349,6 @@ const Projeto: React.FC = () => {
                         >
                           <Download className="h-4 w-4" />
                           <span>Download</span>
-                        </button>
-                        <button
-                          onClick={() => handleDelete(documento.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
                     </td>
@@ -329,50 +367,83 @@ const Projeto: React.FC = () => {
                 <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum documento encontrado</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhuma planta encontrada</h3>
             <p className="text-gray-500 mb-6">
-              Adicione documentos JPG do projeto arquitetônico para começar.
+              Adicione plantas JPG do projeto arquitetônico para começar.
             </p>
             <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
               <Plus className="h-4 w-4 mr-2" />
-              Adicionar Documento
+              Adicionar Planta
             </button>
           </div>
         )}
       </div>
 
-      {/* Modal de Visualização */}
+      {/* Modal de Visualização com Zoom */}
       {modalAberto && imagemSelecionada && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-6xl max-h-full overflow-hidden relative">
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-7xl max-h-full overflow-hidden relative">
             {/* Header do Modal */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">{imagemSelecionada.nome}</h3>
-                <p className="text-sm text-gray-500">{imagemSelecionada.descricao}</p>
+                <h3 className="text-xl font-bold text-gray-900">{imagemSelecionada.nome}</h3>
+                <p className="text-sm text-gray-600">{imagemSelecionada.descricao}</p>
               </div>
-              <button
-                onClick={fecharModal}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <X className="h-6 w-6" />
-              </button>
+              <div className="flex items-center space-x-3">
+                {/* Controles de Zoom */}
+                <div className="flex items-center space-x-2 bg-white px-3 py-2 rounded-lg border border-gray-200">
+                  <button
+                    onClick={diminuirZoom}
+                    className="p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+                    title="Diminuir Zoom"
+                  >
+                    <ZoomOut className="h-4 w-4" />
+                  </button>
+                  <span className="text-sm text-gray-600 min-w-[60px] text-center">
+                    {Math.round(zoom * 100)}%
+                  </span>
+                  <button
+                    onClick={aumentarZoom}
+                    className="p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+                    title="Aumentar Zoom"
+                  >
+                    <ZoomIn className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={resetZoom}
+                    className="px-2 py-1 text-xs text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors"
+                    title="Reset Zoom"
+                  >
+                    Reset
+                  </button>
+                </div>
+                <button
+                  onClick={fecharModal}
+                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
             </div>
             
-            {/* Conteúdo da Imagem */}
-            <div className="p-4 max-h-[80vh] overflow-auto">
-              <img
-                src={imagemSelecionada.caminho || `data:image/jpeg;base64,${btoa('placeholder')}`}
-                alt={imagemSelecionada.descricao}
-                className="w-full h-auto object-contain rounded-lg shadow-lg"
-              />
+            {/* Conteúdo da Imagem com Zoom */}
+            <div className="p-4 max-h-[80vh] overflow-auto bg-gray-100">
+              <div className="flex justify-center">
+                <img
+                  src={imagemSelecionada.caminho || `data:image/jpeg;base64,${btoa('placeholder')}`}
+                  alt={imagemSelecionada.descricao}
+                  className="max-w-full h-auto object-contain rounded-lg shadow-2xl transition-transform duration-200"
+                  style={{ transform: `scale(${zoom})` }}
+                />
+              </div>
             </div>
             
             {/* Footer do Modal */}
             <div className="flex items-center justify-between p-4 border-t border-gray-200 bg-gray-50">
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-gray-600">
                 <span className="font-medium">Tamanho:</span> {imagemSelecionada.tamanho} | 
-                <span className="font-medium ml-2">Data:</span> {formatarData(imagemSelecionada.dataModificacao)}
+                <span className="font-medium ml-2">Data:</span> {formatarData(imagemSelecionada.dataModificacao)} |
+                <span className="font-medium ml-2">Zoom:</span> {Math.round(zoom * 100)}%
               </div>
               <div className="flex space-x-2">
                 <button

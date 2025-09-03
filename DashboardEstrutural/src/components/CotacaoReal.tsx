@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calculator, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
+import { Calculator } from 'lucide-react';
 
 interface ItemCotacao {
   id: string;
