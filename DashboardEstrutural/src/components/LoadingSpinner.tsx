@@ -9,7 +9,7 @@ const LoadingSpinner: React.FC = () => {
           Carregando Dashboard
         </h2>
         <p className="text-gray-600">
-          Analisando dados da Vila Andriw...
+          Analisando dados do Lote 10x30 - 10 Apartamentos...
         </p>
       </div>
     </div>

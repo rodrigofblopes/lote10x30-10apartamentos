@@ -10,7 +10,7 @@ const Header: React.FC = () => {
             <div className="flex items-center space-x-3">
               <Building2 className="h-10 w-10" />
               <div>
-                <h1 className="text-3xl font-bold">Vila Andriw</h1>
+                <h1 className="text-3xl font-bold">Lote 10x30 - 10 Apartamentos</h1>
                 <p className="text-green-100 text-lg">Dashboard de Orçamento</p>
               </div>
             </div>
@@ -33,7 +33,7 @@ const Header: React.FC = () => {
             Análise interativa de orçamento por etapas construtivas e elementos estruturais
           </p>
           <p className="text-green-200 text-sm mt-2">
-            Dados baseados na planilha SINAPI - Vila Andriw
+            Dados baseados na planilha SINAPI - Lote 10x30 - 10 Apartamentos
           </p>
         </div>
       </div>

@@ -6,7 +6,7 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            🏗️ Dashboard de Orçamento - Vila Andriw
+            🏗️ Dashboard de Orçamento - Lote 10x30 - 10 Apartamentos
           </h1>
           <p className="text-xl md:text-2xl text-green-100 max-w-4xl mx-auto">
             Visualização interativa e intuitiva dos custos de construção por pavimento e categoria

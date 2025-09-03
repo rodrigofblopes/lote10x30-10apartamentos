@@ -1,6 +1,6 @@
 import { OrcamentoItem } from '../types/orcamento';
 
-// Dados reais baseados na planilha CSV da Vila Andriw
+// Dados reais baseados na planilha CSV do Lote 10x30 - 10 Apartamentos
 // Área total: 298 m² (149 m² por pavimento)
 export const dadosMockados: OrcamentoItem[] = [
   // FUNDAÇÃO - Total: R$ 39.241,02 (30,81%)

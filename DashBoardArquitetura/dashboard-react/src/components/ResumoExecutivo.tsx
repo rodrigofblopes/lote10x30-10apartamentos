@@ -30,7 +30,7 @@ const ResumoExecutivo: React.FC = () => {
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold text-green-700 mb-6">
-          📊 Resumo Executivo - Vila Andriw
+          📊 Resumo Executivo - Lote 10x30 - 10 Apartamentos
         </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
