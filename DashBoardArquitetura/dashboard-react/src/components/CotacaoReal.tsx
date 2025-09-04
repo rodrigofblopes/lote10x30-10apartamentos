@@ -783,6 +783,22 @@ const CotacaoReal: React.FC = () => {
   const totalEconomia = itensFiltrados.reduce((acc, item) => acc + item.economia, 0);
   const totalCustoPorM2 = totalReal / areaTotal;
   
+  // Cálculos para M.O. e Material
+  const totalRealMO = itensFiltrados.reduce((sum, item) => sum + (item.realMO * item.quantidade), 0);
+  const totalRealMat = itensFiltrados.reduce((sum, item) => sum + (item.realMat * item.quantidade), 0);
+  const totalSINAPIMO = itensFiltrados.reduce((sum, item) => sum + (item.sinapiMO * item.quantidade), 0);
+  const totalSINAPIMat = itensFiltrados.reduce((sum, item) => sum + (item.sinapiMat * item.quantidade), 0);
+  
+  // Custos por m²
+  const custoMOPorM2 = totalRealMO / areaTotal;
+  const custoMatPorM2 = totalRealMat / areaTotal;
+  const custoSINAPIMOPorM2 = totalSINAPIMO / areaTotal;
+  const custoSINAPIMatPorM2 = totalSINAPIMat / areaTotal;
+  
+  // Economias
+  const economiaMO = totalSINAPIMO - totalRealMO;
+  const economiaMat = totalSINAPIMat - totalRealMat;
+  
   
 
   // Verificar se os dados estão carregados corretamente
@@ -910,35 +926,120 @@ const CotacaoReal: React.FC = () => {
           </div>
         </div>
 
-        {/* Resumo Executivo - Mobile First */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-4 lg:mb-6">
-          <div className="bg-blue-50 p-3 lg:p-4 rounded-lg border border-blue-200">
-            <div className="flex items-center space-x-2 mb-2">
-              <Calculator className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600" />
-              <h3 className="text-sm lg:text-base font-semibold text-blue-800">Total SINAPI</h3>
+        {/* Cards de Comparação SINAPI vs Real */}
+        <div className="space-y-6 mb-8">
+          {/* Seção SINAPI */}
+          <div>
+            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+              <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+              Valores SINAPI
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Total SINAPI */}
+              <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-blue-500">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600">Total SINAPI</h4>
+                    <p className="text-2xl font-bold text-blue-600">{formatarMoeda(totalSINAPI)}</p>
+                    <p className="text-sm text-gray-500">Custo/m²: {formatarMoeda(totalSINAPI / areaTotal)}</p>
+                  </div>
+                  <Calculator className="h-8 w-8 text-blue-500" />
+                </div>
+              </div>
+              
+              {/* M.O. SINAPI */}
+              <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-orange-500">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600">M.O. SINAPI</h4>
+                    <p className="text-2xl font-bold text-orange-600">{formatarMoeda(totalSINAPIMO)}</p>
+                    <p className="text-sm text-gray-500">Custo/m²: {formatarMoeda(custoSINAPIMOPorM2)}</p>
+                  </div>
+                  <Calculator className="h-8 w-8 text-orange-500" />
+                </div>
+              </div>
+              
+              {/* Material SINAPI */}
+              <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-purple-500">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600">Material SINAPI</h4>
+                    <p className="text-2xl font-bold text-purple-600">{formatarMoeda(totalSINAPIMat)}</p>
+                    <p className="text-sm text-gray-500">Custo/m²: {formatarMoeda(custoSINAPIMatPorM2)}</p>
+                  </div>
+                  <Calculator className="h-8 w-8 text-purple-500" />
+                </div>
+              </div>
+              
+              {/* Economia SINAPI */}
+              <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-gray-500">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600">Economia SINAPI</h4>
+                    <p className="text-2xl font-bold text-gray-600">R$ 0,00</p>
+                    <p className="text-sm text-gray-500">Referência base</p>
+                  </div>
+                  <Calculator className="h-8 w-8 text-gray-500" />
+                </div>
+              </div>
             </div>
-            <p className="text-lg lg:text-2xl font-bold text-blue-700">{formatarMoeda(totalSINAPI)}</p>
           </div>
-          <div className="bg-green-50 p-3 lg:p-4 rounded-lg border border-green-200">
-            <div className="flex items-center space-x-2 mb-2">
-              <Calculator className="h-4 w-4 lg:h-5 lg:w-5 text-green-600" />
-              <h3 className="text-sm lg:text-base font-semibold text-green-800">Total Real</h3>
+
+          {/* Seção Real */}
+          <div>
+            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+              <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+              Valores Reais
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Total Real */}
+              <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-green-500">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600">Total Real</h4>
+                    <p className="text-2xl font-bold text-green-600">{formatarMoeda(totalReal)}</p>
+                    <p className="text-sm text-gray-500">Custo/m²: {formatarMoeda(totalCustoPorM2)}</p>
+                  </div>
+                  <Calculator className="h-8 w-8 text-green-500" />
+                </div>
+              </div>
+              
+              {/* M.O. Real */}
+              <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-orange-500">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600">M.O. Real</h4>
+                    <p className="text-2xl font-bold text-orange-600">{formatarMoeda(totalRealMO)}</p>
+                    <p className="text-sm text-gray-500">Custo/m²: {formatarMoeda(custoMOPorM2)}</p>
+                  </div>
+                  <Calculator className="h-8 w-8 text-orange-500" />
+                </div>
+              </div>
+              
+              {/* Material Real */}
+              <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-purple-500">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600">Material Real</h4>
+                    <p className="text-2xl font-bold text-purple-600">{formatarMoeda(totalRealMat)}</p>
+                    <p className="text-sm text-gray-500">Custo/m²: {formatarMoeda(custoMatPorM2)}</p>
+                  </div>
+                  <Calculator className="h-8 w-8 text-purple-500" />
+                </div>
+              </div>
+              
+              {/* Economia Total */}
+              <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-red-500">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600">Economia Total</h4>
+                    <p className="text-2xl font-bold text-red-600">{formatarMoeda(totalEconomia)}</p>
+                    <p className="text-sm text-gray-500">M.O.: {formatarMoeda(economiaMO)} | Mat.: {formatarMoeda(economiaMat)}</p>
+                  </div>
+                  <Calculator className="h-8 w-8 text-red-500" />
+                </div>
+              </div>
             </div>
-            <p className="text-lg lg:text-2xl font-bold text-green-700">{formatarMoeda(totalReal)}</p>
-          </div>
-          <div className="bg-emerald-50 p-3 lg:p-4 rounded-lg border border-emerald-200">
-            <div className="flex items-center space-x-2 mb-2">
-              <Ruler className="h-4 w-4 lg:h-5 lg:w-5 text-emerald-600" />
-              <h3 className="text-sm lg:text-base font-semibold text-emerald-800">Custo por m²</h3>
-            </div>
-            <p className="text-lg lg:text-2xl font-bold text-emerald-700">{formatarMoeda(totalCustoPorM2)}</p>
-          </div>
-          <div className="bg-orange-50 p-3 lg:p-4 rounded-lg border border-orange-200">
-            <div className="flex items-center space-x-2 mb-2">
-              <Calculator className="h-4 w-4 lg:h-5 lg:w-5 text-orange-600" />
-              <h3 className="text-sm lg:text-base font-semibold text-orange-800">Economia Total</h3>
-            </div>
-            <p className="text-lg lg:text-2xl font-bold text-orange-700">{formatarMoeda(totalEconomia)}</p>
           </div>
         </div>
       </div>
