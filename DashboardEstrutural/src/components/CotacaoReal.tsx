@@ -612,6 +612,17 @@ const CotacaoReal: React.FC = () => {
   const totalReal = itens.reduce((sum, item) => sum + item.realTotal, 0);
   const totalEconomia = itens.reduce((sum, item) => sum + item.economia, 0);
   const totalCustoPorM2 = totalReal / areaTotal;
+  
+  // Cálculos para M.O. e Material
+  const totalRealMO = itens.reduce((sum, item) => sum + (item.realMO * item.quantidade), 0);
+  const totalRealMat = itens.reduce((sum, item) => sum + (item.realMat * item.quantidade), 0);
+  const totalSINAPIMO = itens.reduce((sum, item) => sum + (item.sinapiMO * item.quantidade), 0);
+  const totalSINAPIMat = itens.reduce((sum, item) => sum + (item.sinapiMat * item.quantidade), 0);
+  
+  const custoMOPorM2 = totalRealMO / areaTotal;
+  const custoMatPorM2 = totalRealMat / areaTotal;
+  const economiaMO = totalSINAPIMO - totalRealMO;
+  const economiaMat = totalSINAPIMat - totalRealMat;
 
   const formatarMoeda = (valor: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -705,6 +716,81 @@ const CotacaoReal: React.FC = () => {
                 {formatarMoeda(totalCustoPorM2)}
               </div>
               <div className="text-sm text-gray-600">Custo Total por m²</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Cards de Custos por m² e Economia */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Custo M.O. por m² */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Custo M.O. por m²</p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {formatarMoeda(custoMOPorM2)}
+                </p>
+              </div>
+              <div className="p-3 bg-orange-100 rounded-full">
+                <Calculator className="h-6 w-6 text-orange-600" />
+              </div>
+            </div>
+            <div className="mt-4 text-xs text-gray-500">
+              Total M.O.: {formatarMoeda(totalRealMO)}
+            </div>
+          </div>
+
+          {/* Custo Material por m² */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Custo Material por m²</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {formatarMoeda(custoMatPorM2)}
+                </p>
+              </div>
+              <div className="p-3 bg-blue-100 rounded-full">
+                <Calculator className="h-6 w-6 text-blue-600" />
+              </div>
+            </div>
+            <div className="mt-4 text-xs text-gray-500">
+              Total Material: {formatarMoeda(totalRealMat)}
+            </div>
+          </div>
+
+          {/* Custo Total por m² */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Custo Total por m²</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatarMoeda(totalCustoPorM2)}
+                </p>
+              </div>
+              <div className="p-3 bg-green-100 rounded-full">
+                <Calculator className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+            <div className="mt-4 text-xs text-gray-500">
+              Total Geral: {formatarMoeda(totalReal)}
+            </div>
+          </div>
+
+          {/* Economia Total */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Economia Total</p>
+                <p className={`text-2xl font-bold ${totalEconomia >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {formatarMoeda(totalEconomia)}
+                </p>
+              </div>
+              <div className={`p-3 rounded-full ${totalEconomia >= 0 ? 'bg-green-100' : 'bg-red-100'}`}>
+                <Calculator className={`h-6 w-6 ${totalEconomia >= 0 ? 'text-green-600' : 'text-red-600'}`} />
+              </div>
+            </div>
+            <div className="mt-4 text-xs text-gray-500">
+              SINAPI: {formatarMoeda(totalSINAPI)} | Real: {formatarMoeda(totalReal)}
             </div>
           </div>
         </div>
