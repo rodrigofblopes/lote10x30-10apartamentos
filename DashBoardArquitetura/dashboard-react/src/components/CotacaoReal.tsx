@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCotacaoStore } from '../store/cotacaoStore';
-import { Calculator, Ruler, Filter, Menu, X } from 'lucide-react';
+import { Calculator, Ruler, Filter, X } from 'lucide-react';
 
 interface ItemCotacao {
   id: string;
@@ -28,7 +28,6 @@ const CotacaoReal: React.FC = () => {
   const [filtroCategoria, setFiltroCategoria] = useState<string>('todas');
   const [filtroSubcategoria, setFiltroSubcategoria] = useState<string>('todas');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   useEffect(() => {
     // Dados reais extraídos da planilha SINAPI oficial - 36 itens únicos
