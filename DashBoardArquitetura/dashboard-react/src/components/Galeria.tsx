@@ -14,71 +14,23 @@ const Galeria: React.FC = () => {
   const [fotoSelecionada, setFotoSelecionada] = useState<Foto | null>(null);
   const [filtroCategoria, setFiltroCategoria] = useState<string>('todas');
 
-  // Dados de exemplo - você pode substituir por dados reais
+  // Fotos do projeto - plantas baixas dos pavimentos
   const fotos: Foto[] = [
     {
       id: '1',
-      titulo: 'Fachada Principal',
-      descricao: 'Vista frontal do edifício com acabamento em massa acrílica',
-      url: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop',
-      categoria: 'Fachada',
-      data: '2024-01-15'
+      titulo: 'Pavimento Térreo',
+      descricao: 'Planta baixa do pavimento térreo com 5 apartamentos',
+      url: '/Pavimento Térreo.jpg',
+      categoria: 'Plantas',
+      data: '2024-01-10'
     },
     {
       id: '2',
-      titulo: 'Planta Baixa - Térreo',
-      descricao: 'Layout do pavimento térreo com 5 apartamentos',
-      url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop',
+      titulo: 'Pavimento Superior',
+      descricao: 'Planta baixa do pavimento superior com 5 apartamentos',
+      url: '/Pavimento Superior.jpg',
       categoria: 'Plantas',
       data: '2024-01-10'
-    },
-    {
-      id: '3',
-      titulo: 'Planta Baixa - Superior',
-      descricao: 'Layout do pavimento superior com 5 apartamentos',
-      url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
-      categoria: 'Plantas',
-      data: '2024-01-10'
-    },
-    {
-      id: '4',
-      titulo: 'Corte Longitudinal',
-      descricao: 'Corte mostrando a estrutura e alturas',
-      url: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=600&fit=crop',
-      categoria: 'Cortes',
-      data: '2024-01-12'
-    },
-    {
-      id: '5',
-      titulo: 'Detalhe da Estrutura',
-      descricao: 'Detalhamento da estrutura de concreto',
-      url: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800&h=600&fit=crop',
-      categoria: 'Detalhes',
-      data: '2024-01-14'
-    },
-    {
-      id: '6',
-      titulo: 'Vista Lateral',
-      descricao: 'Vista lateral do edifício mostrando as proporções',
-      url: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop',
-      categoria: 'Fachada',
-      data: '2024-01-16'
-    },
-    {
-      id: '7',
-      titulo: 'Perspectiva 3D',
-      descricao: 'Rendering 3D do projeto completo',
-      url: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop',
-      categoria: 'Renderings',
-      data: '2024-01-18'
-    },
-    {
-      id: '8',
-      titulo: 'Detalhe das Esquadrias',
-      descricao: 'Detalhamento das janelas e portas',
-      url: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800&h=600&fit=crop',
-      categoria: 'Detalhes',
-      data: '2024-01-20'
     }
   ];
 
@@ -243,7 +195,7 @@ const Galeria: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600">{fotos.length}</div>
-            <div className="text-sm text-gray-600">Total de Fotos</div>
+            <div className="text-sm text-gray-600">Plantas Baixas</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">{categorias.length - 1}</div>
@@ -254,8 +206,8 @@ const Galeria: React.FC = () => {
             <div className="text-sm text-gray-600">Fotos Filtradas</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600">2024</div>
-            <div className="text-sm text-gray-600">Ano do Projeto</div>
+            <div className="text-2xl font-bold text-orange-600">2</div>
+            <div className="text-sm text-gray-600">Pavimentos</div>
           </div>
         </div>
       </div>
