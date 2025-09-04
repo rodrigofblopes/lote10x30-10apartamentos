@@ -66,13 +66,63 @@ function StructuralModel({ setSelectedElement: _setSelectedElement }: Structural
   }
 
   if (error) {
+    // Mostrar modelo 3D básico como fallback
     return (
-      <Html center>
-        <div className="text-center text-red-600">
-          <p className="mb-4">{error}</p>
-          <p className="text-sm">Usando modelo de demonstração...</p>
-        </div>
-      </Html>
+      <group ref={meshRef}>
+        {/* Estrutura básica - Colunas */}
+        <mesh position={[-3, 1.5, -3]} onClick={() => _setSelectedElement('Coluna -3,-3')}>
+          <boxGeometry args={[0.3, 3, 0.3]} />
+          <meshStandardMaterial color="#8B4513" />
+        </mesh>
+        <mesh position={[3, 1.5, -3]} onClick={() => _setSelectedElement('Coluna 3,-3')}>
+          <boxGeometry args={[0.3, 3, 0.3]} />
+          <meshStandardMaterial color="#8B4513" />
+        </mesh>
+        <mesh position={[-3, 1.5, 3]} onClick={() => _setSelectedElement('Coluna -3,3')}>
+          <boxGeometry args={[0.3, 3, 0.3]} />
+          <meshStandardMaterial color="#8B4513" />
+        </mesh>
+        <mesh position={[3, 1.5, 3]} onClick={() => _setSelectedElement('Coluna 3,3')}>
+          <boxGeometry args={[0.3, 3, 0.3]} />
+          <meshStandardMaterial color="#8B4513" />
+        </mesh>
+        <mesh position={[0, 1.5, 0]} onClick={() => _setSelectedElement('Coluna Central')}>
+          <boxGeometry args={[0.3, 3, 0.3]} />
+          <meshStandardMaterial color="#8B4513" />
+        </mesh>
+
+        {/* Vigas */}
+        <mesh position={[0, 2.8, -3]} onClick={() => _setSelectedElement('Viga -3')}>
+          <boxGeometry args={[6, 0.2, 0.3]} />
+          <meshStandardMaterial color="#654321" />
+        </mesh>
+        <mesh position={[0, 2.8, 3]} onClick={() => _setSelectedElement('Viga 3')}>
+          <boxGeometry args={[6, 0.2, 0.3]} />
+          <meshStandardMaterial color="#654321" />
+        </mesh>
+        <mesh position={[-3, 2.8, 0]} rotation={[0, 0, Math.PI / 2]} onClick={() => _setSelectedElement('Viga -3')}>
+          <boxGeometry args={[6, 0.2, 0.3]} />
+          <meshStandardMaterial color="#654321" />
+        </mesh>
+        <mesh position={[3, 2.8, 0]} rotation={[0, 0, Math.PI / 2]} onClick={() => _setSelectedElement('Viga 3')}>
+          <boxGeometry args={[6, 0.2, 0.3]} />
+          <meshStandardMaterial color="#654321" />
+        </mesh>
+
+        {/* Lajes */}
+        <mesh position={[0, 3, 0]} onClick={() => _setSelectedElement('Laje Superior')}>
+          <boxGeometry args={[8, 0.2, 8]} />
+          <meshStandardMaterial color="#708090" transparent opacity={0.7} />
+        </mesh>
+        <mesh position={[0, 0, 0]} onClick={() => _setSelectedElement('Laje Térreo')}>
+          <boxGeometry args={[8, 0.2, 8]} />
+          <meshStandardMaterial color="#708090" transparent opacity={0.7} />
+        </mesh>
+
+        {/* Iluminação */}
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[10, 10, 5]} intensity={0.8} />
+      </group>
     );
   }
 
