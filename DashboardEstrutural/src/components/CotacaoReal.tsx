@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calculator } from 'lucide-react';
+import { Calculator, Save, Download, Upload, RotateCcw } from 'lucide-react';
 
 interface ItemCotacao {
   id: string;
@@ -24,6 +24,7 @@ interface ItemCotacao {
 const CotacaoReal: React.FC = () => {
   const [itens, setItens] = useState<ItemCotacao[]>([]);
   const [areaTotal, setAreaTotal] = useState(298); // Área total do projeto em m²
+  const [saveMessage, setSaveMessage] = useState<string>('');
 
   useEffect(() => {
     // Dados reais extraídos da planilha SINAPI
@@ -514,12 +515,93 @@ const CotacaoReal: React.FC = () => {
       custoPorM2: item.sinapiTotal / areaTotal
     }));
 
+    // Tentar carregar dados salvos primeiro
+    const dadosSalvos = localStorage.getItem('cotacaoRealSalva');
+    if (dadosSalvos) {
+      try {
+        const itensSalvos = JSON.parse(dadosSalvos);
+        setItens(itensSalvos);
+        return;
+      } catch (error) {
+        console.error('Erro ao carregar dados salvos:', error);
+      }
+    }
+    
     setItens(itensComCustoPorM2);
   }, [areaTotal]);
 
+  // Função para salvar dados no localStorage
+  const salvarDados = () => {
+    try {
+      localStorage.setItem('cotacaoRealSalva', JSON.stringify(itens));
+      setSaveMessage('✅ Dados salvos com sucesso!');
+      setTimeout(() => setSaveMessage(''), 3000);
+    } catch (error) {
+      setSaveMessage('❌ Erro ao salvar dados');
+      setTimeout(() => setSaveMessage(''), 3000);
+    }
+  };
+
+  // Função para carregar dados salvos
+  const carregarDados = () => {
+    try {
+      const dadosSalvos = localStorage.getItem('cotacaoRealSalva');
+      if (dadosSalvos) {
+        const itensSalvos = JSON.parse(dadosSalvos);
+        setItens(itensSalvos);
+        setSaveMessage('✅ Dados carregados com sucesso!');
+        setTimeout(() => setSaveMessage(''), 3000);
+      } else {
+        setSaveMessage('❌ Nenhum dado salvo encontrado');
+        setTimeout(() => setSaveMessage(''), 3000);
+      }
+    } catch (error) {
+      setSaveMessage('❌ Erro ao carregar dados');
+      setTimeout(() => setSaveMessage(''), 3000);
+    }
+  };
+
+  // Função para resetar para dados originais
+  const resetarDados = () => {
+    if (confirm('Tem certeza que deseja resetar para os dados originais? Todos os valores editados serão perdidos.')) {
+      localStorage.removeItem('cotacaoRealSalva');
+      window.location.reload();
+    }
+  };
+
+  // Função para exportar dados como JSON
+  const exportarDados = () => {
+    try {
+      const dadosParaExportar = {
+        data: new Date().toISOString(),
+        areaTotal,
+        itens
+      };
+      
+      const blob = new Blob([JSON.stringify(dadosParaExportar, null, 2)], {
+        type: 'application/json'
+      });
+      
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `cotacao-real-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      setSaveMessage('✅ Dados exportados com sucesso!');
+      setTimeout(() => setSaveMessage(''), 3000);
+    } catch (error) {
+      setSaveMessage('❌ Erro ao exportar dados');
+      setTimeout(() => setSaveMessage(''), 3000);
+    }
+  };
+
   const handleValorChange = (id: string, campo: 'realMO' | 'realMat', valor: number) => {
-    setItens(prevItens => 
-      prevItens.map(item => {
+    setItens(prevItens => {
+      const novosItens = prevItens.map(item => {
         if (item.id === id) {
           const novoRealMO = campo === 'realMO' ? valor : item.realMO;
           const novoRealMat = campo === 'realMat' ? valor : item.realMat;
@@ -539,8 +621,19 @@ const CotacaoReal: React.FC = () => {
           };
         }
         return item;
-      })
-    );
+      });
+
+      // Salvar automaticamente após 1 segundo de inatividade
+      setTimeout(() => {
+        try {
+          localStorage.setItem('cotacaoRealSalva', JSON.stringify(novosItens));
+        } catch (error) {
+          console.error('Erro ao salvar automaticamente:', error);
+        }
+      }, 1000);
+
+      return novosItens;
+    });
   };
 
   const handleAreaChange = (novaArea: number) => {
@@ -583,6 +676,50 @@ const CotacaoReal: React.FC = () => {
           <p className="text-gray-600">
             Compare valores SINAPI reais com cotações do mercado
           </p>
+        </div>
+
+        {/* Controles de Salvamento */}
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+          <div className="flex flex-col lg:flex-row items-center justify-between space-y-4 lg:space-y-0">
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={salvarDados}
+                className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                Salvar Dados
+              </button>
+              <button
+                onClick={carregarDados}
+                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Carregar Dados
+              </button>
+              <button
+                onClick={exportarDados}
+                className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Exportar JSON
+              </button>
+              <button
+                onClick={resetarDados}
+                className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Resetar
+              </button>
+            </div>
+            {saveMessage && (
+              <div className="text-sm font-medium text-gray-700 bg-gray-100 px-3 py-2 rounded-lg">
+                {saveMessage}
+              </div>
+            )}
+          </div>
+          <div className="mt-4 text-sm text-gray-600">
+            💡 <strong>Dica:</strong> Os dados são salvos automaticamente no navegador. Use "Exportar JSON" para fazer backup dos seus dados.
+          </div>
         </div>
 
         {/* Controles de Área */}
