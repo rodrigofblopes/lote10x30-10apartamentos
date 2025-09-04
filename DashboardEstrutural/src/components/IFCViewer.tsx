@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState, Suspense } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import React, { useRef, useState, Suspense } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Html, useProgress } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -17,9 +17,12 @@ function Loader() {
 }
 
 // Componente para criar um modelo 3D de exemplo (estrutura básica)
-function StructuralModel() {
+interface StructuralModelProps {
+  setSelectedElement: (element: string) => void;
+}
+
+function StructuralModel({ setSelectedElement }: StructuralModelProps) {
   const meshRef = useRef<THREE.Group>(null);
-  const [selectedElement, setSelectedElement] = useState<string | null>(null);
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -106,7 +109,7 @@ const IFCViewer: React.FC = () => {
             style={{ background: '#f8fafc' }}
           >
             <Suspense fallback={<Loader />}>
-              <StructuralModel />
+              <StructuralModel setSelectedElement={setSelectedElement} />
               <OrbitControls
                 enablePan={true}
                 enableZoom={true}
