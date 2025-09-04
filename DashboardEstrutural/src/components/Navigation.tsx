@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart3, Calculator, PieChart } from 'lucide-react';
+import { BarChart3, Calculator, PieChart, Box } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: string;
@@ -25,6 +25,12 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
       label: 'Cotação Real',
       icon: <Calculator className="h-4 w-4" />,
       description: 'Compare valores SINAPI com cotações reais'
+    },
+    {
+      id: '3d',
+      label: 'Visualizador 3D',
+      icon: <Box className="h-4 w-4" />,
+      description: 'Modelo estrutural em 3D'
     },
     {
       id: 'graficos',
