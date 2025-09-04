@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCotacaoStore } from '../store/cotacaoStore';
-import { Calculator, Ruler } from 'lucide-react';
+import { Calculator, Ruler, Filter, Menu, X } from 'lucide-react';
 
 interface ItemCotacao {
   id: string;
@@ -27,6 +27,8 @@ const CotacaoReal: React.FC = () => {
   const [areaTotal, setAreaTotal] = useState(298);
   const [filtroCategoria, setFiltroCategoria] = useState<string>('todas');
   const [filtroSubcategoria, setFiltroSubcategoria] = useState<string>('todas');
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   useEffect(() => {
     // Dados reais extraídos da planilha SINAPI oficial - 36 itens únicos
@@ -796,35 +798,89 @@ const CotacaoReal: React.FC = () => {
   console.log('Total Materiais Real:', itensFiltrados.reduce((acc, item) => acc + item.realMat, 0));
 
   return (
-    <div className="space-y-6">
-      {/* Header e Controles */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-blue-700">
-              💰 Cotação Real - Lote 10x30 - 10 Apartamentos
+    <div className="space-y-4 lg:space-y-6">
+      {/* Header e Controles - Mobile First */}
+      <div className="bg-white rounded-lg shadow-md p-4 lg:p-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 lg:mb-6">
+          <div className="mb-4 lg:mb-0">
+            <h2 className="text-xl lg:text-2xl font-bold text-blue-700">
+              💰 Cotação Real - Lote 10x30
             </h2>
-            <p className="text-gray-600 mt-2">
-              Compare valores SINAPI com preços reais de mercado e calcule economia
+            <p className="text-sm lg:text-base text-gray-600 mt-2">
+              Compare valores SINAPI com preços reais de mercado
             </p>
           </div>
-          <div className="flex items-center space-x-4">
+          
+          {/* Controles Mobile */}
+          <div className="flex flex-col sm:flex-row gap-3 lg:gap-4">
             <div className="flex items-center space-x-2">
-              <label className="text-sm font-medium text-gray-700">Área Total:</label>
+              <label className="text-sm font-medium text-gray-700">Área:</label>
               <input
                 type="number"
                 value={areaTotal}
                 onChange={(e) => handleAreaChange(Number(e.target.value))}
-                className="w-20 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-20 px-2 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 min="1"
               />
               <span className="text-sm text-gray-600">m²</span>
             </div>
+            
+            {/* Botão Filtros Mobile */}
+            <button
+              onClick={() => setShowMobileFilters(!showMobileFilters)}
+              className="lg:hidden flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              <Filter className="h-4 w-4" />
+              <span>Filtros</span>
+            </button>
           </div>
         </div>
 
-        {/* Filtros */}
-        <div className="flex flex-wrap gap-4 mb-6">
+        {/* Filtros Mobile */}
+        {showMobileFilters && (
+          <div className="lg:hidden bg-gray-50 p-4 rounded-lg mb-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-medium text-gray-700">Filtros</h3>
+              <button
+                onClick={() => setShowMobileFilters(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Categoria:</label>
+                <select
+                  value={filtroCategoria}
+                  onChange={(e) => setFiltroCategoria(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="todas">Todas</option>
+                  {categorias.map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Subcategoria:</label>
+                <select
+                  value={filtroSubcategoria}
+                  onChange={(e) => setFiltroSubcategoria(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="todas">Todas</option>
+                  {subcategorias.map(sub => (
+                    <option key={sub} value={sub}>{sub}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Filtros Desktop */}
+        <div className="hidden lg:flex flex-wrap gap-4 mb-6">
           <div className="flex items-center space-x-2">
             <label className="text-sm font-medium text-gray-700">Categoria:</label>
             <select
@@ -853,79 +909,79 @@ const CotacaoReal: React.FC = () => {
           </div>
         </div>
 
-        {/* Resumo Executivo */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        {/* Resumo Executivo - Mobile First */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-4 lg:mb-6">
+          <div className="bg-blue-50 p-3 lg:p-4 rounded-lg border border-blue-200">
             <div className="flex items-center space-x-2 mb-2">
-              <Calculator className="h-5 w-5 text-blue-600" />
-              <h3 className="font-semibold text-blue-800">Total SINAPI</h3>
+              <Calculator className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600" />
+              <h3 className="text-sm lg:text-base font-semibold text-blue-800">Total SINAPI</h3>
             </div>
-            <p className="text-2xl font-bold text-blue-700">{formatarMoeda(totalSINAPI)}</p>
+            <p className="text-lg lg:text-2xl font-bold text-blue-700">{formatarMoeda(totalSINAPI)}</p>
           </div>
-          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+          <div className="bg-green-50 p-3 lg:p-4 rounded-lg border border-green-200">
             <div className="flex items-center space-x-2 mb-2">
-              <Calculator className="h-5 w-5 text-green-600" />
-              <h3 className="font-semibold text-green-800">Total Real</h3>
+              <Calculator className="h-4 w-4 lg:h-5 lg:w-5 text-green-600" />
+              <h3 className="text-sm lg:text-base font-semibold text-green-800">Total Real</h3>
             </div>
-            <p className="text-2xl font-bold text-green-700">{formatarMoeda(totalReal)}</p>
+            <p className="text-lg lg:text-2xl font-bold text-green-700">{formatarMoeda(totalReal)}</p>
           </div>
-          <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+          <div className="bg-emerald-50 p-3 lg:p-4 rounded-lg border border-emerald-200">
             <div className="flex items-center space-x-2 mb-2">
-              <Ruler className="h-5 w-5 text-emerald-600" />
-              <h3 className="font-semibold text-emerald-800">Custo por m²</h3>
+              <Ruler className="h-4 w-4 lg:h-5 lg:w-5 text-emerald-600" />
+              <h3 className="text-sm lg:text-base font-semibold text-emerald-800">Custo por m²</h3>
             </div>
-            <p className="text-2xl font-bold text-emerald-700">{formatarMoeda(totalCustoPorM2)}</p>
+            <p className="text-lg lg:text-2xl font-bold text-emerald-700">{formatarMoeda(totalCustoPorM2)}</p>
           </div>
-          <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+          <div className="bg-orange-50 p-3 lg:p-4 rounded-lg border border-orange-200">
             <div className="flex items-center space-x-2 mb-2">
-              <Calculator className="h-5 w-5 text-orange-600" />
-              <h3 className="font-semibold text-orange-800">Economia Total</h3>
+              <Calculator className="h-4 w-4 lg:h-5 lg:w-5 text-orange-600" />
+              <h3 className="text-sm lg:text-base font-semibold text-orange-800">Economia Total</h3>
             </div>
-            <p className="text-2xl font-bold text-orange-700">{formatarMoeda(totalEconomia)}</p>
+            <p className="text-lg lg:text-2xl font-bold text-orange-700">{formatarMoeda(totalEconomia)}</p>
           </div>
         </div>
       </div>
 
-      {/* Tabela de Cotação */}
+      {/* Tabela de Cotação - Mobile First */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-2 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Código
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-2 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Descrição
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden lg:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Categoria
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-2 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Qtd
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden sm:table-cell px-2 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   SINAPI M.O.
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden sm:table-cell px-2 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   SINAPI Mat.
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-2 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   SINAPI Total
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-2 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Real M.O.
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-2 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Real Mat.
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-2 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Real Total
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden lg:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Economia
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden lg:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Custo/m²
                 </th>
               </tr>
@@ -933,31 +989,31 @@ const CotacaoReal: React.FC = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {itensFiltrados.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap text-xs lg:text-sm font-medium text-gray-900">
                     {item.codigo}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-900 max-w-xs truncate" title={item.descricao}>
+                  <td className="px-2 lg:px-4 py-2 lg:py-3 text-xs lg:text-sm text-gray-900 max-w-[120px] lg:max-w-xs truncate" title={item.descricao}>
                     {item.descricao}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                  <td className="hidden lg:table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                     <div>
                       <div className="font-medium">{item.categoria}</div>
                       <div className="text-xs text-gray-400">{item.subcategoria}</div>
                     </div>
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap text-xs lg:text-sm text-gray-900">
                     {item.quantidade.toFixed(2)} {item.unidade}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                  <td className="hidden sm:table-cell px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap text-xs lg:text-sm text-gray-900">
                     {formatarMoeda(item.sinapiMO)}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                  <td className="hidden sm:table-cell px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap text-xs lg:text-sm text-gray-900">
                     {formatarMoeda(item.sinapiMat)}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-blue-600">
+                  <td className="px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap text-xs lg:text-sm font-medium text-blue-600">
                     {formatarMoeda(item.sinapiTotal)}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className="px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap">
                     <input
                       type="number"
                       value={item.realMO}
@@ -966,12 +1022,12 @@ const CotacaoReal: React.FC = () => {
                         updateItem(item.id, { realMO: novoValor });
                         handleValorChange(item.id, 'realMO');
                       }}
-                      className="w-20 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-16 lg:w-20 px-1 lg:px-2 py-1 border border-gray-300 rounded text-xs lg:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       step="0.01"
                       min="0"
                     />
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
+                  <td className="px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap">
                     <input
                       type="number"
                       value={item.realMat}
@@ -980,15 +1036,15 @@ const CotacaoReal: React.FC = () => {
                         updateItem(item.id, { realMat: novoValor });
                         handleValorChange(item.id, 'realMat');
                       }}
-                      className="w-20 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-16 lg:w-20 px-1 lg:px-2 py-1 border border-gray-300 rounded text-xs lg:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       step="0.01"
                       min="0"
                     />
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-green-600">
+                  <td className="px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap text-xs lg:text-sm font-medium text-green-600">
                     {formatarMoeda(item.realTotal)}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm">
+                  <td className="hidden lg:table-cell px-4 py-3 whitespace-nowrap text-sm">
                     <div className={`font-medium ${item.economia >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {formatarMoeda(item.economia)}
                     </div>
@@ -996,7 +1052,7 @@ const CotacaoReal: React.FC = () => {
                       {formatarPercentual(item.percentualEconomia)}
                     </div>
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-emerald-600">
+                  <td className="hidden lg:table-cell px-4 py-3 whitespace-nowrap text-sm font-medium text-emerald-600">
                     {formatarMoeda(item.custoPorM2)}
                   </td>
                 </tr>
@@ -1006,12 +1062,12 @@ const CotacaoReal: React.FC = () => {
         </div>
       </div>
 
-      {/* Instruções */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-blue-800 mb-3">
+      {/* Instruções - Mobile First */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 lg:p-6">
+        <h3 className="text-base lg:text-lg font-semibold text-blue-800 mb-3">
           💡 Como Usar a Cotação Real:
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-700">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm text-blue-700">
           <div>
             <p className="mb-2"><strong>1.</strong> Edite os valores de "Real M.O." e "Real Mat." para cada item</p>
             <p className="mb-2"><strong>2.</strong> A economia é calculada automaticamente (SINAPI - Real)</p>
