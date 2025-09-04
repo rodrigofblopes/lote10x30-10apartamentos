@@ -783,11 +783,6 @@ const CotacaoReal: React.FC = () => {
   const totalEconomia = itensFiltrados.reduce((acc, item) => acc + item.economia, 0);
   const totalCustoPorM2 = totalReal / areaTotal;
   
-  // Cálculos para M.O. e Material
-  const totalRealMO = itensFiltrados.reduce((sum, item) => sum + (item.realMO * item.quantidade), 0);
-  const totalRealMat = itensFiltrados.reduce((sum, item) => sum + (item.realMat * item.quantidade), 0);
-  const totalSINAPIMO = itensFiltrados.reduce((sum, item) => sum + (item.sinapiMO * item.quantidade), 0);
-  const totalSINAPIMat = itensFiltrados.reduce((sum, item) => sum + (item.sinapiMat * item.quantidade), 0);
   
 
   // Verificar se os dados estão carregados corretamente
