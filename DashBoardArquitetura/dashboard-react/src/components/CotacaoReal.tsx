@@ -28,6 +28,7 @@ const CotacaoReal: React.FC = () => {
   const [filtroCategoria, setFiltroCategoria] = useState<string>('todas');
   const [filtroSubcategoria, setFiltroSubcategoria] = useState<string>('todas');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<string>('');
 
   useEffect(() => {
     // Dados reais extraídos da planilha SINAPI oficial - 36 itens únicos
@@ -729,8 +730,50 @@ const CotacaoReal: React.FC = () => {
       }
     ];
 
-    setItens(dadosReais);
+    // Tentar carregar dados salvos primeiro
+    const dadosSalvos = localStorage.getItem('cotacaoArquiteturaSalva');
+    if (dadosSalvos) {
+      try {
+        const itensSalvos = JSON.parse(dadosSalvos);
+        setItens(itensSalvos);
+      } catch (error) {
+        console.error('Erro ao carregar dados salvos:', error);
+        setItens(dadosReais);
+      }
+    } else {
+      setItens(dadosReais);
+    }
   }, [setItens]);
+
+  // Função para salvar dados no localStorage
+  const salvarDados = () => {
+    try {
+      localStorage.setItem('cotacaoArquiteturaSalva', JSON.stringify(itens));
+      setSaveMessage('✅ Dados salvos com sucesso!');
+      setTimeout(() => setSaveMessage(''), 3000);
+    } catch (error) {
+      console.error('Erro ao salvar dados:', error);
+      setSaveMessage('❌ Erro ao salvar dados');
+      setTimeout(() => setSaveMessage(''), 3000);
+    }
+  };
+
+  // Função para carregar dados salvos
+  const carregarDados = () => {
+    try {
+      const dadosSalvos = localStorage.getItem('cotacaoArquiteturaSalva');
+      if (dadosSalvos) {
+        const itensSalvos = JSON.parse(dadosSalvos);
+        setItens(itensSalvos);
+        setSaveMessage('✅ Dados carregados com sucesso!');
+        setTimeout(() => setSaveMessage(''), 3000);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
+      setSaveMessage('❌ Erro ao carregar dados');
+      setTimeout(() => setSaveMessage(''), 3000);
+    }
+  };
 
   const handleAreaChange = (novaArea: number) => {
     setAreaTotal(novaArea);
@@ -740,9 +783,8 @@ const CotacaoReal: React.FC = () => {
     const item = itens.find(i => i.id === id);
     if (!item) return;
 
-    const novoValor = campo === 'realMO' ? item.realMO : item.realMat;
-    const realTotal = (campo === 'realMO' ? novoValor : item.realMO) * item.quantidade + 
-                     (campo === 'realMat' ? novoValor : item.realMat) * item.quantidade;
+    // Usar os valores atualizados do item (que já foram atualizados pelo updateItem anterior)
+    const realTotal = item.realMO * item.quantidade + item.realMat * item.quantidade;
     
     const economia = item.sinapiTotal - realTotal;
     const percentualEconomia = item.sinapiTotal > 0 ? (economia / item.sinapiTotal) * 100 : 0;
@@ -754,6 +796,24 @@ const CotacaoReal: React.FC = () => {
       percentualEconomia,
       custoPorM2
     });
+
+    // Salvar automaticamente após 1 segundo de inatividade
+    setTimeout(() => {
+      try {
+        const itensAtualizados = itens.map(i => 
+          i.id === id ? {
+            ...i,
+            realTotal,
+            economia,
+            percentualEconomia,
+            custoPorM2
+          } : i
+        );
+        localStorage.setItem('cotacaoArquiteturaSalva', JSON.stringify(itensAtualizados));
+      } catch (error) {
+        console.error('Erro ao salvar automaticamente:', error);
+      }
+    }, 1000);
   };
 
   const formatarMoeda = (valor: number) => {
@@ -798,6 +858,7 @@ const CotacaoReal: React.FC = () => {
   // Economias
   const economiaMO = totalSINAPIMO - totalRealMO;
   const economiaMat = totalSINAPIMat - totalRealMat;
+  const economiaTotal = totalSINAPI - totalReal;
   
   
 
@@ -842,6 +903,22 @@ const CotacaoReal: React.FC = () => {
               <span className="text-sm text-gray-600">m²</span>
             </div>
             
+            {/* Botões de Salvar e Carregar */}
+            <div className="flex gap-2">
+              <button
+                onClick={salvarDados}
+                className="px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
+              >
+                💾 Salvar
+              </button>
+              <button
+                onClick={carregarDados}
+                className="px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              >
+                📁 Carregar
+              </button>
+            </div>
+            
             {/* Botão Filtros Mobile */}
             <button
               onClick={() => setShowMobileFilters(!showMobileFilters)}
@@ -852,6 +929,17 @@ const CotacaoReal: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Mensagem de Salvamento */}
+        {saveMessage && (
+          <div className={`mb-4 p-3 rounded-md text-sm font-medium ${
+            saveMessage.includes('✅') 
+              ? 'bg-green-100 text-green-800 border border-green-200' 
+              : 'bg-red-100 text-red-800 border border-red-200'
+          }`}>
+            {saveMessage}
+          </div>
+        )}
 
         {/* Filtros Mobile */}
         {showMobileFilters && (
@@ -1033,7 +1121,7 @@ const CotacaoReal: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="text-sm font-medium text-gray-600">Economia Total</h4>
-                    <p className="text-2xl font-bold text-red-600">{formatarMoeda(totalEconomia)}</p>
+                    <p className="text-2xl font-bold text-red-600">{formatarMoeda(economiaTotal)}</p>
                     <p className="text-sm text-gray-500">M.O.: {formatarMoeda(economiaMO)} | Mat.: {formatarMoeda(economiaMat)}</p>
                   </div>
                   <Calculator className="h-8 w-8 text-red-500" />
