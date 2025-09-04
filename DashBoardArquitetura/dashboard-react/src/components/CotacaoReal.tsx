@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCotacaoStore } from '../store/cotacaoStore';
-import { Calculator, Ruler, Filter, X } from 'lucide-react';
+import { Calculator, Filter, X } from 'lucide-react';
 
 interface ItemCotacao {
   id: string;
