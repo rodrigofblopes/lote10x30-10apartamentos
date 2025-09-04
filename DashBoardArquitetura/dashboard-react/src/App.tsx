@@ -7,7 +7,7 @@ import Navigation from './components/Navigation';
 import ResumoExecutivo from './components/ResumoExecutivo';
 import GridOrcamento from './components/GridOrcamento';
 import CotacaoReal from './components/CotacaoReal';
-import Projeto from './components/Projeto';
+import Galeria from './components/Galeria';
 import Graficos from './components/Graficos';
 import LoadingSpinner from './components/LoadingSpinner';
 
@@ -739,8 +739,8 @@ function App() {
         return <GridOrcamento />;
       case 'cotacao':
         return <CotacaoReal />;
-      case 'projeto':
-        return <Projeto />;
+      case 'galeria':
+        return <Galeria />;
       case 'graficos':
         return <Graficos />;
       default:

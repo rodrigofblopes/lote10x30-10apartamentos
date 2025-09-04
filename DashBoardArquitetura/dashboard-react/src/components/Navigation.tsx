@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BarChart3, Calculator, PieChart, Building2, Menu, X } from 'lucide-react';
+import { BarChart3, Calculator, PieChart, Image, Menu, X } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: string;
@@ -29,10 +29,10 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
       description: 'Compare valores SINAPI com cotações reais'
     },
     {
-      id: 'projeto',
-      label: 'Projeto',
-      icon: <Building2 className="h-4 w-4" />,
-      description: 'Plantas baixas, cortes e detalhes'
+      id: 'galeria',
+      label: 'Galeria',
+      icon: <Image className="h-4 w-4" />,
+      description: 'Fotos, plantas e renderings do projeto'
     },
     {
       id: 'graficos',
