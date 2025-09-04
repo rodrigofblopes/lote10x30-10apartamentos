@@ -789,15 +789,6 @@ const CotacaoReal: React.FC = () => {
   const totalSINAPIMO = itensFiltrados.reduce((sum, item) => sum + (item.sinapiMO * item.quantidade), 0);
   const totalSINAPIMat = itensFiltrados.reduce((sum, item) => sum + (item.sinapiMat * item.quantidade), 0);
   
-  // Custos por m²
-  const custoMOPorM2 = totalRealMO / areaTotal;
-  const custoMatPorM2 = totalRealMat / areaTotal;
-  const custoSINAPIMOPorM2 = totalSINAPIMO / areaTotal;
-  const custoSINAPIMatPorM2 = totalSINAPIMat / areaTotal;
-  
-  // Economias
-  const economiaMO = totalSINAPIMO - totalRealMO;
-  const economiaMat = totalSINAPIMat - totalRealMat;
 
   // Verificar se os dados estão carregados corretamente
   console.log('Total SINAPI calculado:', totalSINAPI);

@@ -21,6 +21,12 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
       description: 'Orçamento detalhado por item'
     },
     {
+      id: 'cotacao',
+      label: 'Cotação Real',
+      icon: <Calculator className="h-4 w-4" />,
+      description: 'Compare valores SINAPI com cotações reais'
+    },
+    {
       id: 'graficos',
       label: 'Gráficos',
       icon: <PieChart className="h-4 w-4" />,
