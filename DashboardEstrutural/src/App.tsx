@@ -5,7 +5,6 @@ import Header from './components/Header';
 import Navigation from './components/Navigation';
 import ResumoExecutivo from './components/ResumoExecutivo';
 import GridOrcamento from './components/GridOrcamento';
-import CotacaoReal from './components/CotacaoReal';
 import Graficos from './components/Graficos';
 import LoadingSpinner from './components/LoadingSpinner';
 
@@ -40,8 +39,6 @@ function App() {
         return <ResumoExecutivo />;
       case 'orcamento':
         return <GridOrcamento />;
-      case 'cotacao':
-        return <CotacaoReal />;
       case 'graficos':
         return <Graficos />;
       default:
