@@ -1,7 +1,8 @@
-import React, { useRef, useState, Suspense } from 'react';
+import React, { useRef, useState, Suspense, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Html, useProgress } from '@react-three/drei';
 import * as THREE from 'three';
+// import { IFCLoader } from 'web-ifc';
 
 // Componente de loading
 function Loader() {
@@ -16,13 +17,36 @@ function Loader() {
   );
 }
 
-// Componente para criar um modelo 3D de exemplo (estrutura básica)
+// Componente para carregar o modelo IFC real
 interface StructuralModelProps {
   setSelectedElement: (element: string) => void;
 }
 
-function StructuralModel({ setSelectedElement }: StructuralModelProps) {
+function StructuralModel({ setSelectedElement: _setSelectedElement }: StructuralModelProps) {
   const meshRef = useRef<THREE.Group>(null);
+  const [model] = useState<THREE.Group | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadIFCModel = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Por enquanto, vamos mostrar uma mensagem informativa
+        // O carregamento real do IFC será implementado em uma versão futura
+        setLoading(false);
+        setError('Carregamento de arquivos IFC será implementado em breve. O arquivo VilaAndriw.ifc está disponível na pasta public.');
+      } catch (err) {
+        console.error('Erro ao carregar modelo IFC:', err);
+        setError('Erro ao carregar o modelo IFC. Verifique se o arquivo está disponível.');
+        setLoading(false);
+      }
+    };
+
+    loadIFCModel();
+  }, []);
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -30,48 +54,31 @@ function StructuralModel({ setSelectedElement }: StructuralModelProps) {
     }
   });
 
-  // Criar elementos estruturais básicos
-  const createColumn = (position: [number, number, number], color: string) => (
-    <mesh position={position} onClick={() => setSelectedElement(`Coluna ${position[0]},${position[2]}`)}>
-      <boxGeometry args={[0.3, 3, 0.3]} />
-      <meshStandardMaterial color={color} />
-    </mesh>
-  );
+  if (loading) {
+    return (
+      <Html center>
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando modelo IFC...</p>
+        </div>
+      </Html>
+    );
+  }
 
-  const createBeam = (position: [number, number, number], rotation: [number, number, number], color: string) => (
-    <mesh position={position} rotation={rotation} onClick={() => setSelectedElement(`Viga ${position[0]},${position[2]}`)}>
-      <boxGeometry args={[4, 0.2, 0.3]} />
-      <meshStandardMaterial color={color} />
-    </mesh>
-  );
-
-  const createSlab = (position: [number, number, number], color: string) => (
-    <mesh position={position} onClick={() => setSelectedElement(`Laje ${position[0]},${position[2]}`)}>
-      <boxGeometry args={[8, 0.2, 8]} />
-      <meshStandardMaterial color={color} transparent opacity={0.7} />
-    </mesh>
-  );
+  if (error) {
+    return (
+      <Html center>
+        <div className="text-center text-red-600">
+          <p className="mb-4">{error}</p>
+          <p className="text-sm">Usando modelo de demonstração...</p>
+        </div>
+      </Html>
+    );
+  }
 
   return (
     <group ref={meshRef}>
-      {/* Colunas */}
-      {createColumn([-3, 1.5, -3], '#8B4513')}
-      {createColumn([3, 1.5, -3], '#8B4513')}
-      {createColumn([-3, 1.5, 3], '#8B4513')}
-      {createColumn([3, 1.5, 3], '#8B4513')}
-      {createColumn([0, 1.5, 0], '#8B4513')}
-
-      {/* Vigas */}
-      {createBeam([0, 2.8, -3], [0, 0, 0], '#654321')}
-      {createBeam([0, 2.8, 3], [0, 0, 0], '#654321')}
-      {createBeam([-3, 2.8, 0], [0, 0, Math.PI / 2], '#654321')}
-      {createBeam([3, 2.8, 0], [0, 0, Math.PI / 2], '#654321')}
-
-      {/* Lajes */}
-      {createSlab([0, 3, 0], '#708090')}
-      {createSlab([0, 0, 0], '#708090')}
-
-      {/* Iluminação */}
+      {model && <primitive object={model} />}
       <ambientLight intensity={0.6} />
       <directionalLight position={[10, 10, 5]} intensity={0.8} />
     </group>
