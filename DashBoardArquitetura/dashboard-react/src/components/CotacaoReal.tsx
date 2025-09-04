@@ -45,12 +45,12 @@ const CotacaoReal: React.FC = () => {
         sinapiMO: 48.44,
         sinapiMat: 54.69,
         sinapiTotal: 39608.10,
-        realMO: 48.44,
+        realMO: 20.00, // Valor real de M.O. por m²
         realMat: 54.69,
-        realTotal: 39608.10,
-        economia: 0,
-        percentualEconomia: 0,
-        custoPorM2: 132.89,
+        realTotal: 28675.44, // (20.00 + 54.69) × 384.06
+        economia: 10932.66, // 39608.10 - 28675.44
+        percentualEconomia: 27.6, // (10932.66 / 39608.10) × 100
+        custoPorM2: 96.19, // 28675.44 / 298
         peso: 9.33
       },
       {
@@ -779,7 +779,7 @@ const CotacaoReal: React.FC = () => {
     setAreaTotal(novaArea);
   };
 
-  const handleValorChange = (id: string, campo: 'realMO' | 'realMat') => {
+  const handleValorChange = (id: string, _campo: 'realMO' | 'realMat') => {
     const item = itens.find(i => i.id === id);
     if (!item) return;
 
@@ -840,7 +840,6 @@ const CotacaoReal: React.FC = () => {
   // Cálculos dos totais
   const totalSINAPI = itensFiltrados.reduce((acc, item) => acc + item.sinapiTotal, 0);
   const totalReal = itensFiltrados.reduce((acc, item) => acc + item.realTotal, 0);
-  const totalEconomia = itensFiltrados.reduce((acc, item) => acc + item.economia, 0);
   const totalCustoPorM2 = totalReal / areaTotal;
   
   // Cálculos para M.O. e Material
