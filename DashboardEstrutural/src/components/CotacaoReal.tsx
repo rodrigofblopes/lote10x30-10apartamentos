@@ -598,6 +598,9 @@ const CotacaoReal: React.FC = () => {
                     Qtd
                   </th>
                   <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Valor Unit.
+                  </th>
+                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     SINAPI M.O.
                   </th>
                   <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -641,6 +644,9 @@ const CotacaoReal: React.FC = () => {
                     <td className="px-2 py-4 text-xs text-gray-900">{item.categoria}</td>
                     <td className="px-2 py-4 text-xs text-gray-900">
                       {item.quantidade} {item.unidade}
+                    </td>
+                    <td className="px-2 py-4 text-xs text-gray-900">
+                      {formatarMoeda(item.sinapiMO + item.sinapiMat)}
                     </td>
                     <td className="px-2 py-4 text-xs text-gray-900">
                       {formatarMoeda(item.sinapiMO)}
