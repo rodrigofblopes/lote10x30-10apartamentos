@@ -398,7 +398,7 @@ export const carregarDados = async (): Promise<OrcamentoItem[]> => {
   return dadosMockados;
 };
 
-// Função para processar dados do CSV EST10AP.csv
+// Função para processar dados do CSV 5DEST.csv (separado por etapas)
 export const processarDadosCSV = (csvContent: string): OrcamentoItem[] => {
   const lines = csvContent.split('\n');
   const dados: OrcamentoItem[] = [];

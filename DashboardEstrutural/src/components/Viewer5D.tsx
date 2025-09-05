@@ -46,9 +46,10 @@ interface StructuralModelProps {
   onElementSelect: (elementId: string, elementData: any) => void;
   selectedElementId: string | null;
   linkedElements: string[];
+  highlightedElements: string[];
 }
 
-function StructuralModel({ onElementSelect, selectedElementId: _selectedElementId, linkedElements: _linkedElements }: StructuralModelProps) {
+function StructuralModel({ onElementSelect, selectedElementId: _selectedElementId, linkedElements: _linkedElements, highlightedElements }: StructuralModelProps) {
   const meshRef = useRef<THREE.Group>(null);
 
   // Carregar o modelo GLB com coleções renomeadas
@@ -195,7 +196,69 @@ function StructuralModel({ onElementSelect, selectedElementId: _selectedElementI
 
   return (
     <group ref={meshRef}>
-      {scene && <primitive object={scene} />}
+      {scene && (
+        <primitive 
+          object={scene} 
+          onClick={(event: any) => {
+            event.stopPropagation();
+            const elementId = event.object.name || 'unknown';
+            onElementSelect(elementId, { 
+              name: elementId, 
+              position: event.object.position,
+              type: 'structural_element'
+            });
+          }}
+          onPointerOver={(event: any) => {
+            event.stopPropagation();
+            document.body.style.cursor = 'pointer';
+          }}
+          onPointerOut={() => {
+            document.body.style.cursor = 'auto';
+          }}
+        />
+      )}
+      
+      {/* Renderizar elementos destacados com cores diferentes */}
+      {highlightedElements.map((elementId) => {
+        // Encontrar o objeto correspondente na cena
+        let targetObject: THREE.Object3D | null = null;
+        if (scene) {
+          scene.traverse((child) => {
+            if (child.name === elementId) {
+              targetObject = child;
+            }
+          });
+        }
+        
+        if (targetObject && targetObject instanceof THREE.Mesh) {
+          return (
+            <mesh
+              key={`highlight-${elementId}`}
+              geometry={targetObject.geometry}
+              position={targetObject.position}
+              rotation={targetObject.rotation}
+              scale={targetObject.scale}
+              onClick={(event: any) => {
+                event.stopPropagation();
+                onElementSelect(elementId, { 
+                  name: elementId, 
+                  position: targetObject?.position,
+                  type: 'highlighted_element'
+                });
+              }}
+            >
+              <meshStandardMaterial 
+                color="#ff6b35" 
+                transparent 
+                opacity={0.8}
+                emissive="#ff6b35"
+                emissiveIntensity={0.3}
+              />
+            </mesh>
+          );
+        }
+        return null;
+      })}
       
       {/* Iluminação Profissional */}
       <ambientLight intensity={0.3} color="#ffffff" />
@@ -254,6 +317,9 @@ const Viewer5D: React.FC = () => {
 
   // Estado para links automáticos
   const [autoLinks, setAutoLinks] = useState<ElementLink[]>([]);
+  
+  // Estado para elementos destacados no 3D
+  const [highlightedElements, setHighlightedElements] = useState<string[]>([]);
 
   // Estado para links automáticos (removido por enquanto)
   // const [autoLinks, setAutoLinks] = useState<AutoLink[]>([]);
@@ -278,6 +344,51 @@ const Viewer5D: React.FC = () => {
       ...prev,
       selectedItem: item
     }));
+    
+    // Destacar elementos 3D correspondentes ao item selecionado
+    highlightElementsForItem(item);
+  };
+  
+  // Função para destacar elementos 3D baseado no item da planilha
+  const highlightElementsForItem = (item: any) => {
+    const elementsToHighlight: string[] = [];
+    
+    // Procurar links automáticos que correspondem ao item
+    autoLinks.forEach(link => {
+      if (link.itemId === item.id) {
+        elementsToHighlight.push(link.elementId);
+      }
+    });
+    
+    // Procurar links manuais que correspondem ao item
+    linkingState.links.forEach(link => {
+      if (link.itemId === item.id) {
+        elementsToHighlight.push(link.elementId);
+      }
+    });
+    
+    // Se não houver links, tentar fazer matching direto baseado no código
+    if (elementsToHighlight.length === 0) {
+      const itemCode = item.id.trim();
+      
+      // Simular elementos 3D baseados no código do item
+      const possibleElements = [
+        itemCode + '_',
+        itemCode + '_.001',
+        itemCode + '_.002',
+        itemCode + '_.003',
+        itemCode + '_.004',
+        itemCode + '_.005'
+      ];
+      
+      // Adicionar elementos que podem existir no GLB
+      possibleElements.forEach(elementId => {
+        elementsToHighlight.push(elementId);
+      });
+    }
+    
+    setHighlightedElements(elementsToHighlight);
+    console.log(`Destacando elementos para item ${item.id}:`, elementsToHighlight);
   };
 
   const createLink = () => {
@@ -544,6 +655,15 @@ const Viewer5D: React.FC = () => {
               <span className="sm:hidden">Auto</span>
             </button>
             
+            <button
+              onClick={() => setHighlightedElements([])}
+              className="flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors bg-red-600 text-white hover:bg-red-700 text-xs lg:text-sm"
+            >
+              <EyeOff className="h-3 w-3 lg:h-4 lg:w-4" />
+              <span className="hidden sm:inline">Limpar</span>
+              <span className="sm:hidden">Limpar</span>
+            </button>
+            
           </div>
         </div>
 
@@ -666,6 +786,7 @@ const Viewer5D: React.FC = () => {
                     onElementSelect={handleElementSelect}
                     selectedElementId={linkingState.selectedElement?.id || null}
                     linkedElements={linkingState.links.map(link => link.elementId)}
+                    highlightedElements={highlightedElements}
                   />
                   <OrbitControls 
                     enablePan={true}
@@ -702,7 +823,7 @@ const Viewer5D: React.FC = () => {
             <div className="bg-gray-800 text-white px-3 lg:px-4 py-2">
               <h3 className="font-semibold flex items-center text-sm lg:text-base">
                 <Calculator className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
-                Orçamento Estrutural
+                Orçamento 5DEST (Por Etapas)
               </h3>
             </div>
             
