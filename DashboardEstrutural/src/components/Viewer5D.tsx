@@ -3,7 +3,31 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Html, useProgress, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { useOrcamentoStore } from '../store/orcamentoStore';
-import { Calculator, Eye, EyeOff, Link, Unlink, Box } from 'lucide-react';
+import { LINKING_CONFIG, OfflineLink } from '../config/linkingConfig';
+import LinkingConfigEditor from './LinkingConfigEditor';
+import { Calculator, Eye, EyeOff, Link, Unlink, Box, Search, Filter, Trash2, Plus, Check, Settings } from 'lucide-react';
+
+// Interfaces para o sistema de linking
+interface ElementLink {
+  id: string;
+  elementId: string;
+  elementName: string;
+  itemId: string;
+  itemDescription: string;
+  itemCode: string;
+  linkedAt: Date;
+  notes?: string;
+}
+
+interface LinkingState {
+  selectedElement: { id: string; data: any } | null;
+  selectedItem: any | null;
+  links: ElementLink[];
+  linkMode: boolean;
+  searchTerm: string;
+  filterCategory: string;
+  showLinkedOnly: boolean;
+}
 
 // Componente de loading
 function Loader() {
@@ -38,15 +62,85 @@ function StructuralModel({ onElementSelect, selectedElementId: _selectedElementI
     }
   });
 
+  // Função para aplicar materiais baseados no nome do elemento
+  const applyMaterialByElementName = (mesh: THREE.Mesh, elementName: string) => {
+    const name = elementName.toLowerCase();
+    
+    // Criar materiais específicos para cada tipo de elemento
+    if (name.includes('pilar') || name.includes('coluna') || name.includes('column')) {
+      // Concreto armado - cinza com textura
+      mesh.material = new THREE.MeshStandardMaterial({
+        color: '#8B8B8B',
+        roughness: 0.8,
+        metalness: 0.1,
+        emissive: new THREE.Color(0x000000)
+      });
+    } else if (name.includes('viga') || name.includes('beam')) {
+      // Vigas - cinza mais escuro
+      mesh.material = new THREE.MeshStandardMaterial({
+        color: '#696969',
+        roughness: 0.7,
+        metalness: 0.2,
+        emissive: new THREE.Color(0x000000)
+      });
+    } else if (name.includes('laje') || name.includes('slab')) {
+      // Lajes - cinza claro
+      mesh.material = new THREE.MeshStandardMaterial({
+        color: '#A9A9A9',
+        roughness: 0.9,
+        metalness: 0.0,
+        emissive: new THREE.Color(0x000000)
+      });
+    } else if (name.includes('parede') || name.includes('wall')) {
+      // Paredes - cor de tijolo
+      mesh.material = new THREE.MeshStandardMaterial({
+        color: '#CD853F',
+        roughness: 0.8,
+        metalness: 0.0,
+        emissive: new THREE.Color(0x000000)
+      });
+    } else if (name.includes('janela') || name.includes('window') || name.includes('vidro')) {
+      // Vidros - azul transparente
+      mesh.material = new THREE.MeshStandardMaterial({
+        color: '#87CEEB',
+        roughness: 0.1,
+        metalness: 0.0,
+        transparent: true,
+        opacity: 0.7,
+        emissive: new THREE.Color(0x000000)
+      });
+    } else if (name.includes('porta') || name.includes('door')) {
+      // Portas - madeira
+      mesh.material = new THREE.MeshStandardMaterial({
+        color: '#8B4513',
+        roughness: 0.9,
+        metalness: 0.0,
+        emissive: new THREE.Color(0x000000)
+      });
+    } else {
+      // Material padrão - concreto
+      mesh.material = new THREE.MeshStandardMaterial({
+        color: '#8B8B8B',
+        roughness: 0.8,
+        metalness: 0.1,
+        emissive: new THREE.Color(0x000000)
+      });
+    }
+  };
+
   // Adicionar interatividade aos elementos
   useEffect(() => {
     if (scene) {
       scene.traverse((child) => {
         if (child instanceof THREE.Mesh) {
+          const elementName = child.name || `Elemento_${child.id}`;
+          
+          // Aplicar material baseado no nome
+          applyMaterialByElementName(child, elementName);
+          
           // Adicionar evento de clique
           (child as any).onClick = (event: any) => {
             event.stopPropagation();
-            const elementName = child.name || `Elemento_${child.id}`;
             const elementData = {
               name: elementName,
               id: child.id,
@@ -61,7 +155,7 @@ function StructuralModel({ onElementSelect, selectedElementId: _selectedElementI
           (child as any).onPointerOver = () => {
             document.body.style.cursor = 'pointer';
             if (child.material) {
-              child.material.emissive = new THREE.Color(0x222222);
+              child.material.emissive = new THREE.Color(0x333333);
             }
           };
           
@@ -82,8 +176,43 @@ function StructuralModel({ onElementSelect, selectedElementId: _selectedElementI
   return (
     <group ref={meshRef}>
       {scene && <primitive object={scene} />}
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[10, 10, 5]} intensity={0.8} />
+      
+      {/* Iluminação Profissional */}
+      <ambientLight intensity={0.3} color="#ffffff" />
+      
+      {/* Luz principal (sol) */}
+      <directionalLight 
+        position={[10, 10, 5]} 
+        intensity={1.2} 
+        color="#ffebcd"
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-far={50}
+        shadow-camera-left={-10}
+        shadow-camera-right={10}
+        shadow-camera-top={10}
+        shadow-camera-bottom={-10}
+      />
+      
+      {/* Luz de preenchimento */}
+      <directionalLight 
+        position={[-5, 5, -5]} 
+        intensity={0.4} 
+        color="#87ceeb"
+      />
+      
+      {/* Luz ambiente superior */}
+      <hemisphereLight 
+        args={["#87ceeb", "#8b7355", 0.6]}
+      />
+      
+      {/* Luz pontual para detalhes */}
+      <pointLight 
+        position={[0, 8, 0]} 
+        intensity={0.5} 
+        color="#ffffff"
+        distance={20}
+      />
     </group>
   );
 }
@@ -91,30 +220,129 @@ function StructuralModel({ onElementSelect, selectedElementId: _selectedElementI
 // Componente principal do visualizador 5D
 const Viewer5D: React.FC = () => {
   const { itens } = useOrcamentoStore();
-  const [selectedElement, setSelectedElement] = useState<{id: string, data: any} | null>(null);
-  const [linkedElements, setLinkedElements] = useState<string[]>([]);
+  
+  // Estado do sistema de linking
+  const [linkingState, setLinkingState] = useState<LinkingState>({
+    selectedElement: null,
+    selectedItem: null,
+    links: [],
+    linkMode: false,
+    searchTerm: '',
+    filterCategory: '',
+    showLinkedOnly: false
+  });
+
+  // Estado para links automáticos (removido por enquanto)
+  // const [autoLinks, setAutoLinks] = useState<AutoLink[]>([]);
+  // const [linkingStats, setLinkingStats] = useState<any>(null);
+  // const [showAutoLinking, setShowAutoLinking] = useState(false);
+  
+  // Estado para configuração offline
+  const [offlineLinks, setOfflineLinks] = useState<OfflineLink[]>(LINKING_CONFIG.links);
+  const [showConfigEditor, setShowConfigEditor] = useState(false);
+
+  // Estados de visibilidade
   const [show3D, setShow3D] = useState(true);
   const [showSpreadsheet, setShowSpreadsheet] = useState(true);
-  const [linkMode, setLinkMode] = useState(false);
 
+  // Funções do sistema de linking
   const handleElementSelect = (elementId: string, elementData: any) => {
-    setSelectedElement({ id: elementId, data: elementData });
-    
-    if (linkMode) {
-      // Toggle link do elemento
-      setLinkedElements(prev => 
-        prev.includes(elementId) 
-          ? prev.filter(id => id !== elementId)
-          : [...prev, elementId]
-      );
+    setLinkingState(prev => ({
+      ...prev,
+      selectedElement: { id: elementId, data: elementData }
+    }));
+  };
+
+  const handleItemSelect = (item: any) => {
+    setLinkingState(prev => ({
+      ...prev,
+      selectedItem: item
+    }));
+  };
+
+  const createLink = () => {
+    if (linkingState.selectedElement && linkingState.selectedItem) {
+      const newLink: ElementLink = {
+        id: `link_${Date.now()}`,
+        elementId: linkingState.selectedElement.id,
+        elementName: linkingState.selectedElement.data.name || linkingState.selectedElement.id,
+        itemId: linkingState.selectedItem.id,
+        itemDescription: linkingState.selectedItem.descricao,
+        itemCode: linkingState.selectedItem.codigo,
+        linkedAt: new Date(),
+        notes: ''
+      };
+
+      setLinkingState(prev => ({
+        ...prev,
+        links: [...prev.links, newLink],
+        selectedElement: null,
+        selectedItem: null
+      }));
+
+      // Salvar no localStorage
+      localStorage.setItem('viewer5d_links', JSON.stringify([...linkingState.links, newLink]));
     }
   };
 
-  const handleItemSelect = (itemId: string) => {
-    // Aqui você pode implementar a lógica para destacar elementos 3D
-    // baseado no item selecionado da planilha
-    console.log('Item da planilha selecionado:', itemId);
+  const removeLink = (linkId: string) => {
+    const updatedLinks = linkingState.links.filter(link => link.id !== linkId);
+    setLinkingState(prev => ({
+      ...prev,
+      links: updatedLinks
+    }));
+    localStorage.setItem('viewer5d_links', JSON.stringify(updatedLinks));
   };
+
+  const toggleLinkMode = () => {
+    setLinkingState(prev => ({
+      ...prev,
+      linkMode: !prev.linkMode,
+      selectedElement: null,
+      selectedItem: null
+    }));
+  };
+
+  // Função para criar links automáticos (comentada por enquanto)
+  // const createAutoLinks = () => {
+  //   // Simular elementos 3D (em um caso real, isso viria do modelo GLB)
+  //   const elements3D = [
+  //     { id: 'pilar_001', name: 'Pilar Central' },
+  //     { id: 'viga_001', name: 'Viga Principal' },
+  //     { id: 'laje_001', name: 'Laje Térreo' },
+  //     { id: 'parede_001', name: 'Parede Externa' },
+  //     { id: 'piso_001', name: 'Piso Porcelanato' },
+  //     { id: 'janela_001', name: 'Janela Alumínio' },
+  //     { id: 'porta_001', name: 'Porta Madeira' },
+  //     { id: 'telhado_001', name: 'Telhado Fibrocimento' }
+  //   ];
+
+  //   const result = createAutomaticLinks(elements3D, itens);
+  //   setAutoLinks(result.links);
+  //   setLinkingStats(result.statistics);
+  //   setShowAutoLinking(true);
+    
+  //   console.log('Links automáticos criados:', result);
+  // };
+
+  // Carregar links salvos do localStorage
+  useEffect(() => {
+    const savedLinks = localStorage.getItem('viewer5d_links');
+    if (savedLinks) {
+      try {
+        const links = JSON.parse(savedLinks);
+        setLinkingState(prev => ({
+          ...prev,
+          links: links.map((link: any) => ({
+            ...link,
+            linkedAt: new Date(link.linkedAt)
+          }))
+        }));
+      } catch (error) {
+        console.error('Erro ao carregar links salvos:', error);
+      }
+    }
+  }, []);
 
   const formatarMoeda = (valor: number) => {
     return new Intl.NumberFormat('pt-BR', { 
@@ -172,40 +400,141 @@ const Viewer5D: React.FC = () => {
             </button>
             
             <button
-              onClick={() => setLinkMode(!linkMode)}
+              onClick={toggleLinkMode}
               className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
-                linkMode 
+                linkingState.linkMode 
                   ? 'bg-purple-600 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              {linkMode ? <Unlink className="h-4 w-4" /> : <Link className="h-4 w-4" />}
+              {linkingState.linkMode ? <Link className="h-4 w-4" /> : <Unlink className="h-4 w-4" />}
               <span>Modo Link</span>
+            </button>
+            
+            <button
+              onClick={() => setLinkingState(prev => ({ ...prev, showLinkedOnly: !prev.showLinkedOnly }))}
+              className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
+                linkingState.showLinkedOnly 
+                  ? 'bg-orange-600 text-white' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              <Filter className="h-4 w-4" />
+              <span>Linkados</span>
+            </button>
+            
+            <button
+              onClick={() => setShowConfigEditor(true)}
+              className="flex items-center space-x-2 px-3 py-2 rounded-md transition-colors bg-purple-600 text-white hover:bg-purple-700"
+            >
+              <Settings className="h-4 w-4" />
+              <span>Configurar Links</span>
             </button>
           </div>
         </div>
 
-        {/* Status do Elemento Selecionado */}
-        {selectedElement && (
+        {/* Status do Sistema de Linking */}
+        {(linkingState.selectedElement || linkingState.selectedItem) && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-            <h3 className="font-semibold text-blue-800 mb-2">Elemento 3D Selecionado:</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div>
-                <span className="font-medium">ID:</span> {selectedElement.id}
+            <h3 className="font-semibold text-blue-800 mb-3">Sistema de Linking:</h3>
+            
+            {linkingState.selectedElement && (
+              <div className="mb-3 p-3 bg-blue-100 rounded-lg">
+                <h4 className="font-medium text-blue-900 mb-2">Elemento 3D Selecionado:</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                  <div><span className="font-medium">Nome:</span> {linkingState.selectedElement.data.name || linkingState.selectedElement.id}</div>
+                  <div><span className="font-medium">ID:</span> {linkingState.selectedElement.id}</div>
+                </div>
               </div>
-              <div>
-                <span className="font-medium">Status:</span> 
-                <span className={`ml-2 px-2 py-1 rounded text-xs ${
-                  linkedElements.includes(selectedElement.id)
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-gray-100 text-gray-800'
-                }`}>
-                  {linkedElements.includes(selectedElement.id) ? 'Linkado' : 'Não Linkado'}
-                </span>
+            )}
+            
+            {linkingState.selectedItem && (
+              <div className="mb-3 p-3 bg-green-100 rounded-lg">
+                <h4 className="font-medium text-green-900 mb-2">Item da Planilha Selecionado:</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                  <div><span className="font-medium">Código:</span> {linkingState.selectedItem.codigo}</div>
+                  <div><span className="font-medium">Descrição:</span> {linkingState.selectedItem.descricao}</div>
+                </div>
               </div>
-              <div>
-                <span className="font-medium">Elementos Linkados:</span> {linkedElements.length}
+            )}
+            
+            {linkingState.selectedElement && linkingState.selectedItem && (
+              <div className="flex gap-2">
+                <button
+                  onClick={createLink}
+                  className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Criar Link</span>
+                </button>
+                <button
+                  onClick={() => setLinkingState(prev => ({ ...prev, selectedElement: null, selectedItem: null }))}
+                  className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span>Cancelar</span>
+                </button>
               </div>
+            )}
+          </div>
+        )}
+
+        {/* Links Offline Configurados */}
+        {offlineLinks.length > 0 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+            <h3 className="font-semibold text-blue-800 mb-3 flex items-center">
+              <Settings className="h-5 w-5 mr-2" />
+              Links Offline Configurados ({offlineLinks.length})
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-40 overflow-y-auto">
+              {offlineLinks.map((link) => (
+                <div key={link.id} className="p-2 bg-white rounded border text-sm">
+                  <div className="font-medium text-blue-900">{link.element3D.name}</div>
+                  <div className="text-xs text-gray-600">{link.budgetItem.code}</div>
+                  <div className="flex items-center justify-between mt-1">
+                    <span className={`px-2 py-1 rounded text-xs ${
+                      link.validated 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {link.confidence}%
+                    </span>
+                    <span className={`px-2 py-1 rounded text-xs ${
+                      link.validated 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {link.validated ? '✓' : '⏳'}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Lista de Links Criados Online */}
+        {linkingState.links.length > 0 && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+            <h3 className="font-semibold text-green-800 mb-3 flex items-center">
+              <Check className="h-5 w-5 mr-2" />
+              Links Online Criados ({linkingState.links.length})
+            </h3>
+            <div className="space-y-2 max-h-40 overflow-y-auto">
+              {linkingState.links.map((link) => (
+                <div key={link.id} className="flex items-center justify-between p-2 bg-white rounded border">
+                  <div className="flex-1">
+                    <div className="text-sm font-medium">{link.elementName}</div>
+                    <div className="text-xs text-gray-600">{link.itemCode} - {link.itemDescription}</div>
+                  </div>
+                  <button
+                    onClick={() => removeLink(link.id)}
+                    className="p-1 text-red-600 hover:bg-red-100 rounded"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -227,24 +556,33 @@ const Viewer5D: React.FC = () => {
                 <Suspense fallback={<Loader />}>
                   <StructuralModel 
                     onElementSelect={handleElementSelect}
-                    selectedElementId={selectedElement?.id || null}
-                    linkedElements={linkedElements}
+                    selectedElementId={linkingState.selectedElement?.id || null}
+                    linkedElements={linkingState.links.map(link => link.elementId)}
                   />
                   <OrbitControls 
                     enablePan={true}
                     enableZoom={true}
                     enableRotate={true}
+                    minDistance={5}
+                    maxDistance={50}
+                    minPolarAngle={Math.PI / 6}
+                    maxPolarAngle={Math.PI - Math.PI / 6}
                   />
-                  <Environment preset="sunset" />
+                  <Environment preset="city" />
+                  
+                  {/* Efeitos de pós-processamento */}
+                  <fog attach="fog" args={['#87ceeb', 20, 100]} />
                 </Suspense>
               </Canvas>
               
               {/* Overlay de Instruções */}
               <div className="absolute top-4 left-4 bg-black bg-opacity-75 text-white p-3 rounded-lg text-sm">
-                <p className="font-semibold mb-2">Instruções:</p>
-                <p>• Clique nos elementos 3D para selecionar</p>
-                <p>• Ative "Modo Link" para linkar elementos</p>
-                <p>• Use mouse para navegar no 3D</p>
+                <p className="font-semibold mb-2">Como Linkar:</p>
+                <p>1. Ative "Modo Link"</p>
+                <p>2. Clique em um elemento 3D</p>
+                <p>3. Clique em um item da planilha</p>
+                <p>4. Clique "Criar Link"</p>
+                <p className="mt-2 text-xs text-gray-300">• Use mouse para navegar no 3D</p>
               </div>
             </div>
           </div>
@@ -258,6 +596,28 @@ const Viewer5D: React.FC = () => {
                 <Calculator className="h-5 w-5 mr-2" />
                 Orçamento Estrutural
               </h3>
+            </div>
+            
+            {/* Barra de Busca */}
+            <div className="p-4 border-b border-gray-200">
+              <div className="flex gap-2">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Buscar por código ou descrição..."
+                    value={linkingState.searchTerm}
+                    onChange={(e) => setLinkingState(prev => ({ ...prev, searchTerm: e.target.value }))}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <button
+                  onClick={() => setLinkingState(prev => ({ ...prev, searchTerm: '' }))}
+                  className="px-3 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  Limpar
+                </button>
+              </div>
             </div>
             
             <div className="overflow-x-auto max-h-96 lg:max-h-[500px]">
@@ -288,16 +648,33 @@ const Viewer5D: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {itens.map((item) => (
-                    <tr 
-                      key={item.id} 
-                      className={`hover:bg-gray-50 cursor-pointer transition-colors ${
-                        selectedElement && item.descricao.toLowerCase().includes(selectedElement.id.toLowerCase())
-                          ? 'bg-blue-50 border-l-4 border-blue-500'
-                          : ''
-                      }`}
-                      onClick={() => handleItemSelect(item.id)}
-                    >
+                  {itens
+                    .filter(item => {
+                      if (linkingState.showLinkedOnly) {
+                        return linkingState.links.some(link => link.itemId === item.id);
+                      }
+                      if (linkingState.searchTerm) {
+                        return item.descricao.toLowerCase().includes(linkingState.searchTerm.toLowerCase()) ||
+                               item.codigo.toLowerCase().includes(linkingState.searchTerm.toLowerCase());
+                      }
+                      return true;
+                    })
+                    .map((item) => {
+                      const isSelected = linkingState.selectedItem?.id === item.id;
+                      const isLinked = linkingState.links.some(link => link.itemId === item.id);
+                      
+                      return (
+                        <tr 
+                          key={item.id} 
+                          className={`hover:bg-gray-50 cursor-pointer transition-colors ${
+                            isSelected
+                              ? 'bg-green-50 border-l-4 border-green-500'
+                              : isLinked
+                              ? 'bg-blue-50 border-l-2 border-blue-300'
+                              : ''
+                          }`}
+                          onClick={() => handleItemSelect(item)}
+                        >
                       <td className="px-3 py-2 whitespace-nowrap text-xs font-medium text-gray-900">
                         {item.codigo}
                       </td>
@@ -318,19 +695,16 @@ const Viewer5D: React.FC = () => {
                       </td>
                       <td className="px-3 py-2 whitespace-nowrap text-xs">
                         <span className={`px-2 py-1 rounded-full text-xs ${
-                          linkedElements.some(linkedId => 
-                            item.descricao.toLowerCase().includes(linkedId.toLowerCase())
-                          )
+                          isLinked
                             ? 'bg-green-100 text-green-800'
                             : 'bg-gray-100 text-gray-500'
                         }`}>
-                          {linkedElements.some(linkedId => 
-                            item.descricao.toLowerCase().includes(linkedId.toLowerCase())
-                          ) ? 'Linkado' : 'Não'}
+                          {isLinked ? 'Linkado' : 'Não'}
                         </span>
                       </td>
                     </tr>
-                  ))}
+                      );
+                    })}
                 </tbody>
               </table>
             </div>
@@ -339,19 +713,22 @@ const Viewer5D: React.FC = () => {
       </div>
 
       {/* Resumo dos Elementos Linkados */}
-      {linkedElements.length > 0 && (
+      {linkingState.links.length > 0 && (
         <div className="bg-white rounded-lg shadow-md p-4 lg:p-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
             <Link className="h-5 w-5 mr-2 text-purple-600" />
-            Elementos Linkados ({linkedElements.length})
+            Elementos Linkados ({linkingState.links.length})
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {linkedElements.map((elementId, index) => (
-              <div key={index} className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+            {linkingState.links.map((link) => (
+              <div key={link.id} className="bg-purple-50 border border-purple-200 rounded-lg p-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-purple-800">{elementId}</span>
+                  <div>
+                    <span className="text-sm font-medium text-purple-800">{link.elementName}</span>
+                    <div className="text-xs text-gray-600">{link.itemCode}</div>
+                  </div>
                   <button
-                    onClick={() => setLinkedElements(prev => prev.filter(id => id !== elementId))}
+                    onClick={() => removeLink(link.id)}
                     className="text-purple-600 hover:text-purple-800 text-xs"
                   >
                     <Unlink className="h-3 w-3" />
@@ -381,6 +758,17 @@ const Viewer5D: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Editor de Configuração */}
+      {showConfigEditor && (
+        <LinkingConfigEditor
+          onConfigChange={(newConfig) => {
+            setOfflineLinks(newConfig.links);
+            setShowConfigEditor(false);
+          }}
+          onClose={() => setShowConfigEditor(false)}
+        />
+      )}
     </div>
   );
 };
