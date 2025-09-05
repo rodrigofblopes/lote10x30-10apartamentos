@@ -21,6 +21,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.180.0",
+    "three-stdlib": "^2.36.0",
     "web-ifc": "^0.0.71",
     "zustand": "^4.4.7"
   },

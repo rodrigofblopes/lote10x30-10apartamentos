@@ -1,8 +1,7 @@
 import React, { useRef, useState, Suspense, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Environment, Html, useProgress } from '@react-three/drei';
+import { OrbitControls, Environment, Html, useProgress, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
-// import { IFCLoader } from 'web-ifc';
 
 // Componente de loading
 function Loader() {
@@ -17,122 +16,16 @@ function Loader() {
   );
 }
 
-// Componente para carregar o modelo IFC real
+// Componente para carregar o modelo GLB real
 interface StructuralModelProps {
   setSelectedElement: (element: string) => void;
 }
 
-function StructuralModel({ setSelectedElement: _setSelectedElement }: StructuralModelProps) {
+function StructuralModel({ setSelectedElement }: StructuralModelProps) {
   const meshRef = useRef<THREE.Group>(null);
-  const [model, setModel] = useState<THREE.Group | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const loadIFCModel = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Verificar se o arquivo IFC existe
-        const response = await fetch('/VilaAndriw.ifc');
-        if (!response.ok) {
-          throw new Error('Arquivo IFC não encontrado');
-        }
-
-        // Por enquanto, vamos mostrar que o arquivo foi encontrado
-        // mas usar o modelo de demonstração até implementarmos o parser completo
-        console.log('Arquivo VilaAndriw.ifc encontrado! Tamanho:', response.headers.get('content-length'), 'bytes');
-        
-        // Criar um modelo 3D mais detalhado baseado no arquivo IFC
-        const group = new THREE.Group();
-        
-        // Estrutura mais complexa baseada no projeto Vila Andriw
-        // Pavimento Térreo
-        for (let x = -4; x <= 4; x += 2) {
-          for (let z = -4; z <= 4; z += 2) {
-            // Colunas
-            const column = new THREE.Mesh(
-              new THREE.BoxGeometry(0.2, 3, 0.2),
-              new THREE.MeshLambertMaterial({ color: '#8B4513' })
-            );
-            column.position.set(x, 1.5, z);
-            group.add(column);
-          }
-        }
-        
-        // Vigas principais
-        const beamGeometry = new THREE.BoxGeometry(8, 0.15, 0.2);
-        const beamMaterial = new THREE.MeshLambertMaterial({ color: '#654321' });
-        
-        // Vigas longitudinais
-        for (let z = -4; z <= 4; z += 4) {
-          const beam = new THREE.Mesh(beamGeometry, beamMaterial);
-          beam.position.set(0, 2.8, z);
-          group.add(beam);
-        }
-        
-        // Vigas transversais
-        for (let x = -4; x <= 4; x += 4) {
-          const beam = new THREE.Mesh(beamGeometry, beamMaterial);
-          beam.position.set(x, 2.8, 0);
-          beam.rotation.z = Math.PI / 2;
-          group.add(beam);
-        }
-        
-        // Lajes
-        const slabGeometry = new THREE.BoxGeometry(10, 0.1, 10);
-        const slabMaterial = new THREE.MeshLambertMaterial({ 
-          color: '#708090', 
-          transparent: true, 
-          opacity: 0.8 
-        });
-        
-        // Laje térreo
-        const slab1 = new THREE.Mesh(slabGeometry, slabMaterial);
-        slab1.position.set(0, 0, 0);
-        group.add(slab1);
-        
-        // Laje superior
-        const slab2 = new THREE.Mesh(slabGeometry, slabMaterial);
-        slab2.position.set(0, 3, 0);
-        group.add(slab2);
-        
-        // Paredes externas
-        const wallGeometry = new THREE.BoxGeometry(0.2, 3, 10);
-        const wallMaterial = new THREE.MeshLambertMaterial({ color: '#D2B48C' });
-        
-        // Paredes norte e sul
-        const wall1 = new THREE.Mesh(wallGeometry, wallMaterial);
-        wall1.position.set(0, 1.5, 5);
-        group.add(wall1);
-        
-        const wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
-        wall2.position.set(0, 1.5, -5);
-        group.add(wall2);
-        
-        // Paredes leste e oeste
-        const wall3 = new THREE.Mesh(wallGeometry, wallMaterial);
-        wall3.position.set(5, 1.5, 0);
-        wall3.rotation.y = Math.PI / 2;
-        group.add(wall3);
-        
-        const wall4 = new THREE.Mesh(wallGeometry, wallMaterial);
-        wall4.position.set(-5, 1.5, 0);
-        wall4.rotation.y = Math.PI / 2;
-        group.add(wall4);
-        
-        setModel(group);
-        setLoading(false);
-      } catch (err) {
-        console.error('Erro ao carregar modelo IFC:', err);
-        setError('Erro ao carregar o modelo IFC. Usando modelo de demonstração.');
-        setLoading(false);
-      }
-    };
-
-    loadIFCModel();
-  }, []);
+  // Carregar o modelo GLB
+  const { scene } = useGLTF('/lote10x30-10apartamentos.glb');
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -140,81 +33,44 @@ function StructuralModel({ setSelectedElement: _setSelectedElement }: Structural
     }
   });
 
-  if (loading) {
-    return (
-      <Html center>
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Carregando modelo IFC...</p>
-        </div>
-      </Html>
-    );
-  }
-
-  if (error) {
-    // Mostrar modelo 3D básico como fallback
-    return (
-      <group ref={meshRef}>
-        {/* Estrutura básica - Colunas */}
-        <mesh position={[-3, 1.5, -3]} onClick={() => _setSelectedElement('Coluna -3,-3')}>
-          <boxGeometry args={[0.3, 3, 0.3]} />
-          <meshStandardMaterial color="#8B4513" />
-        </mesh>
-        <mesh position={[3, 1.5, -3]} onClick={() => _setSelectedElement('Coluna 3,-3')}>
-          <boxGeometry args={[0.3, 3, 0.3]} />
-          <meshStandardMaterial color="#8B4513" />
-        </mesh>
-        <mesh position={[-3, 1.5, 3]} onClick={() => _setSelectedElement('Coluna -3,3')}>
-          <boxGeometry args={[0.3, 3, 0.3]} />
-          <meshStandardMaterial color="#8B4513" />
-        </mesh>
-        <mesh position={[3, 1.5, 3]} onClick={() => _setSelectedElement('Coluna 3,3')}>
-          <boxGeometry args={[0.3, 3, 0.3]} />
-          <meshStandardMaterial color="#8B4513" />
-        </mesh>
-        <mesh position={[0, 1.5, 0]} onClick={() => _setSelectedElement('Coluna Central')}>
-          <boxGeometry args={[0.3, 3, 0.3]} />
-          <meshStandardMaterial color="#8B4513" />
-        </mesh>
-
-        {/* Vigas */}
-        <mesh position={[0, 2.8, -3]} onClick={() => _setSelectedElement('Viga -3')}>
-          <boxGeometry args={[6, 0.2, 0.3]} />
-          <meshStandardMaterial color="#654321" />
-        </mesh>
-        <mesh position={[0, 2.8, 3]} onClick={() => _setSelectedElement('Viga 3')}>
-          <boxGeometry args={[6, 0.2, 0.3]} />
-          <meshStandardMaterial color="#654321" />
-        </mesh>
-        <mesh position={[-3, 2.8, 0]} rotation={[0, 0, Math.PI / 2]} onClick={() => _setSelectedElement('Viga -3')}>
-          <boxGeometry args={[6, 0.2, 0.3]} />
-          <meshStandardMaterial color="#654321" />
-        </mesh>
-        <mesh position={[3, 2.8, 0]} rotation={[0, 0, Math.PI / 2]} onClick={() => _setSelectedElement('Viga 3')}>
-          <boxGeometry args={[6, 0.2, 0.3]} />
-          <meshStandardMaterial color="#654321" />
-        </mesh>
-
-        {/* Lajes */}
-        <mesh position={[0, 3, 0]} onClick={() => _setSelectedElement('Laje Superior')}>
-          <boxGeometry args={[8, 0.2, 8]} />
-          <meshStandardMaterial color="#708090" transparent opacity={0.7} />
-        </mesh>
-        <mesh position={[0, 0, 0]} onClick={() => _setSelectedElement('Laje Térreo')}>
-          <boxGeometry args={[8, 0.2, 8]} />
-          <meshStandardMaterial color="#708090" transparent opacity={0.7} />
-        </mesh>
-
-        {/* Iluminação */}
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[10, 10, 5]} intensity={0.8} />
-      </group>
-    );
-  }
+  // Adicionar interatividade aos elementos
+  useEffect(() => {
+    if (scene) {
+      scene.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          // Adicionar evento de clique
+          (child as any).onClick = (event: any) => {
+            event.stopPropagation();
+            const elementName = child.name || `Elemento ${child.id}`;
+            setSelectedElement(elementName);
+            console.log('Elemento clicado:', elementName, child.userData);
+          };
+          
+          // Adicionar hover effects
+          (child as any).onPointerOver = () => {
+            document.body.style.cursor = 'pointer';
+            if (child.material) {
+              child.material.emissive = new THREE.Color(0x222222);
+            }
+          };
+          
+          (child as any).onPointerOut = () => {
+            document.body.style.cursor = 'auto';
+            if (child.material) {
+              child.material.emissive = new THREE.Color(0x000000);
+            }
+          };
+        }
+      });
+      
+      console.log('Modelo GLB carregado com sucesso!');
+      console.log('Elementos encontrados:', scene.children.length);
+    }
+  }, [scene, setSelectedElement]);
 
   return (
     <group ref={meshRef}>
-      {model && <primitive object={model} />}
+      {scene && <primitive object={scene} />}
       <ambientLight intensity={0.6} />
       <directionalLight position={[10, 10, 5]} intensity={0.8} />
     </group>
