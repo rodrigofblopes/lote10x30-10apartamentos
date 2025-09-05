@@ -1,0 +1,59 @@
+{
+  "project": {
+    "name": "Vila Andriw",
+    "description": "Projeto residencial 10 apartamentos",
+    "location": "São Paulo, SP",
+    "area": 1200,
+    "floors": 2,
+    "apartments": 10,
+    "type": "residential"
+  },
+  "budget": {
+    "currency": "BRL",
+    "baseYear": 2024,
+    "source": "SINAPI",
+    "columns": {
+      "code": "codigo",
+      "description": "descricao",
+      "unit": "unidade",
+      "quantity": "quantidade",
+      "unitPrice": "preco_unitario",
+      "labor": "mao_de_obra",
+      "materials": "materiais",
+      "total": "total"
+    }
+  },
+  "models": {
+    "architecture": {
+      "file": "modelo-arquitetura.glb",
+      "path": "dashboard-arquitetura/public/",
+      "type": "architectural"
+    },
+    "structural": {
+      "file": "modelo-estrutural.glb",
+      "path": "dashboard-estrutural/public/",
+      "type": "structural"
+    }
+  },
+  "deployment": {
+    "vercel": true,
+    "domains": {
+      "architecture": "vila-andriw-arquitetura.vercel.app",
+      "structural": "vila-andriw-estrutural.vercel.app"
+    }
+  },
+  "theme": {
+    "primary": "#2563eb",
+    "secondary": "#64748b",
+    "accent": "#f59e0b",
+    "background": "#f8fafc",
+    "text": "#1e293b"
+  },
+  "features": {
+    "3dViewer": true,
+    "budgetAnalysis": true,
+    "realQuotation": true,
+    "5dIntegration": true,
+    "blenderLinking": true
+  }
+}

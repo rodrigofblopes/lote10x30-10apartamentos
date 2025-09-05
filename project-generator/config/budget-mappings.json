@@ -1,0 +1,96 @@
+{
+  "estrutura": {
+    "pilares": {
+      "code": "103355",
+      "description": "ALVENARIA DE VEDAÇÃO DE BLOCOS CERÂMICOS FURADOS",
+      "material": "Concreto",
+      "category": "Estrutura",
+      "keywords": ["pilar", "coluna", "estrutura"]
+    },
+    "vigas": {
+      "code": "87905",
+      "description": "CHAPISCO APLICADO EM ALVENARIA E ESTRUTURAS DE CONCRETO",
+      "material": "Concreto",
+      "category": "Estrutura",
+      "keywords": ["viga", "estrutura", "concreto"]
+    },
+    "lajes": {
+      "code": "87703",
+      "description": "CONTRAPISO EM ARGAMASSA PRONTA",
+      "material": "Concreto",
+      "category": "Estrutura",
+      "keywords": ["laje", "piso", "estrutura"]
+    }
+  },
+  "alvenaria": {
+    "paredes_externas": {
+      "code": "103355",
+      "description": "ALVENARIA DE VEDAÇÃO DE BLOCOS CERÂMICOS FURADOS",
+      "material": "Bloco Cerâmico",
+      "category": "Alvenaria",
+      "keywords": ["parede", "externa", "alvenaria"]
+    },
+    "paredes_internas": {
+      "code": "103355",
+      "description": "ALVENARIA DE VEDAÇÃO DE BLOCOS CERÂMICOS FURADOS",
+      "material": "Bloco Cerâmico",
+      "category": "Alvenaria",
+      "keywords": ["parede", "interna", "alvenaria"]
+    }
+  },
+  "revestimentos": {
+    "pisos": {
+      "code": "87263",
+      "description": "REVESTIMENTO CERÂMICO PARA PISO COM PLACAS TIPO PORCELANATO",
+      "material": "Porcelanato",
+      "category": "Revestimento",
+      "keywords": ["piso", "porcelanato", "revestimento"]
+    },
+    "azulejos": {
+      "code": "87264",
+      "description": "REVESTIMENTO CERÂMICO PARA PAREDE COM PLACAS TIPO AZULEJO",
+      "material": "Azulejo",
+      "category": "Revestimento",
+      "keywords": ["azulejo", "parede", "revestimento"]
+    },
+    "pintura": {
+      "code": "87905",
+      "description": "CHAPISCO APLICADO EM ALVENARIA E ESTRUTURAS DE CONCRETO",
+      "material": "Tinta",
+      "category": "Revestimento",
+      "keywords": ["pintura", "tinta", "revestimento"]
+    }
+  },
+  "esquadrias": {
+    "janelas": {
+      "code": "94573",
+      "description": "JANELA DE ALUMÍNIO DE CORRER COM 4 FOLHAS PARA VIDROS",
+      "material": "Alumínio",
+      "category": "Esquadrias",
+      "keywords": ["janela", "alumínio", "vidro"]
+    },
+    "portas": {
+      "code": "91329",
+      "description": "KIT DE PORTA DE MADEIRA FRISADA, SEMI-OCA",
+      "material": "Madeira",
+      "category": "Esquadrias",
+      "keywords": ["porta", "madeira", "esquadria"]
+    }
+  },
+  "instalacoes": {
+    "hidraulica": {
+      "code": "123456",
+      "description": "INSTALAÇÃO HIDRÁULICA PREDIAL",
+      "material": "PVC",
+      "category": "Instalações",
+      "keywords": ["hidráulica", "água", "instalação"]
+    },
+    "eletrica": {
+      "code": "123457",
+      "description": "INSTALAÇÃO ELÉTRICA PREDIAL",
+      "material": "Cobre",
+      "category": "Instalações",
+      "keywords": ["elétrica", "energia", "instalação"]
+    }
+  }
+}

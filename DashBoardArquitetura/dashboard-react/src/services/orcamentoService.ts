@@ -1,6 +1,68 @@
 import { OrcamentoItem } from '../types/orcamento';
 
-// Dados reais extraídos do arquivo "Orçamento Material e MO.csv"
+// Função para processar dados do CSV ARQ10AP.csv
+const processarDadosCSV = (csvContent: string): OrcamentoItem[] => {
+  const lines = csvContent.split('\n');
+  const dados: OrcamentoItem[] = [];
+  
+  // Pular as primeiras 3 linhas (cabeçalho)
+  for (let i = 3; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line || line.startsWith(';') || line.includes('PAVIMENTO') || line.includes('PAREDES') || line.includes('PISO') || line.includes('REVESTIMENTO') || line.includes('FORRO') || line.includes('ESQUADRIAS') || line.includes('TELHADO')) {
+      continue;
+    }
+    
+    const columns = line.split(';');
+    if (columns.length >= 12) {
+      const item = columns[0]?.trim();
+      const descricao = columns[1]?.trim();
+      const unidade = columns[2]?.trim();
+      const quantidade = parseFloat(columns[3]?.replace(',', '.') || '0');
+      const valorUnitario = parseFloat(columns[4]?.replace(',', '.') || '0');
+      const maoDeObra = parseFloat(columns[5]?.replace(',', '.') || '0');
+      const materiais = parseFloat(columns[6]?.replace(',', '.') || '0');
+      const total = parseFloat(columns[7]?.replace(',', '.') || '0');
+      const maoDeObraTotal = parseFloat(columns[8]?.replace(',', '.') || '0');
+      const materiaisTotal = parseFloat(columns[9]?.replace(',', '.') || '0');
+      const totalFinal = parseFloat(columns[10]?.replace(',', '.') || '0');
+      const pesoPercentual = parseFloat(columns[11]?.replace('%', '').replace(',', '.') || '0');
+      
+      if (item && descricao && quantidade > 0) {
+        // Determinar pavimento baseado no item
+        let pavimento = 'Térreo';
+        if (item.startsWith('2.')) {
+          pavimento = 'Superior';
+        }
+        
+        // Extrair categoria baseada no item
+        const categoria = extrairCategoriaPorItem(item);
+        
+        dados.push({
+          id: item,
+          item: item,
+          codigo: '', // Não disponível no CSV
+          descricao: descricao,
+          unidade: unidade,
+          quantidade: quantidade,
+          valorUnitario: valorUnitario,
+          maoDeObra: maoDeObraTotal,
+          materiais: materiaisTotal,
+          total: totalFinal,
+          pesoPercentual: pesoPercentual,
+          pavimento: pavimento,
+          categoria: categoria,
+          maoDeObraM2: maoDeObra,
+          materiaisM2: materiais,
+          totalM2: valorUnitario
+        });
+      }
+    }
+  }
+  
+  return dados;
+};
+
+// Dados reais extraídos do arquivo "ARQ10AP.csv"
 export const dadosMockados: OrcamentoItem[] = [
   // PAVIMENTO TÉRREO
   {
@@ -656,7 +718,21 @@ export const dadosMockados: OrcamentoItem[] = [
 ];
 
 export const carregarDados = async (): Promise<OrcamentoItem[]> => {
-  // Simula carregamento assíncrono
+  try {
+    // Tentar carregar o arquivo ARQ10AP.csv
+    const response = await fetch('/ARQ10AP.csv');
+    if (response.ok) {
+      const csvContent = await response.text();
+      const dadosProcessados = processarDadosCSV(csvContent);
+      if (dadosProcessados.length > 0) {
+        return dadosProcessados;
+      }
+    }
+  } catch (error) {
+    console.warn('Erro ao carregar ARQ10AP.csv, usando dados mockados:', error);
+  }
+  
+  // Fallback para dados mockados se não conseguir carregar o CSV
   await new Promise(resolve => setTimeout(resolve, 1000));
   return dadosMockados;
 };
@@ -668,7 +744,7 @@ export const processarDadosExcel = (_excelData: ArrayBuffer): OrcamentoItem[] =>
   return dadosMockados;
 };
 
-// Função para extrair categoria baseada no item (baseada no dashboard.py)
+// Função para extrair categoria baseada no item (baseada no arquivo ARQ10AP.csv)
 export const extrairCategoriaPorItem = (item: string): string => {
   if (!item || item === 'nan') return 'Outros';
   
@@ -678,14 +754,13 @@ export const extrairCategoriaPorItem = (item: string): string => {
       const mainPart = parts[0];
       const subPart = parts[1];
       
-      if (mainPart === '1' || mainPart === '2') { // Térreo ou Superior
-        if (subPart === '1') return 'Paredes';
-        if (subPart === '2') return 'Piso';
-        if (subPart === '3') return 'Revestimento Paredes';
-        if (subPart === '4') return 'Forro';
-        if (subPart === '5') return 'Esquadrias';
-        if (subPart === '6') return 'Telhado';
-      }
+      // Categorias arquiteturais
+      if (subPart === '1') return 'Paredes';
+      if (subPart === '2') return 'Piso';
+      if (subPart === '3') return 'Revestimento Paredes';
+      if (subPart === '4') return 'Forro';
+      if (subPart === '5') return 'Esquadrias';
+      if (subPart === '6') return 'Telhado';
     }
   }
   

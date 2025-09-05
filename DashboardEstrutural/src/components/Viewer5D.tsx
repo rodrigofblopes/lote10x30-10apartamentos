@@ -5,7 +5,8 @@ import * as THREE from 'three';
 import { useOrcamentoStore } from '../store/orcamentoStore';
 import { LINKING_CONFIG, OfflineLink } from '../config/linkingConfig';
 import LinkingConfigEditor from './LinkingConfigEditor';
-import { Calculator, Eye, EyeOff, Link, Unlink, Box, Search, Filter, Trash2, Plus, Check, Settings } from 'lucide-react';
+import BlenderMetadataViewer from './BlenderMetadataViewer';
+import { Calculator, Eye, EyeOff, Link, Unlink, Box, Search, Filter, Trash2, Plus, Check, Settings, Database } from 'lucide-react';
 
 // Interfaces para o sistema de linking
 interface ElementLink {
@@ -240,6 +241,7 @@ const Viewer5D: React.FC = () => {
   // Estado para configuração offline
   const [offlineLinks, setOfflineLinks] = useState<OfflineLink[]>(LINKING_CONFIG.links);
   const [showConfigEditor, setShowConfigEditor] = useState(false);
+  const [showBlenderMetadata, setShowBlenderMetadata] = useState(false);
 
   // Estados de visibilidade
   const [show3D, setShow3D] = useState(true);
@@ -429,6 +431,14 @@ const Viewer5D: React.FC = () => {
             >
               <Settings className="h-4 w-4" />
               <span>Configurar Links</span>
+            </button>
+            
+            <button
+              onClick={() => setShowBlenderMetadata(true)}
+              className="flex items-center space-x-2 px-3 py-2 rounded-md transition-colors bg-orange-600 text-white hover:bg-orange-700"
+            >
+              <Database className="h-4 w-4" />
+              <span>Metadados Blender</span>
             </button>
           </div>
         </div>
@@ -767,6 +777,13 @@ const Viewer5D: React.FC = () => {
             setShowConfigEditor(false);
           }}
           onClose={() => setShowConfigEditor(false)}
+        />
+      )}
+
+      {/* Visualizador de Metadados do Blender */}
+      {showBlenderMetadata && (
+        <BlenderMetadataViewer
+          onClose={() => setShowBlenderMetadata(false)}
         />
       )}
     </div>

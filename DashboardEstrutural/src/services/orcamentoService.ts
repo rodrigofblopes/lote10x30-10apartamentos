@@ -379,15 +379,95 @@ export const dadosMockados: OrcamentoItem[] = [
 ];
 
 export const carregarDados = async (): Promise<OrcamentoItem[]> => {
-  // Simula carregamento assíncrono
+  try {
+    // Tentar carregar o arquivo EST10AP.csv
+    const response = await fetch('/EST10AP.csv');
+    if (response.ok) {
+      const csvContent = await response.text();
+      const dadosProcessados = processarDadosCSV(csvContent);
+      if (dadosProcessados.length > 0) {
+        return dadosProcessados;
+      }
+    }
+  } catch (error) {
+    console.warn('Erro ao carregar EST10AP.csv, usando dados mockados:', error);
+  }
+  
+  // Fallback para dados mockados se não conseguir carregar o CSV
   await new Promise(resolve => setTimeout(resolve, 1000));
   return dadosMockados;
 };
 
-// Funções para processar dados reais (placeholder)
-export const processarDadosCSV = (_csvData: string): OrcamentoItem[] => {
-  // Implementar parsing de CSV
-  return [];
+// Função para processar dados do CSV EST10AP.csv
+export const processarDadosCSV = (csvContent: string): OrcamentoItem[] => {
+  const lines = csvContent.split('\n');
+  const dados: OrcamentoItem[] = [];
+  
+  // Pular as primeiras 3 linhas (cabeçalho)
+  for (let i = 3; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line || line.startsWith(';') || line.includes('Fundação') || line.includes('Vigas') || line.includes('Pilares') || line.includes('Fundações') || line.includes('Térreo') || line.includes('Lajes') || line.includes('Pavimento Superior')) {
+      continue;
+    }
+    
+    const columns = line.split(';');
+    if (columns.length >= 12) {
+      const item = columns[0]?.trim();
+      const descricao = columns[1]?.trim();
+      const unidade = columns[2]?.trim();
+      const quantidade = parseFloat(columns[3]?.replace(',', '.') || '0');
+      const valorUnitario = parseFloat(columns[4]?.replace(',', '.') || '0');
+      const maoDeObra = parseFloat(columns[5]?.replace(',', '.') || '0');
+      const materiais = parseFloat(columns[6]?.replace(',', '.') || '0');
+      const total = parseFloat(columns[7]?.replace(',', '.') || '0');
+      const maoDeObraTotal = parseFloat(columns[8]?.replace(',', '.') || '0');
+      const materiaisTotal = parseFloat(columns[9]?.replace(',', '.') || '0');
+      const totalFinal = parseFloat(columns[10]?.replace(',', '.') || '0');
+      const pesoPercentual = parseFloat(columns[11]?.replace('%', '').replace(',', '.') || '0');
+      
+      if (item && descricao && quantidade > 0) {
+        // Determinar categoria e subcategoria baseado no item
+        let categoria = 'Fundação';
+        let subcategoria = 'Outros';
+        
+        if (item.startsWith('1.')) {
+          categoria = 'Fundação';
+          if (item.includes('1.1')) subcategoria = 'Vigas';
+          else if (item.includes('1.2')) subcategoria = 'Pilares';
+          else if (item.includes('1.3')) subcategoria = 'Fundações';
+        } else if (item.startsWith('2.')) {
+          categoria = 'Térreo';
+          if (item.includes('2.1')) subcategoria = 'Vigas';
+          else if (item.includes('2.2')) subcategoria = 'Pilares';
+          else if (item.includes('2.3')) subcategoria = 'Lajes';
+        } else if (item.startsWith('3.')) {
+          categoria = 'Pavimento Superior';
+          if (item.includes('3.1')) subcategoria = 'Vigas';
+          else if (item.includes('3.2')) subcategoria = 'Pilares';
+          else if (item.includes('3.3')) subcategoria = 'Lajes';
+        }
+        
+        dados.push({
+          id: item,
+          codigo: '', // Não disponível no CSV
+          nome: descricao.substring(0, 50) + '...', // Nome resumido
+          descricao: descricao,
+          categoria: categoria,
+          subcategoria: subcategoria,
+          unidade: unidade,
+          quantidade: quantidade,
+          valorUnitario: valorUnitario,
+          maoDeObra: maoDeObraTotal,
+          materiais: materiaisTotal,
+          total: totalFinal,
+          area: 149, // Área padrão por pavimento
+          peso: pesoPercentual
+        });
+      }
+    }
+  }
+  
+  return dados;
 };
 
 export const processarDadosExcel = (_excelData: ArrayBuffer): OrcamentoItem[] => {

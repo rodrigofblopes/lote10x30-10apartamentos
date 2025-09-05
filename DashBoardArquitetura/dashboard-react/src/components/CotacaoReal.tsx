@@ -1,26 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCotacaoStore } from '../store/cotacaoStore';
+import { carregarDadosCotacao, ItemCotacao } from '../services/cotacaoService';
 import { Calculator, Filter, X } from 'lucide-react';
-
-interface ItemCotacao {
-  id: string;
-  codigo: string;
-  descricao: string;
-  categoria: string;
-  subcategoria: string;
-  quantidade: number;
-  unidade: string;
-  sinapiMO: number;
-  sinapiMat: number;
-  sinapiTotal: number;
-  realMO: number;
-  realMat: number;
-  realTotal: number;
-  economia: number;
-  percentualEconomia: number;
-  custoPorM2: number;
-  peso: number;
-}
 
 const CotacaoReal: React.FC = () => {
   const { itens, setItens, updateItem } = useCotacaoStore();
@@ -31,8 +12,14 @@ const CotacaoReal: React.FC = () => {
   const [saveMessage, setSaveMessage] = useState<string>('');
 
   useEffect(() => {
-    // Dados reais extraídos da planilha SINAPI oficial - 36 itens únicos
-    const dadosReais: ItemCotacao[] = [
+    const carregarDadosInicial = async () => {
+      try {
+        const dadosReais = await carregarDadosCotacao();
+        setItens(dadosReais);
+      } catch (error) {
+        console.error('Erro ao carregar dados de cotação:', error);
+        // Fallback para dados mockados em caso de erro
+        const dadosMockados: ItemCotacao[] = [
       // PAVIMENTO TÉRREO - PAREDES
       {
         id: '1.1.1',
@@ -728,21 +715,12 @@ const CotacaoReal: React.FC = () => {
         custoPorM2: 46.20,
         peso: 1.86
       }
-    ];
-
-    // Tentar carregar dados salvos primeiro
-    const dadosSalvos = localStorage.getItem('cotacaoArquiteturaSalva');
-    if (dadosSalvos) {
-      try {
-        const itensSalvos = JSON.parse(dadosSalvos);
-        setItens(itensSalvos);
-      } catch (error) {
-        console.error('Erro ao carregar dados salvos:', error);
-        setItens(dadosReais);
+        ];
+        setItens(dadosMockados);
       }
-    } else {
-      setItens(dadosReais);
-    }
+    };
+    
+    carregarDadosInicial();
   }, [setItens]);
 
   // Função para salvar dados no localStorage
