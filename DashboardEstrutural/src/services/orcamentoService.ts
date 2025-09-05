@@ -1,4 +1,5 @@
 import { OrcamentoItem } from '../types/orcamento';
+import * as XLSX from 'xlsx';
 
 // Dados reais baseados na planilha CSV do Lote 10x30 - 10 Apartamentos
 // Área total: 298 m² (149 m² por pavimento)
@@ -380,8 +381,8 @@ export const dadosMockados: OrcamentoItem[] = [
 
 export const carregarDados = async (): Promise<OrcamentoItem[]> => {
   try {
-    // Tentar carregar o arquivo 5DEST.csv
-    const response = await fetch('/5DEST.csv');
+    // Tentar carregar o arquivo EST10AP.csv
+    const response = await fetch('/EST10AP.csv');
     if (response.ok) {
       const csvContent = await response.text();
       const dadosProcessados = processarDadosCSV(csvContent);
@@ -390,7 +391,7 @@ export const carregarDados = async (): Promise<OrcamentoItem[]> => {
       }
     }
   } catch (error) {
-    console.warn('Erro ao carregar 5DEST.csv, usando dados mockados:', error);
+    console.warn('Erro ao carregar EST10AP.csv, usando dados mockados:', error);
   }
   
   // Fallback para dados mockados se não conseguir carregar o CSV
@@ -398,7 +399,7 @@ export const carregarDados = async (): Promise<OrcamentoItem[]> => {
   return dadosMockados;
 };
 
-// Função para processar dados do CSV 5DEST.csv (separado por etapas)
+// Função para processar dados do CSV EST10AP.csv
 export const processarDadosCSV = (csvContent: string): OrcamentoItem[] => {
   const lines = csvContent.split('\n');
   const dados: OrcamentoItem[] = [];
@@ -470,7 +471,79 @@ export const processarDadosCSV = (csvContent: string): OrcamentoItem[] => {
   return dados;
 };
 
-export const processarDadosExcel = (_excelData: ArrayBuffer): OrcamentoItem[] => {
-  // Implementar parsing de Excel
-  return [];
+export const processarDadosExcel = (excelData: ArrayBuffer): OrcamentoItem[] => {
+  const workbook = XLSX.read(excelData, { type: 'array' });
+  const sheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[sheetName];
+  
+  // Converter para JSON
+  const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+  
+  const dados: OrcamentoItem[] = [];
+  
+  // Pular as primeiras linhas (cabeçalho)
+  for (let i = 3; i < jsonData.length; i++) {
+    const row = jsonData[i] as any[];
+    
+    if (!row || row.length < 12) continue;
+    
+    const item = row[0]?.toString().trim();
+    const descricao = row[1]?.toString().trim();
+    const unidade = row[2]?.toString().trim();
+    const quantidade = parseFloat(row[3]?.toString().replace(',', '.') || '0');
+    // const maoDeObraUnit = parseFloat(row[5]?.toString().replace(',', '.') || '0');
+    // const materiaisUnit = parseFloat(row[6]?.toString().replace(',', '.') || '0');
+    const totalUnit = parseFloat(row[7]?.toString().replace(',', '.') || '0');
+    const maoDeObraTotal = parseFloat(row[8]?.toString().replace(',', '.') || '0');
+    const materiaisTotal = parseFloat(row[9]?.toString().replace(',', '.') || '0');
+    const totalFinal = parseFloat(row[10]?.toString().replace(',', '.') || '0');
+    const pesoPercentual = parseFloat(row[11]?.toString().replace('%', '').replace(',', '.') || '0');
+    
+    // Pular linhas de cabeçalho ou totais
+    if (!item || !descricao || quantidade <= 0 || 
+        descricao.includes('Fundação') || descricao.includes('Térreo') || 
+        descricao.includes('Pavimento Superior') || descricao.includes('Totais')) {
+      continue;
+    }
+    
+    // Determinar categoria e subcategoria baseado no item
+    let categoria = 'Fundação';
+    let subcategoria = 'Outros';
+    
+    if (item.startsWith('1.')) {
+      categoria = 'Fundação';
+      if (item.includes('1.1')) subcategoria = 'Vigas';
+      else if (item.includes('1.2')) subcategoria = 'Pilares';
+      else if (item.includes('1.3')) subcategoria = 'Fundações';
+    } else if (item.startsWith('2.')) {
+      categoria = 'Térreo';
+      if (item.includes('2.1')) subcategoria = 'Vigas';
+      else if (item.includes('2.2')) subcategoria = 'Pilares';
+      else if (item.includes('2.3')) subcategoria = 'Lajes';
+    } else if (item.startsWith('3.')) {
+      categoria = 'Pavimento Superior';
+      if (item.includes('3.1')) subcategoria = 'Vigas';
+      else if (item.includes('3.2')) subcategoria = 'Pilares';
+      else if (item.includes('3.3')) subcategoria = 'Lajes';
+    }
+    
+    dados.push({
+      id: item,
+      codigo: '', // Não disponível no Excel
+      nome: descricao.length > 50 ? descricao.substring(0, 50) + '...' : descricao,
+      descricao: descricao,
+      categoria: categoria,
+      subcategoria: subcategoria,
+      unidade: unidade,
+      quantidade: quantidade,
+      valorUnitario: totalUnit,
+      maoDeObra: maoDeObraTotal,
+      materiais: materiaisTotal,
+      total: totalFinal,
+      area: 149, // Área padrão por pavimento
+      peso: pesoPercentual
+    });
+  }
+  
+  return dados;
 };

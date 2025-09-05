@@ -2,7 +2,7 @@ import React, { useState, useRef, Suspense, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Html, useProgress, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
-import { useOrcamentoStore } from '../store/orcamentoStore';
+import { carregarDados5D } from '../services/orcamento5DService';
 import { Calculator, Eye, EyeOff, Link, Unlink, Box, Search, Filter, Trash2, Plus, Check } from 'lucide-react';
 
 // Interfaces para o sistema de linking
@@ -305,7 +305,25 @@ function StructuralModel({ onElementSelect, selectedElementId: _selectedElementI
 
 // Componente principal do visualizador 5D
 const Viewer5D: React.FC = () => {
-  const { itens } = useOrcamentoStore();
+  const [itens5D, setItens5D] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Carregar dados específicos do 5D
+  useEffect(() => {
+    const carregarDados = async () => {
+      try {
+        setLoading(true);
+        const dados = await carregarDados5D();
+        setItens5D(dados);
+      } catch (error) {
+        console.error('Erro ao carregar dados 5D:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    carregarDados();
+  }, []);
   
   // Estado do sistema de linking
   const [linkingState, setLinkingState] = useState<LinkingState>({
@@ -460,7 +478,7 @@ const Viewer5D: React.FC = () => {
       const baseCode = collectionId.replace(/[._]/g, '.').replace(/\.$/, '');
       
       // Procurar item correspondente na planilha
-      const matchingItem = itens.find(item => {
+      const matchingItem = itens5D.find(item => {
         const itemCode = item.id.trim();
         
         // Matching exato para códigos principais (1.1, 1.2, etc.)
@@ -880,7 +898,14 @@ const Viewer5D: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {itens
+                  {loading ? (
+                    <tr>
+                      <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                        Carregando dados 5D...
+                      </td>
+                    </tr>
+                  ) : (
+                    itens5D
                     .filter(item => {
                       if (linkingState.showLinkedOnly) {
                         return linkingState.links.some(link => link.itemId === item.id) ||
@@ -942,7 +967,8 @@ const Viewer5D: React.FC = () => {
                       </td>
                     </tr>
                       );
-                    })}
+                    })
+                  )}
                 </tbody>
               </table>
             </div>

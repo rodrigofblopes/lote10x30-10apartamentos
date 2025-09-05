@@ -7,8 +7,8 @@ interface BackToHubProps {
 
 const BackToHub: React.FC<BackToHubProps> = ({ dashboardName }) => {
   const handleBackToHub = () => {
-    // Navegar para o index do hub de projetos
-    window.location.href = '/';
+    // Navegar para o hub central de projetos
+    window.location.href = 'https://lote10x30-10apartamentos.vercel.app/';
   };
 
   return (
