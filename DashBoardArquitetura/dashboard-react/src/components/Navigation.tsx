@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BarChart3, Calculator, PieChart, Image, Menu, X } from 'lucide-react';
+import { BarChart3, Calculator, PieChart, Image, Menu, X, Box } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: string;
@@ -33,6 +33,12 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
       label: 'Galeria',
       icon: <Image className="h-4 w-4" />,
       description: 'Fotos, plantas e renderings do projeto'
+    },
+    {
+      id: '3d',
+      label: 'Visualizador 3D',
+      icon: <Box className="h-4 w-4" />,
+      description: 'Modelo arquitetônico em 3D'
     },
     {
       id: 'graficos',

@@ -8,6 +8,7 @@ import ResumoExecutivo from './components/ResumoExecutivo';
 import GridOrcamento from './components/GridOrcamento';
 import CotacaoReal from './components/CotacaoReal';
 import Galeria from './components/Galeria';
+import Arquitetura3D from './components/Arquitetura3D';
 import Graficos from './components/Graficos';
 import LoadingSpinner from './components/LoadingSpinner';
 
@@ -741,6 +742,8 @@ function App() {
         return <CotacaoReal />;
       case 'galeria':
         return <Galeria />;
+      case '3d':
+        return <Arquitetura3D />;
       case 'graficos':
         return <Graficos />;
       default:
