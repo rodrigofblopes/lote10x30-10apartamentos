@@ -230,32 +230,35 @@ function StructuralModel({ onElementSelect, selectedElementId: _selectedElementI
           });
         }
         
-        if (targetObject && targetObject instanceof THREE.Mesh) {
-          return (
-            <mesh
-              key={`highlight-${elementId}`}
-              geometry={targetObject.geometry}
-              position={targetObject.position}
-              rotation={targetObject.rotation}
-              scale={targetObject.scale}
-              onClick={(event: any) => {
-                event.stopPropagation();
-                onElementSelect(elementId, { 
-                  name: elementId, 
-                  position: targetObject?.position,
-                  type: 'highlighted_element'
-                });
-              }}
-            >
-              <meshStandardMaterial 
-                color="#ff6b35" 
-                transparent 
-                opacity={0.8}
-                emissive="#ff6b35"
-                emissiveIntensity={0.3}
-              />
-            </mesh>
-          );
+        if (targetObject) {
+          const mesh = targetObject as any;
+          if (mesh.geometry) {
+            return (
+              <mesh
+                key={`highlight-${elementId}`}
+                geometry={mesh.geometry}
+                position={mesh.position}
+                rotation={mesh.rotation}
+                scale={mesh.scale}
+                onClick={(event: any) => {
+                  event.stopPropagation();
+                  onElementSelect(elementId, { 
+                    name: elementId, 
+                    position: mesh.position,
+                    type: 'highlighted_element'
+                  });
+                }}
+              >
+                <meshStandardMaterial 
+                  color="#ff6b35" 
+                  transparent 
+                  opacity={0.8}
+                  emissive="#ff6b35"
+                  emissiveIntensity={0.3}
+                />
+              </mesh>
+            );
+          }
         }
         return null;
       })}
