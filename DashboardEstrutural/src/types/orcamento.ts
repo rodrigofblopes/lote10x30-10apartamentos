@@ -13,6 +13,7 @@ export interface OrcamentoItem {
   total: number;
   area?: number;
   peso: number;
+  isEtapaTotal?: boolean; // Flag para identificar totais por etapa
 }
 
 export interface ResumoExecutivo {

@@ -921,12 +921,15 @@ const Viewer5D: React.FC = () => {
                       const isSelected = linkingState.selectedItem?.id === item.id;
                       const isLinked = linkingState.links.some(link => link.itemId === item.id);
                       const isAutoLinked = autoLinks.some(link => link.itemId === item.id);
+                      const isEtapaTotal = item.isEtapaTotal;
                       
                       return (
                         <tr 
                           key={item.id} 
                           className={`hover:bg-gray-50 cursor-pointer transition-colors ${
-                            isSelected
+                            isEtapaTotal
+                              ? 'bg-blue-100 border-l-4 border-blue-600 font-bold'
+                              : isSelected
                               ? 'bg-green-50 border-l-4 border-green-500'
                               : isAutoLinked
                               ? 'bg-blue-50 border-l-4 border-blue-500'
@@ -937,33 +940,49 @@ const Viewer5D: React.FC = () => {
                           onClick={() => handleItemSelect(item)}
                         >
                       <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs font-medium text-gray-900">
-                        {item.codigo}
+                        {item.codigo || item.id}
                       </td>
-                      <td className="px-2 lg:px-3 py-2 text-xs text-gray-900 max-w-[150px] lg:max-w-[200px] truncate" title={item.descricao}>
+                      <td className={`px-2 lg:px-3 py-2 text-xs max-w-[150px] lg:max-w-[200px] truncate ${
+                        isEtapaTotal ? 'font-bold text-blue-800' : 'text-gray-900'
+                      }`} title={item.descricao}>
                         {item.descricao}
                       </td>
-                      <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs text-gray-900">
-                        {item.quantidade.toFixed(2)} {item.unidade}
+                      <td className={`px-2 lg:px-3 py-2 whitespace-nowrap text-xs ${
+                        isEtapaTotal ? 'font-bold text-blue-800' : 'text-gray-900'
+                      }`}>
+                        {isEtapaTotal ? '-' : `${item.quantidade.toFixed(2)} ${item.unidade}`}
                       </td>
-                      <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs text-gray-900">
+                      <td className={`px-2 lg:px-3 py-2 whitespace-nowrap text-xs ${
+                        isEtapaTotal ? 'font-bold text-blue-800' : 'text-gray-900'
+                      }`}>
                         {formatarMoeda(item.maoDeObra)}
                       </td>
-                      <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs text-gray-900">
+                      <td className={`px-2 lg:px-3 py-2 whitespace-nowrap text-xs ${
+                        isEtapaTotal ? 'font-bold text-blue-800' : 'text-gray-900'
+                      }`}>
                         {formatarMoeda(item.materiais)}
                       </td>
-                      <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs font-medium text-blue-600">
+                      <td className={`px-2 lg:px-3 py-2 whitespace-nowrap text-xs font-medium ${
+                        isEtapaTotal ? 'text-blue-800 font-bold' : 'text-blue-600'
+                      }`}>
                         {formatarMoeda(item.total)}
                       </td>
                       <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs">
-                        <span className={`px-1 lg:px-2 py-1 rounded-full text-xs ${
-                          isAutoLinked
-                            ? 'bg-blue-100 text-blue-800'
-                            : isLinked
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-500'
-                        }`}>
-                          {isAutoLinked ? 'Auto' : isLinked ? 'Manual' : 'Não'}
-                        </span>
+                        {isEtapaTotal ? (
+                          <span className="px-1 lg:px-2 py-1 rounded-full text-xs bg-blue-200 text-blue-800 font-bold">
+                            Total
+                          </span>
+                        ) : (
+                          <span className={`px-1 lg:px-2 py-1 rounded-full text-xs ${
+                            isAutoLinked
+                              ? 'bg-blue-100 text-blue-800'
+                              : isLinked
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-gray-100 text-gray-500'
+                          }`}>
+                            {isAutoLinked ? 'Auto' : isLinked ? 'Manual' : 'Não'}
+                          </span>
+                        )}
                       </td>
                     </tr>
                       );

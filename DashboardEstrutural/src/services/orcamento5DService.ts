@@ -226,68 +226,85 @@ export const processarDadosExcel5D = (excelData: ArrayBuffer): OrcamentoItem[] =
   
   const dados: OrcamentoItem[] = [];
   
-  // Pular as primeiras linhas (cabeçalho)
+  console.log('Dados Excel carregados:', jsonData.slice(0, 10)); // Debug
+  
+  // Pular as primeiras linhas (cabeçalho) e processar a partir da linha 4
   for (let i = 3; i < jsonData.length; i++) {
     const row = jsonData[i] as any[];
     
-    if (!row || row.length < 12) continue;
+    if (!row || row.length < 8) continue;
     
     const item = row[0]?.toString().trim();
     const descricao = row[1]?.toString().trim();
     const unidade = row[2]?.toString().trim();
     const quantidade = parseFloat(row[3]?.toString().replace(',', '.') || '0');
+    
+    // Valores unitários (colunas F, G, H)
+    // const maoDeObraUnit = parseFloat(row[5]?.toString().replace(',', '.') || '0');
+    // const materiaisUnit = parseFloat(row[6]?.toString().replace(',', '.') || '0');
     const totalUnit = parseFloat(row[7]?.toString().replace(',', '.') || '0');
+    
+    // Valores totais (colunas I, J, K)
     const maoDeObraTotal = parseFloat(row[8]?.toString().replace(',', '.') || '0');
     const materiaisTotal = parseFloat(row[9]?.toString().replace(',', '.') || '0');
     const totalFinal = parseFloat(row[10]?.toString().replace(',', '.') || '0');
+    
+    // Peso percentual (coluna L)
     const pesoPercentual = parseFloat(row[11]?.toString().replace('%', '').replace(',', '.') || '0');
     
-    // Pular linhas de cabeçalho ou totais
-    if (!item || !descricao || quantidade <= 0 || 
-        descricao.includes('Fundação') || descricao.includes('Térreo') || 
-        descricao.includes('Pavimento Superior') || descricao.includes('Totais')) {
+    // Pular linhas vazias ou com dados inválidos
+    if (!item || !descricao || quantidade <= 0) {
       continue;
     }
+    
+    // Incluir linhas de totais por etapa (ex: "1 Fundação", "2 Térreo", etc.)
+    const isEtapaTotal = descricao.includes('Fundação') || descricao.includes('Térreo') || 
+                        descricao.includes('Pavimento Superior') || descricao.includes('Totais');
     
     // Determinar categoria e subcategoria baseado no item
     let categoria = 'Fundação';
     let subcategoria = 'Outros';
     
-    if (item.startsWith('1.')) {
+    if (item.startsWith('1.') || descricao.includes('Fundação')) {
       categoria = 'Fundação';
-      if (item.includes('1.1')) subcategoria = 'Vigas';
-      else if (item.includes('1.2')) subcategoria = 'Pilares';
-      else if (item.includes('1.3')) subcategoria = 'Fundações';
-    } else if (item.startsWith('2.')) {
+      if (item.includes('1.1') || descricao.includes('Vigas')) subcategoria = 'Vigas';
+      else if (item.includes('1.2') || descricao.includes('Pilares')) subcategoria = 'Pilares';
+      else if (item.includes('1.3') || descricao.includes('Fundações')) subcategoria = 'Fundações';
+    } else if (item.startsWith('2.') || descricao.includes('Térreo')) {
       categoria = 'Térreo';
-      if (item.includes('2.1')) subcategoria = 'Vigas';
-      else if (item.includes('2.2')) subcategoria = 'Pilares';
-      else if (item.includes('2.3')) subcategoria = 'Lajes';
-    } else if (item.startsWith('3.')) {
+      if (item.includes('2.1') || descricao.includes('Vigas')) subcategoria = 'Vigas';
+      else if (item.includes('2.2') || descricao.includes('Pilares')) subcategoria = 'Pilares';
+      else if (item.includes('2.3') || descricao.includes('Lajes')) subcategoria = 'Lajes';
+    } else if (item.startsWith('3.') || descricao.includes('Pavimento Superior')) {
       categoria = 'Pavimento Superior';
-      if (item.includes('3.1')) subcategoria = 'Vigas';
-      else if (item.includes('3.2')) subcategoria = 'Pilares';
-      else if (item.includes('3.3')) subcategoria = 'Lajes';
+      if (item.includes('3.1') || descricao.includes('Vigas')) subcategoria = 'Vigas';
+      else if (item.includes('3.2') || descricao.includes('Pilares')) subcategoria = 'Pilares';
+      else if (item.includes('3.3') || descricao.includes('Lajes')) subcategoria = 'Lajes';
     }
     
-    dados.push({
-      id: item,
+    // Criar item com dados processados
+    const itemProcessado = {
+      id: item || `etapa-${i}`,
       codigo: '', // Não disponível no Excel
       nome: descricao.length > 50 ? descricao.substring(0, 50) + '...' : descricao,
       descricao: descricao,
       categoria: categoria,
       subcategoria: subcategoria,
-      unidade: unidade,
+      unidade: unidade || 'un',
       quantidade: quantidade,
       valorUnitario: totalUnit,
       maoDeObra: maoDeObraTotal,
       materiais: materiaisTotal,
       total: totalFinal,
       area: 149, // Área padrão por pavimento
-      peso: pesoPercentual
-    });
+      peso: pesoPercentual,
+      isEtapaTotal: isEtapaTotal // Flag para identificar totais por etapa
+    };
+    
+    dados.push(itemProcessado);
   }
   
+  console.log('Dados processados:', dados.length, 'itens'); // Debug
   return dados;
 };
 
