@@ -3,10 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Html, useProgress, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { useOrcamentoStore } from '../store/orcamentoStore';
-import { LINKING_CONFIG, OfflineLink } from '../config/linkingConfig';
-import LinkingConfigEditor from './LinkingConfigEditor';
-import BlenderMetadataViewer from './BlenderMetadataViewer';
-import { Calculator, Eye, EyeOff, Link, Unlink, Box, Search, Filter, Trash2, Plus, Check, Settings, Database } from 'lucide-react';
+import { Calculator, Eye, EyeOff, Link, Unlink, Box, Search, Filter, Trash2, Plus, Check } from 'lucide-react';
 
 // Interfaces para o sistema de linking
 interface ElementLink {
@@ -238,10 +235,6 @@ const Viewer5D: React.FC = () => {
   // const [linkingStats, setLinkingStats] = useState<any>(null);
   // const [showAutoLinking, setShowAutoLinking] = useState(false);
   
-  // Estado para configuração offline
-  const [offlineLinks, setOfflineLinks] = useState<OfflineLink[]>(LINKING_CONFIG.links);
-  const [showConfigEditor, setShowConfigEditor] = useState(false);
-  const [showBlenderMetadata, setShowBlenderMetadata] = useState(false);
 
   // Estados de visibilidade
   const [show3D, setShow3D] = useState(true);
@@ -425,21 +418,6 @@ const Viewer5D: React.FC = () => {
               <span>Linkados</span>
             </button>
             
-            <button
-              onClick={() => setShowConfigEditor(true)}
-              className="flex items-center space-x-2 px-3 py-2 rounded-md transition-colors bg-purple-600 text-white hover:bg-purple-700"
-            >
-              <Settings className="h-4 w-4" />
-              <span>Configurar Links</span>
-            </button>
-            
-            <button
-              onClick={() => setShowBlenderMetadata(true)}
-              className="flex items-center space-x-2 px-3 py-2 rounded-md transition-colors bg-orange-600 text-white hover:bg-orange-700"
-            >
-              <Database className="h-4 w-4" />
-              <span>Metadados Blender</span>
-            </button>
           </div>
         </div>
 
@@ -489,39 +467,6 @@ const Viewer5D: React.FC = () => {
           </div>
         )}
 
-        {/* Links Offline Configurados */}
-        {offlineLinks.length > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-            <h3 className="font-semibold text-blue-800 mb-3 flex items-center">
-              <Settings className="h-5 w-5 mr-2" />
-              Links Offline Configurados ({offlineLinks.length})
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-40 overflow-y-auto">
-              {offlineLinks.map((link) => (
-                <div key={link.id} className="p-2 bg-white rounded border text-sm">
-                  <div className="font-medium text-blue-900">{link.element3D.name}</div>
-                  <div className="text-xs text-gray-600">{link.budgetItem.code}</div>
-                  <div className="flex items-center justify-between mt-1">
-                    <span className={`px-2 py-1 rounded text-xs ${
-                      link.validated 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {link.confidence}%
-                    </span>
-                    <span className={`px-2 py-1 rounded text-xs ${
-                      link.validated 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {link.validated ? '✓' : '⏳'}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Lista de Links Criados Online */}
         {linkingState.links.length > 0 && (
@@ -558,7 +503,7 @@ const Viewer5D: React.FC = () => {
             <div className="bg-gray-800 text-white px-4 py-2">
               <h3 className="font-semibold flex items-center">
                 <Box className="h-5 w-5 mr-2" />
-                Modelo 3D - Vila Andriw
+                Modelo 3D - 10 Apartamentos
               </h3>
             </div>
             <div className="h-96 lg:h-[500px] relative">
@@ -769,23 +714,6 @@ const Viewer5D: React.FC = () => {
         </div>
       </div>
 
-      {/* Editor de Configuração */}
-      {showConfigEditor && (
-        <LinkingConfigEditor
-          onConfigChange={(newConfig) => {
-            setOfflineLinks(newConfig.links);
-            setShowConfigEditor(false);
-          }}
-          onClose={() => setShowConfigEditor(false)}
-        />
-      )}
-
-      {/* Visualizador de Metadados do Blender */}
-      {showBlenderMetadata && (
-        <BlenderMetadataViewer
-          onClose={() => setShowBlenderMetadata(false)}
-        />
-      )}
     </div>
   );
 };
