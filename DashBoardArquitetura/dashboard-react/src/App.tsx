@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useOrcamentoStore } from './store/orcamentoStore';
 import { useCotacaoStore } from './store/cotacaoStore';
 import { carregarDados } from './services/orcamentoService';
+import BackToHub from './components/BackToHub';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
 import ResumoExecutivo from './components/ResumoExecutivo';
@@ -757,12 +758,13 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <BackToHub dashboardName="Dashboard Arquitetura" />
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4 lg:py-8">
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
         
-        <div className="mt-8">
+        <div className="mt-4 lg:mt-8">
           {renderContent()}
         </div>
       </div>

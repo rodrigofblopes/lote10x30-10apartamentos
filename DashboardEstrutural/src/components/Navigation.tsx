@@ -49,7 +49,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="border-b border-gray-200">
-        <nav className="flex space-x-8 px-6" aria-label="Tabs">
+        <nav className="flex flex-wrap lg:flex-nowrap space-x-1 lg:space-x-8 px-2 lg:px-6" aria-label="Tabs">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
@@ -57,7 +57,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
                 className={`
-                  group relative min-w-0 flex-1 overflow-hidden py-4 px-1 text-center text-sm font-medium hover:text-green-600 focus:z-10
+                  group relative min-w-0 flex-1 overflow-hidden py-2 lg:py-4 px-1 text-center text-xs lg:text-sm font-medium hover:text-green-600 focus:z-10
                   ${isActive 
                     ? 'text-green-600 border-b-2 border-green-600' 
                     : 'text-gray-500 hover:text-gray-700'
@@ -66,7 +66,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
               >
                 <div className="flex flex-col items-center space-y-1">
                   <div className={`
-                    p-2 rounded-lg transition-colors
+                    p-1 lg:p-2 rounded-lg transition-colors
                     ${isActive 
                       ? 'bg-green-100 text-green-600' 
                       : 'text-gray-400 group-hover:text-gray-500'
@@ -74,9 +74,9 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
                   `}>
                     {tab.icon}
                   </div>
-                  <span className="font-medium">{tab.label}</span>
+                  <span className="font-medium text-xs lg:text-sm">{tab.label}</span>
                   <span className={`
-                    text-xs max-w-full truncate
+                    text-xs max-w-full truncate hidden lg:block
                     ${isActive ? 'text-green-600' : 'text-gray-400'}
                   `}>
                     {tab.description}

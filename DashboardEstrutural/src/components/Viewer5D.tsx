@@ -51,8 +51,8 @@ interface StructuralModelProps {
 function StructuralModel({ onElementSelect, selectedElementId: _selectedElementId, linkedElements: _linkedElements }: StructuralModelProps) {
   const meshRef = useRef<THREE.Group>(null);
 
-  // Carregar o modelo GLB
-  const { scene } = useGLTF('/lote10x30-10apartamentos.glb');
+  // Carregar o modelo GLB com coleções renomeadas
+  const { scene } = useGLTF('/Estrutural.glb');
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -230,6 +230,10 @@ const Viewer5D: React.FC = () => {
     showLinkedOnly: false
   });
 
+  // Estado para links automáticos
+  const [autoLinks, setAutoLinks] = useState<ElementLink[]>([]);
+  const [showAutoLinks, setShowAutoLinks] = useState(false);
+
   // Estado para links automáticos (removido por enquanto)
   // const [autoLinks, setAutoLinks] = useState<AutoLink[]>([]);
   // const [linkingStats, setLinkingStats] = useState<any>(null);
@@ -298,6 +302,85 @@ const Viewer5D: React.FC = () => {
     }));
   };
 
+  // Função para criar links automáticos baseados no matching dos nomes
+  const createAutoLinks = () => {
+    const newAutoLinks: ElementLink[] = [];
+    
+    // Simular elementos 3D baseados no padrão esperado (viga 1.1_Viga...)
+    const elements3D = [
+      { id: 'viga 1.1_Viga', name: 'Viga 1.1' },
+      { id: 'viga 1.1.1_Armação', name: 'Armação Viga 1.1.1' },
+      { id: 'viga 1.1.2_Concreto', name: 'Concreto Viga 1.1.2' },
+      { id: 'viga 1.1.3_Forma', name: 'Forma Viga 1.1.3' },
+      { id: 'pilar 1.2_Pilar', name: 'Pilar 1.2' },
+      { id: 'pilar 1.2.1_Armação', name: 'Armação Pilar 1.2.1' },
+      { id: 'pilar 1.2.2_Concreto', name: 'Concreto Pilar 1.2.2' },
+      { id: 'pilar 1.2.3_Forma', name: 'Forma Pilar 1.2.3' },
+      { id: 'fundação 1.3_Fundação', name: 'Fundação 1.3' },
+      { id: 'fundação 1.3.1_Armação', name: 'Armação Fundação 1.3.1' },
+      { id: 'fundação 1.3.2_Concreto', name: 'Concreto Fundação 1.3.2' },
+      { id: 'fundação 1.3.3_Forma', name: 'Forma Fundação 1.3.3' },
+      { id: 'viga 2.1_Viga', name: 'Viga 2.1' },
+      { id: 'viga 2.1.1_Armação', name: 'Armação Viga 2.1.1' },
+      { id: 'viga 2.1.2_Concreto', name: 'Concreto Viga 2.1.2' },
+      { id: 'viga 2.1.3_Forma', name: 'Forma Viga 2.1.3' },
+      { id: 'pilar 2.2_Pilar', name: 'Pilar 2.2' },
+      { id: 'pilar 2.2.1_Armação', name: 'Armação Pilar 2.2.1' },
+      { id: 'pilar 2.2.2_Concreto', name: 'Concreto Pilar 2.2.2' },
+      { id: 'pilar 2.2.3_Forma', name: 'Forma Pilar 2.2.3' },
+      { id: 'laje 2.3_Laje', name: 'Laje 2.3' },
+      { id: 'laje 2.3.1_Armação', name: 'Armação Laje 2.3.1' },
+      { id: 'laje 2.3.2_Concreto', name: 'Concreto Laje 2.3.2' },
+      { id: 'viga 3.1_Viga', name: 'Viga 3.1' },
+      { id: 'viga 3.1.1_Armação', name: 'Armação Viga 3.1.1' },
+      { id: 'viga 3.1.2_Concreto', name: 'Concreto Viga 3.1.2' },
+      { id: 'viga 3.1.3_Forma', name: 'Forma Viga 3.1.3' },
+      { id: 'pilar 3.2_Pilar', name: 'Pilar 3.2' },
+      { id: 'pilar 3.2.1_Armação', name: 'Armação Pilar 3.2.1' },
+      { id: 'pilar 3.2.2_Concreto', name: 'Concreto Pilar 3.2.2' },
+      { id: 'pilar 3.2.3_Forma', name: 'Forma Pilar 3.2.3' },
+      { id: 'laje 3.3_Laje', name: 'Laje 3.3' },
+      { id: 'laje 3.3.1_Armação', name: 'Armação Laje 3.3.1' },
+      { id: 'laje 3.3.2_Concreto', name: 'Concreto Laje 3.3.2' }
+    ];
+
+    // Fazer matching entre elementos 3D e itens da planilha
+    elements3D.forEach(element3D => {
+      const matchingItem = itens.find(item => {
+        // Extrair o código do item (ex: 1.1.1)
+        const itemCode = item.id;
+        
+        // Extrair o código do elemento 3D (ex: viga 1.1_Viga -> 1.1)
+        const elementCode = element3D.id.split('_')[0].split(' ')[1];
+        
+        // Verificar se o código do item começa com o código do elemento
+        return itemCode.startsWith(elementCode);
+      });
+
+      if (matchingItem) {
+        const newLink: ElementLink = {
+          id: `auto_link_${element3D.id}_${matchingItem.id}`,
+          elementId: element3D.id,
+          elementName: element3D.name,
+          itemId: matchingItem.id,
+          itemDescription: matchingItem.descricao,
+          itemCode: matchingItem.codigo,
+          linkedAt: new Date(),
+          notes: 'Link automático baseado no matching de códigos'
+        };
+        newAutoLinks.push(newLink);
+      }
+    });
+
+    setAutoLinks(newAutoLinks);
+    setShowAutoLinks(true);
+    
+    // Salvar no localStorage
+    localStorage.setItem('viewer5d_auto_links', JSON.stringify(newAutoLinks));
+    
+    console.log('Links automáticos criados:', newAutoLinks.length);
+  };
+
   // Função para criar links automáticos (comentada por enquanto)
   // const createAutoLinks = () => {
   //   // Simular elementos 3D (em um caso real, isso viria do modelo GLB)
@@ -337,6 +420,20 @@ const Viewer5D: React.FC = () => {
         console.error('Erro ao carregar links salvos:', error);
       }
     }
+
+    // Carregar links automáticos salvos
+    const savedAutoLinks = localStorage.getItem('viewer5d_auto_links');
+    if (savedAutoLinks) {
+      try {
+        const autoLinks = JSON.parse(savedAutoLinks);
+        setAutoLinks(autoLinks.map((link: any) => ({
+          ...link,
+          linkedAt: new Date(link.linkedAt)
+        })));
+      } catch (error) {
+        console.error('Erro ao carregar links automáticos salvos:', error);
+      }
+    }
   }, []);
 
   const formatarMoeda = (valor: number) => {
@@ -369,53 +466,66 @@ const Viewer5D: React.FC = () => {
           </div>
           
           {/* Controles */}
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2 lg:gap-3">
             <button
               onClick={() => setShow3D(!show3D)}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
+              className={`flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors text-xs lg:text-sm ${
                 show3D 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              {show3D ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-              <span>3D</span>
+              {show3D ? <Eye className="h-3 w-3 lg:h-4 lg:w-4" /> : <EyeOff className="h-3 w-3 lg:h-4 lg:w-4" />}
+              <span className="hidden sm:inline">3D</span>
+              <span className="sm:hidden">3D</span>
             </button>
             
             <button
               onClick={() => setShowSpreadsheet(!showSpreadsheet)}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
+              className={`flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors text-xs lg:text-sm ${
                 showSpreadsheet 
                   ? 'bg-green-600 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              {showSpreadsheet ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-              <span>Planilha</span>
+              {showSpreadsheet ? <Eye className="h-3 w-3 lg:h-4 lg:w-4" /> : <EyeOff className="h-3 w-3 lg:h-4 lg:w-4" />}
+              <span className="hidden sm:inline">Planilha</span>
+              <span className="sm:hidden">Planilha</span>
             </button>
             
             <button
               onClick={toggleLinkMode}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
+              className={`flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors text-xs lg:text-sm ${
                 linkingState.linkMode 
                   ? 'bg-purple-600 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              {linkingState.linkMode ? <Link className="h-4 w-4" /> : <Unlink className="h-4 w-4" />}
-              <span>Modo Link</span>
+              {linkingState.linkMode ? <Link className="h-3 w-3 lg:h-4 lg:w-4" /> : <Unlink className="h-3 w-3 lg:h-4 lg:w-4" />}
+              <span className="hidden sm:inline">Modo Link</span>
+              <span className="sm:hidden">Link</span>
             </button>
             
             <button
               onClick={() => setLinkingState(prev => ({ ...prev, showLinkedOnly: !prev.showLinkedOnly }))}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
+              className={`flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors text-xs lg:text-sm ${
                 linkingState.showLinkedOnly 
                   ? 'bg-orange-600 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              <Filter className="h-4 w-4" />
-              <span>Linkados</span>
+              <Filter className="h-3 w-3 lg:h-4 lg:w-4" />
+              <span className="hidden sm:inline">Linkados</span>
+              <span className="sm:hidden">Linkados</span>
+            </button>
+            
+            <button
+              onClick={createAutoLinks}
+              className="flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors bg-green-600 text-white hover:bg-green-700 text-xs lg:text-sm"
+            >
+              <Link className="h-3 w-3 lg:h-4 lg:w-4" />
+              <span className="hidden sm:inline">Auto Link</span>
+              <span className="sm:hidden">Auto</span>
             </button>
             
           </div>
@@ -468,12 +578,39 @@ const Viewer5D: React.FC = () => {
         )}
 
 
+        {/* Links Automáticos Criados */}
+        {autoLinks.length > 0 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+            <h3 className="font-semibold text-blue-800 mb-3 flex items-center">
+              <Link className="h-5 w-5 mr-2" />
+              Links Automáticos Criados ({autoLinks.length})
+            </h3>
+            <div className="space-y-2 max-h-40 overflow-y-auto">
+              {autoLinks.map((link) => (
+                <div key={link.id} className="flex items-center justify-between p-2 bg-white rounded border">
+                  <div className="flex-1">
+                    <div className="text-sm font-medium">{link.elementName}</div>
+                    <div className="text-xs text-gray-600">{link.itemCode} - {link.itemDescription}</div>
+                    <div className="text-xs text-blue-600">{link.notes}</div>
+                  </div>
+                  <button
+                    onClick={() => setAutoLinks(prev => prev.filter(l => l.id !== link.id))}
+                    className="p-1 text-red-600 hover:bg-red-100 rounded"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Lista de Links Criados Online */}
         {linkingState.links.length > 0 && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
             <h3 className="font-semibold text-green-800 mb-3 flex items-center">
               <Check className="h-5 w-5 mr-2" />
-              Links Online Criados ({linkingState.links.length})
+              Links Manuais Criados ({linkingState.links.length})
             </h3>
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {linkingState.links.map((link) => (
@@ -496,17 +633,17 @@ const Viewer5D: React.FC = () => {
       </div>
 
       {/* Layout Principal */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
         {/* Visualizador 3D */}
         {show3D && (
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-gray-800 text-white px-4 py-2">
-              <h3 className="font-semibold flex items-center">
-                <Box className="h-5 w-5 mr-2" />
+            <div className="bg-gray-800 text-white px-3 lg:px-4 py-2">
+              <h3 className="font-semibold flex items-center text-sm lg:text-base">
+                <Box className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
                 Modelo 3D - 10 Apartamentos
               </h3>
             </div>
-            <div className="h-96 lg:h-[500px] relative">
+            <div className="h-64 sm:h-80 lg:h-96 xl:h-[500px] relative">
               <Canvas camera={{ position: [10, 10, 10], fov: 50 }}>
                 <Suspense fallback={<Loader />}>
                   <StructuralModel 
@@ -546,16 +683,16 @@ const Viewer5D: React.FC = () => {
         {/* Planilha de Orçamento */}
         {showSpreadsheet && (
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-gray-800 text-white px-4 py-2">
-              <h3 className="font-semibold flex items-center">
-                <Calculator className="h-5 w-5 mr-2" />
+            <div className="bg-gray-800 text-white px-3 lg:px-4 py-2">
+              <h3 className="font-semibold flex items-center text-sm lg:text-base">
+                <Calculator className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
                 Orçamento Estrutural
               </h3>
             </div>
             
             {/* Barra de Busca */}
-            <div className="p-4 border-b border-gray-200">
-              <div className="flex gap-2">
+            <div className="p-3 lg:p-4 border-b border-gray-200">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
@@ -563,7 +700,7 @@ const Viewer5D: React.FC = () => {
                     placeholder="Buscar por código ou descrição..."
                     value={linkingState.searchTerm}
                     onChange={(e) => setLinkingState(prev => ({ ...prev, searchTerm: e.target.value }))}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-8 lg:pl-10 pr-3 lg:pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm lg:text-base"
                   />
                 </div>
                 <button
@@ -576,28 +713,28 @@ const Viewer5D: React.FC = () => {
             </div>
             
             <div className="overflow-x-auto max-h-96 lg:max-h-[500px]">
-              <table className="min-w-full divide-y divide-gray-200">
+              <table className="min-w-full divide-y divide-gray-200 text-xs lg:text-sm">
                 <thead className="bg-gray-50 sticky top-0">
                   <tr>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Código
                     </th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Descrição
                     </th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Qtd
                     </th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       M.O.
                     </th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Material
                     </th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Total
                     </th>
-                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Link
                     </th>
                   </tr>
@@ -606,7 +743,8 @@ const Viewer5D: React.FC = () => {
                   {itens
                     .filter(item => {
                       if (linkingState.showLinkedOnly) {
-                        return linkingState.links.some(link => link.itemId === item.id);
+                        return linkingState.links.some(link => link.itemId === item.id) ||
+                               autoLinks.some(link => link.itemId === item.id);
                       }
                       if (linkingState.searchTerm) {
                         return item.descricao.toLowerCase().includes(linkingState.searchTerm.toLowerCase()) ||
@@ -617,6 +755,7 @@ const Viewer5D: React.FC = () => {
                     .map((item) => {
                       const isSelected = linkingState.selectedItem?.id === item.id;
                       const isLinked = linkingState.links.some(link => link.itemId === item.id);
+                      const isAutoLinked = autoLinks.some(link => link.itemId === item.id);
                       
                       return (
                         <tr 
@@ -624,37 +763,41 @@ const Viewer5D: React.FC = () => {
                           className={`hover:bg-gray-50 cursor-pointer transition-colors ${
                             isSelected
                               ? 'bg-green-50 border-l-4 border-green-500'
+                              : isAutoLinked
+                              ? 'bg-blue-50 border-l-4 border-blue-500'
                               : isLinked
-                              ? 'bg-blue-50 border-l-2 border-blue-300'
+                              ? 'bg-purple-50 border-l-2 border-purple-300'
                               : ''
                           }`}
                           onClick={() => handleItemSelect(item)}
                         >
-                      <td className="px-3 py-2 whitespace-nowrap text-xs font-medium text-gray-900">
+                      <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs font-medium text-gray-900">
                         {item.codigo}
                       </td>
-                      <td className="px-3 py-2 text-xs text-gray-900 max-w-[200px] truncate" title={item.descricao}>
+                      <td className="px-2 lg:px-3 py-2 text-xs text-gray-900 max-w-[150px] lg:max-w-[200px] truncate" title={item.descricao}>
                         {item.descricao}
                       </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-900">
+                      <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs text-gray-900">
                         {item.quantidade.toFixed(2)} {item.unidade}
                       </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-900">
+                      <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs text-gray-900">
                         {formatarMoeda(item.maoDeObra)}
                       </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-900">
+                      <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs text-gray-900">
                         {formatarMoeda(item.materiais)}
                       </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-xs font-medium text-blue-600">
+                      <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs font-medium text-blue-600">
                         {formatarMoeda(item.total)}
                       </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-xs">
-                        <span className={`px-2 py-1 rounded-full text-xs ${
-                          isLinked
+                      <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs">
+                        <span className={`px-1 lg:px-2 py-1 rounded-full text-xs ${
+                          isAutoLinked
+                            ? 'bg-blue-100 text-blue-800'
+                            : isLinked
                             ? 'bg-green-100 text-green-800'
                             : 'bg-gray-100 text-gray-500'
                         }`}>
-                          {isLinked ? 'Linkado' : 'Não'}
+                          {isAutoLinked ? 'Auto' : isLinked ? 'Manual' : 'Não'}
                         </span>
                       </td>
                     </tr>

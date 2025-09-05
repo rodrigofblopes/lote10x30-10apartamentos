@@ -380,8 +380,8 @@ export const dadosMockados: OrcamentoItem[] = [
 
 export const carregarDados = async (): Promise<OrcamentoItem[]> => {
   try {
-    // Tentar carregar o arquivo EST10AP.csv
-    const response = await fetch('/EST10AP.csv');
+    // Tentar carregar o arquivo 5DEST.csv
+    const response = await fetch('/5DEST.csv');
     if (response.ok) {
       const csvContent = await response.text();
       const dadosProcessados = processarDadosCSV(csvContent);
@@ -390,7 +390,7 @@ export const carregarDados = async (): Promise<OrcamentoItem[]> => {
       }
     }
   } catch (error) {
-    console.warn('Erro ao carregar EST10AP.csv, usando dados mockados:', error);
+    console.warn('Erro ao carregar 5DEST.csv, usando dados mockados:', error);
   }
   
   // Fallback para dados mockados se não conseguir carregar o CSV
