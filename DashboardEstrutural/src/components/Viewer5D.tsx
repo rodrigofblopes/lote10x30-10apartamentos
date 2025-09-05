@@ -3,29 +3,8 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Html, useProgress, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { carregarDados5D } from '../services/orcamento5DService';
-import { Calculator, Eye, EyeOff, Link, Unlink, Box, Search, Filter, Trash2, Plus, Check } from 'lucide-react';
+import { Calculator, Eye, EyeOff, Box, Search } from 'lucide-react';
 
-// Interfaces para o sistema de linking
-interface ElementLink {
-  id: string;
-  elementId: string;
-  elementName: string;
-  itemId: string;
-  itemDescription: string;
-  itemCode: string;
-  linkedAt: Date;
-  notes?: string;
-}
-
-interface LinkingState {
-  selectedElement: { id: string; data: any } | null;
-  selectedItem: any | null;
-  links: ElementLink[];
-  linkMode: boolean;
-  searchTerm: string;
-  filterCategory: string;
-  showLinkedOnly: boolean;
-}
 
 // Componente de loading
 function Loader() {
@@ -43,13 +22,10 @@ function Loader() {
 
 // Componente para carregar o modelo GLB com interatividade
 interface StructuralModelProps {
-  onElementSelect: (elementId: string, elementData: any) => void;
-  selectedElementId: string | null;
-  linkedElements: string[];
   highlightedElements: string[];
 }
 
-function StructuralModel({ onElementSelect, selectedElementId: _selectedElementId, linkedElements: _linkedElements, highlightedElements }: StructuralModelProps) {
+function StructuralModel({ highlightedElements }: StructuralModelProps) {
   const meshRef = useRef<THREE.Group>(null);
 
   // Carregar o modelo GLB com coleções renomeadas
@@ -149,82 +125,123 @@ function StructuralModel({ onElementSelect, selectedElementId: _selectedElementI
     }
   };
 
-  // Adicionar interatividade aos elementos
+  // Aplicar materiais aos elementos
   useEffect(() => {
     if (scene) {
+      const allObjectNames: string[] = [];
+      const allChildren: any[] = [];
+      const meshObjects: any[] = [];
+      
       scene.traverse((child) => {
+        const childInfo = {
+          name: child.name,
+          type: child.type,
+          id: child.id,
+          isMesh: child instanceof THREE.Mesh,
+          parent: child.parent?.name || 'root'
+        };
+        
+        allChildren.push(childInfo);
+        
         if (child instanceof THREE.Mesh) {
           const elementName = child.name || `Elemento_${child.id}`;
+          allObjectNames.push(elementName);
+          meshObjects.push({
+            name: child.name,
+            id: child.id,
+            type: child.type,
+            parent: child.parent?.name || 'root'
+          });
           
           // Aplicar material baseado no nome
           applyMaterialByElementName(child, elementName);
-          
-          // Adicionar evento de clique
-          (child as any).onClick = (event: any) => {
-            event.stopPropagation();
-            const elementData = {
-              name: elementName,
-              id: child.id,
-              position: child.position,
-              userData: child.userData
-            };
-            onElementSelect(elementName, elementData);
-            console.log('Elemento 3D clicado:', elementName, elementData);
-          };
-          
-          // Adicionar hover effects
-          (child as any).onPointerOver = () => {
-            document.body.style.cursor = 'pointer';
-            if (child.material) {
-              child.material.emissive = new THREE.Color(0x333333);
-            }
-          };
-          
-          (child as any).onPointerOut = () => {
-            document.body.style.cursor = 'auto';
-            if (child.material) {
-              child.material.emissive = new THREE.Color(0x000000);
-            }
-          };
         }
       });
       
+      // Filtrar nomes que começam com números (códigos da planilha)
+      const numericNames = allObjectNames.filter(name => /^\d/.test(name));
+      const numericMeshes = meshObjects.filter(mesh => mesh.name && /^\d/.test(mesh.name));
+      
+      console.log('=== INFORMAÇÕES DO MODELO GLB ===');
       console.log('Modelo GLB carregado com sucesso!');
-      console.log('Elementos encontrados:', scene.children.length);
+      console.log('Total de objetos na cena:', allChildren.length);
+      console.log('Total de meshes:', meshObjects.length);
+      console.log('NOMES DE TODOS OS OBJETOS NA CENA:', allObjectNames);
+      console.log('NOMES QUE COMEÇAM COM NÚMEROS (códigos):', numericNames);
+      console.log('MESHES COM CÓDIGOS NUMÉRICOS:', numericMeshes);
+      console.log('MESHES (objetos 3D):', meshObjects);
+      console.log('DETALHES COMPLETOS DOS OBJETOS:', allChildren);
+      console.log('=== FIM INFORMAÇÕES ===');
     }
-  }, [scene, onElementSelect]);
+  }, [scene]);
+
 
   return (
     <group ref={meshRef}>
       {scene && (
-        <primitive 
-          object={scene} 
-          onClick={(event: any) => {
-            event.stopPropagation();
-            const elementId = event.object.name || 'unknown';
-            onElementSelect(elementId, { 
-              name: elementId, 
-              position: event.object.position,
-              type: 'structural_element'
-            });
-          }}
-          onPointerOver={(event: any) => {
-            event.stopPropagation();
-            document.body.style.cursor = 'pointer';
-          }}
-          onPointerOut={() => {
-            document.body.style.cursor = 'auto';
-          }}
-        />
+        <primitive object={scene} />
       )}
       
       {/* Renderizar elementos destacados com cores diferentes */}
       {highlightedElements.map((elementId) => {
+        console.log('Tentando destacar elemento:', elementId);
+        
         // Encontrar o objeto correspondente na cena
         let targetObject: THREE.Object3D | null = null;
         if (scene) {
           scene.traverse((child) => {
-            if (child.name === elementId) {
+            const childName = child.name || '';
+            console.log('Verificando objeto na cena:', childName);
+            
+            // Função de matching mais inteligente para coleções do Blender
+            const isMatch = (searchPattern: string, objectName: string): boolean => {
+              // Matching exato
+              if (objectName === searchPattern) return true;
+              
+              // Matching por início (mais comum para coleções)
+              if (objectName.startsWith(searchPattern)) return true;
+              
+              // Matching específico para padrões de coleção do Blender
+              // Ex: "2.1_" deve match com "2.1_.001", "2.1_.002", etc.
+              if (searchPattern.endsWith('_') && objectName.startsWith(searchPattern)) return true;
+              
+              // Matching para padrões como "2.1_.001" (com underscore e ponto)
+              if (searchPattern.includes('_.') && objectName.startsWith(searchPattern)) return true;
+              
+              // Matching por contém (para casos como "2.1_.001" contém "2.1_")
+              if (objectName.includes(searchPattern)) return true;
+              
+              // Matching com variações de separadores
+              const normalizedPattern = searchPattern.replace(/[._-]/g, '');
+              const normalizedName = objectName.replace(/[._-]/g, '');
+              if (normalizedName.startsWith(normalizedPattern)) return true;
+              
+              // Matching hierárquico para coleções
+              // Se procurar por "2.1", deve encontrar "2.1_.001", "2.1_.002", etc.
+              if (searchPattern.includes('.') && !searchPattern.endsWith('_')) {
+                const basePattern = searchPattern + '_.';
+                if (objectName.startsWith(basePattern)) return true;
+                
+                const basePattern2 = searchPattern + '_';
+                if (objectName.startsWith(basePattern2)) return true;
+              }
+              
+              // Matching para coleções pai (IfcBuildingStorey)
+              if (searchPattern === '2' && objectName.includes('Térreo')) return true;
+              if (searchPattern === '1' && objectName.includes('Fundação')) return true;
+              if (searchPattern === '3' && objectName.includes('Superior')) return true;
+              
+              // Matching por palavras-chave específicas
+              if (searchPattern.includes('Viga') && objectName.toLowerCase().includes('viga')) return true;
+              if (searchPattern.includes('Pilar') && objectName.toLowerCase().includes('pilar')) return true;
+              if (searchPattern.includes('Laje') && objectName.toLowerCase().includes('laje')) return true;
+              if (searchPattern.includes('Fundacao') && objectName.toLowerCase().includes('fundacao')) return true;
+              
+              return false;
+            };
+            
+            if (isMatch(elementId, childName)) {
+              console.log('ENCONTRADO! Matching:', childName, 'para padrão:', elementId);
               targetObject = child;
             }
           });
@@ -233,21 +250,14 @@ function StructuralModel({ onElementSelect, selectedElementId: _selectedElementI
         if (targetObject) {
           const mesh = targetObject as any;
           if (mesh.geometry) {
+            console.log('Renderizando elemento destacado:', elementId, '->', (targetObject as any).name);
             return (
               <mesh
-                key={`highlight-${elementId}`}
+                key={`highlight-${elementId}-${(targetObject as any).name}`}
                 geometry={mesh.geometry}
                 position={mesh.position}
                 rotation={mesh.rotation}
                 scale={mesh.scale}
-                onClick={(event: any) => {
-                  event.stopPropagation();
-                  onElementSelect(elementId, { 
-                    name: elementId, 
-                    position: mesh.position,
-                    type: 'highlighted_element'
-                  });
-                }}
               >
                 <meshStandardMaterial 
                   color="#ff6b35" 
@@ -259,6 +269,8 @@ function StructuralModel({ onElementSelect, selectedElementId: _selectedElementI
               </mesh>
             );
           }
+        } else {
+          console.log('Elemento NÃO encontrado na cena:', elementId);
         }
         return null;
       })}
@@ -325,264 +337,184 @@ const Viewer5D: React.FC = () => {
     carregarDados();
   }, []);
   
-  // Estado do sistema de linking
-  const [linkingState, setLinkingState] = useState<LinkingState>({
-    selectedElement: null,
-    selectedItem: null,
-    links: [],
-    linkMode: false,
-    searchTerm: '',
-    filterCategory: '',
-    showLinkedOnly: false
-  });
-
-  // Estado para links automáticos
-  const [autoLinks, setAutoLinks] = useState<ElementLink[]>([]);
-  
   // Estado para elementos destacados no 3D
   const [highlightedElements, setHighlightedElements] = useState<string[]>([]);
-
-  // Estado para links automáticos (removido por enquanto)
-  // const [autoLinks, setAutoLinks] = useState<AutoLink[]>([]);
-  // const [linkingStats, setLinkingStats] = useState<any>(null);
-  // const [showAutoLinking, setShowAutoLinking] = useState(false);
+  
+  // Estado para busca na planilha
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  
+  // Estado para itens selecionados (múltipla seleção)
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   
 
   // Estados de visibilidade
   const [show3D, setShow3D] = useState(true);
   const [showSpreadsheet, setShowSpreadsheet] = useState(true);
 
-  // Funções do sistema de linking
-  const handleElementSelect = (elementId: string, elementData: any) => {
-    setLinkingState(prev => ({
-      ...prev,
-      selectedElement: { id: elementId, data: elementData }
-    }));
+  // Função para selecionar item da planilha e destacar elementos 3D
+  const handleItemSelect = (item: any, event: React.MouseEvent) => {
+    const itemId = item.id;
+    
+    // Se Ctrl/Cmd está pressionado, adicionar/remover da seleção múltipla
+    if (event.ctrlKey || event.metaKey) {
+      setSelectedItems(prev => {
+        const isSelected = prev.includes(itemId);
+        let newSelection: string[];
+        
+        if (isSelected) {
+          // Remover da seleção
+          newSelection = prev.filter(id => id !== itemId);
+        } else {
+          // Adicionar à seleção
+          newSelection = [...prev, itemId];
+        }
+        
+        // Atualizar elementos destacados no 3D
+        updateHighlightedElements(newSelection);
+        return newSelection;
+      });
+    } else {
+      // Seleção única (substitui seleção anterior)
+      setSelectedItems([itemId]);
+      updateHighlightedElements([itemId]);
+    }
   };
 
-  const handleItemSelect = (item: any) => {
-    setLinkingState(prev => ({
-      ...prev,
-      selectedItem: item
-    }));
+  // Função para atualizar elementos destacados baseado na seleção múltipla
+  const updateHighlightedElements = (selectedItemIds: string[]) => {
+    const allElementsToHighlight: string[] = [];
     
-    // Destacar elementos 3D correspondentes ao item selecionado
-    highlightElementsForItem(item);
+    selectedItemIds.forEach(itemId => {
+      const item = itens5D.find(i => i.id === itemId);
+      if (item) {
+        const patterns = generateSearchPatterns(itemId);
+        allElementsToHighlight.push(...patterns);
+      }
+    });
+    
+    setHighlightedElements(allElementsToHighlight);
+  };
+
+  // Função para gerar padrões de busca (extraída da função anterior)
+  const generateSearchPatterns = (code: string): string[] => {
+    const patterns: string[] = [];
+    
+    // Padrão exato
+    patterns.push(code);
+    
+    // Padrões com underscore (mais comum no Blender)
+    patterns.push(`${code}_`);
+    patterns.push(`${code.replace('.', '_')}_`);
+    
+    // Padrões específicos para coleções do Blender (baseado na estrutura mostrada)
+    if (code === '1') {
+      // Fundação - incluir todas as sub-coleções
+      patterns.push('1_', '1.1_', '1.2_', '1.3_');
+      // Padrões com numeração sequencial para sub-itens (formato: 1.1_.001, 1.1_.002, etc.)
+      for (let i = 1; i <= 50; i++) {
+        const num = i.toString().padStart(3, '0');
+        patterns.push(`1.1_.${num}`);
+        patterns.push(`1.2_.${num}`);
+        patterns.push(`1.3_.${num}`);
+      }
+    } else if (code === '1.1') {
+      // Vigas da fundação
+      patterns.push('1.1_');
+      for (let i = 1; i <= 50; i++) {
+        const num = i.toString().padStart(3, '0');
+        patterns.push(`1.1_.${num}`);
+      }
+    } else if (code === '1.2') {
+      // Pilares da fundação
+      patterns.push('1.2_');
+      for (let i = 1; i <= 50; i++) {
+        const num = i.toString().padStart(3, '0');
+        patterns.push(`1.2_.${num}`);
+      }
+    } else if (code === '1.3') {
+      // Fundações
+      patterns.push('1.3_');
+      for (let i = 1; i <= 50; i++) {
+        const num = i.toString().padStart(3, '0');
+        patterns.push(`1.3_.${num}`);
+      }
+    } else if (code === '2') {
+      // Térreo - incluir todas as sub-coleções
+      patterns.push('2_', '2.1_', '2.2_', '2.3_');
+      for (let i = 1; i <= 50; i++) {
+        const num = i.toString().padStart(3, '0');
+        patterns.push(`2.1_.${num}`);
+        patterns.push(`2.2_.${num}`);
+        patterns.push(`2.3_.${num}`);
+      }
+    } else if (code === '2.1') {
+      // Vigas do térreo (como mostrado na imagem: 2.1_.001, 2.1_.002, etc.)
+      patterns.push('2.1_');
+      for (let i = 1; i <= 50; i++) {
+        const num = i.toString().padStart(3, '0');
+        patterns.push(`2.1_.${num}`);
+      }
+    } else if (code === '2.2') {
+      // Pilares do térreo
+      patterns.push('2.2_');
+      for (let i = 1; i <= 50; i++) {
+        const num = i.toString().padStart(3, '0');
+        patterns.push(`2.2_.${num}`);
+      }
+    } else if (code === '2.3') {
+      // Lajes do térreo
+      patterns.push('2.3_');
+      for (let i = 1; i <= 50; i++) {
+        const num = i.toString().padStart(3, '0');
+        patterns.push(`2.3_.${num}`);
+      }
+    } else if (code === '3') {
+      // Pavimento Superior
+      patterns.push('3_', '3.1_', '3.3_');
+      for (let i = 1; i <= 50; i++) {
+        const num = i.toString().padStart(3, '0');
+        patterns.push(`3.1_.${num}`);
+        patterns.push(`3.3_.${num}`);
+      }
+    } else if (code === '3.1') {
+      // Vigas do pavimento superior
+      patterns.push('3.1_');
+      for (let i = 1; i <= 50; i++) {
+        const num = i.toString().padStart(3, '0');
+        patterns.push(`3.1_.${num}`);
+      }
+    } else if (code === '3.3') {
+      // Pilares do pavimento superior
+      patterns.push('3.3_');
+      for (let i = 1; i <= 50; i++) {
+        const num = i.toString().padStart(3, '0');
+        patterns.push(`3.3_.${num}`);
+      }
+    }
+    
+    // Padrões genéricos com numeração sequencial
+    for (let i = 1; i <= 50; i++) {
+      const num = i.toString().padStart(3, '0');
+      patterns.push(`${code}_${num}`);
+      patterns.push(`${code.replace('.', '_')}_${num}`);
+      patterns.push(`${code}.${num}`);
+      patterns.push(`${code}_${i}`);
+      patterns.push(`${code.replace('.', '_')}_${i}`);
+    }
+    
+    // Padrões com espaços e hífens
+    patterns.push(`${code} `);
+    patterns.push(`${code}-`);
+    patterns.push(`${code.replace('.', '-')}`);
+    
+    return patterns;
   };
   
-  // Função para destacar elementos 3D baseado no item da planilha
-  const highlightElementsForItem = (item: any) => {
-    const elementsToHighlight: string[] = [];
-    
-    // Procurar links automáticos que correspondem ao item
-    autoLinks.forEach(link => {
-      if (link.itemId === item.id) {
-        elementsToHighlight.push(link.elementId);
-      }
-    });
-    
-    // Procurar links manuais que correspondem ao item
-    linkingState.links.forEach(link => {
-      if (link.itemId === item.id) {
-        elementsToHighlight.push(link.elementId);
-      }
-    });
-    
-    // Se não houver links, tentar fazer matching direto baseado no código
-    if (elementsToHighlight.length === 0) {
-      const itemCode = item.id.trim();
-      
-      // Simular elementos 3D baseados no código do item
-      const possibleElements = [
-        itemCode + '_',
-        itemCode + '_.001',
-        itemCode + '_.002',
-        itemCode + '_.003',
-        itemCode + '_.004',
-        itemCode + '_.005'
-      ];
-      
-      // Adicionar elementos que podem existir no GLB
-      possibleElements.forEach(elementId => {
-        elementsToHighlight.push(elementId);
-      });
-    }
-    
-    setHighlightedElements(elementsToHighlight);
-    console.log(`Destacando elementos para item ${item.id}:`, elementsToHighlight);
-  };
 
-  const createLink = () => {
-    if (linkingState.selectedElement && linkingState.selectedItem) {
-      const newLink: ElementLink = {
-        id: `link_${Date.now()}`,
-        elementId: linkingState.selectedElement.id,
-        elementName: linkingState.selectedElement.data.name || linkingState.selectedElement.id,
-        itemId: linkingState.selectedItem.id,
-        itemDescription: linkingState.selectedItem.descricao,
-        itemCode: linkingState.selectedItem.codigo,
-        linkedAt: new Date(),
-        notes: ''
-      };
 
-      setLinkingState(prev => ({
-        ...prev,
-        links: [...prev.links, newLink],
-        selectedElement: null,
-        selectedItem: null
-      }));
 
-      // Salvar no localStorage
-      localStorage.setItem('viewer5d_links', JSON.stringify([...linkingState.links, newLink]));
-    }
-  };
 
-  const removeLink = (linkId: string) => {
-    const updatedLinks = linkingState.links.filter(link => link.id !== linkId);
-    setLinkingState(prev => ({
-      ...prev,
-      links: updatedLinks
-    }));
-    localStorage.setItem('viewer5d_links', JSON.stringify(updatedLinks));
-  };
-
-  const toggleLinkMode = () => {
-    setLinkingState(prev => ({
-      ...prev,
-      linkMode: !prev.linkMode,
-      selectedElement: null,
-      selectedItem: null
-    }));
-  };
-
-  // Função para criar links automáticos baseados no matching direto dos códigos
-  const createAutoLinks = () => {
-    const newAutoLinks: ElementLink[] = [];
-    
-    // Simular coleções do GLB baseadas na estrutura real (como visto na imagem)
-    const glbCollections = [
-      '1.1_', '1.1_.001', '1.1_.002', '1.1_.003', '1.1_.004', '1.1_.005', '1.1_.006', '1.1_.007', '1.1_.008', '1.1_.009', '1.1_.010', '1.1_.011', '1.1_.012', '1.1_.013', '1.1_.014', '1.1_.015', '1.1_.016', '1.1_.017', '1.1_.018', '1.1_.019', '1.1_.020', '1.1_.021', '1.1_.022',
-      '1.2_', '1.2_.001', '1.2_.002', '1.2_.003', '1.2_.004', '1.2_.005', '1.2_.006', '1.2_.007', '1.2_.008', '1.2_.009', '1.2_.010', '1.2_.011', '1.2_.012', '1.2_.013', '1.2_.014', '1.2_.015', '1.2_.016', '1.2_.017', '1.2_.018', '1.2_.019', '1.2_.020', '1.2_.021', '1.2_.022',
-      '1.3_', '1.3_.001', '1.3_.002', '1.3_.003', '1.3_.004', '1.3_.005', '1.3_.006', '1.3_.007', '1.3_.008', '1.3_.009', '1.3_.010', '1.3_.011', '1.3_.012', '1.3_.013', '1.3_.014', '1.3_.015', '1.3_.016', '1.3_.017', '1.3_.018', '1.3_.019', '1.3_.020', '1.3_.021', '1.3_.022',
-      '2.1_', '2.1_.001', '2.1_.002', '2.1_.003', '2.1_.004', '2.1_.005', '2.1_.006', '2.1_.007', '2.1_.008', '2.1_.009', '2.1_.010', '2.1_.011', '2.1_.012', '2.1_.013', '2.1_.014', '2.1_.015', '2.1_.016', '2.1_.017', '2.1_.018', '2.1_.019', '2.1_.020', '2.1_.021', '2.1_.022',
-      '2.2_', '2.2_.001', '2.2_.002', '2.2_.003', '2.2_.004', '2.2_.005', '2.2_.006', '2.2_.007', '2.2_.008', '2.2_.009', '2.2_.010', '2.2_.011', '2.2_.012', '2.2_.013', '2.2_.014', '2.2_.015', '2.2_.016', '2.2_.017', '2.2_.018', '2.2_.019', '2.2_.020', '2.2_.021', '2.2_.022',
-      '2.3_', '2.3_.001', '2.3_.002', '2.3_.003', '2.3_.004', '2.3_.005', '2.3_.006', '2.3_.007', '2.3_.008', '2.3_.009', '2.3_.010', '2.3_.011', '2.3_.012', '2.3_.013', '2.3_.014', '2.3_.015', '2.3_.016', '2.3_.017', '2.3_.018', '2.3_.019', '2.3_.020', '2.3_.021', '2.3_.022',
-      '3.1_', '3.1_.001', '3.1_.002', '3.1_.003', '3.1_.004', '3.1_.005', '3.1_.006', '3.1_.007', '3.1_.008', '3.1_.009', '3.1_.010', '3.1_.011', '3.1_.012', '3.1_.013', '3.1_.014', '3.1_.015', '3.1_.016', '3.1_.017', '3.1_.018', '3.1_.019', '3.1_.020', '3.1_.021', '3.1_.022',
-      '3.2_', '3.2_.001', '3.2_.002', '3.2_.003', '3.2_.004', '3.2_.005', '3.2_.006', '3.2_.007', '3.2_.008', '3.2_.009', '3.2_.010', '3.2_.011', '3.2_.012', '3.2_.013', '3.2_.014', '3.2_.015', '3.2_.016', '3.2_.017', '3.2_.018', '3.2_.019', '3.2_.020', '3.2_.021', '3.2_.022',
-      '3.3_', '3.3_.001', '3.3_.002', '3.3_.003', '3.3_.004', '3.3_.005', '3.3_.006', '3.3_.007', '3.3_.008', '3.3_.009', '3.3_.010', '3.3_.011', '3.3_.012', '3.3_.013', '3.3_.014', '3.3_.015', '3.3_.016', '3.3_.017', '3.3_.018', '3.3_.019', '3.3_.020', '3.3_.021', '3.3_.022'
-    ];
-
-    // Fazer matching direto entre coleções GLB e itens da planilha
-    glbCollections.forEach(collectionId => {
-      // Extrair o código base da coleção (ex: 1.1_ -> 1.1)
-      const baseCode = collectionId.replace(/[._]/g, '.').replace(/\.$/, '');
-      
-      // Procurar item correspondente na planilha
-      const matchingItem = itens5D.find(item => {
-        const itemCode = item.id.trim();
-        
-        // Matching exato para códigos principais (1.1, 1.2, etc.)
-        if (baseCode === itemCode) {
-          return true;
-        }
-        
-        // Matching para subitens (1.1.1, 1.1.2, etc.)
-        if (itemCode.startsWith(baseCode + '.')) {
-          return true;
-        }
-        
-        // Matching para elementos com sufixo (1.1_.001 -> 1.1.1)
-        if (collectionId.includes('_')) {
-          const [code, suffix] = collectionId.split('_');
-          const cleanCode = code.replace(/\.$/, '');
-          
-          if (suffix && suffix.startsWith('.')) {
-            const subCode = cleanCode + suffix;
-            return itemCode === subCode;
-          }
-        }
-        
-        return false;
-      });
-
-      if (matchingItem) {
-        const newLink: ElementLink = {
-          id: `auto_link_${collectionId}_${matchingItem.id}`,
-          elementId: collectionId,
-          elementName: `${matchingItem.descricao} (${collectionId})`,
-          itemId: matchingItem.id,
-          itemDescription: matchingItem.descricao,
-          itemCode: matchingItem.codigo,
-          linkedAt: new Date(),
-          notes: `Link automático: ${collectionId} → ${matchingItem.id}`
-        };
-        newAutoLinks.push(newLink);
-      }
-    });
-
-    setAutoLinks(newAutoLinks);
-    
-    // Salvar no localStorage
-    localStorage.setItem('viewer5d_auto_links', JSON.stringify(newAutoLinks));
-    
-    console.log('Links automáticos criados:', newAutoLinks.length);
-    console.log('Detalhes dos links:', newAutoLinks);
-  };
-
-  // Função para criar links automáticos (comentada por enquanto)
-  // const createAutoLinks = () => {
-  //   // Simular elementos 3D (em um caso real, isso viria do modelo GLB)
-  //   const elements3D = [
-  //     { id: 'pilar_001', name: 'Pilar Central' },
-  //     { id: 'viga_001', name: 'Viga Principal' },
-  //     { id: 'laje_001', name: 'Laje Térreo' },
-  //     { id: 'parede_001', name: 'Parede Externa' },
-  //     { id: 'piso_001', name: 'Piso Porcelanato' },
-  //     { id: 'janela_001', name: 'Janela Alumínio' },
-  //     { id: 'porta_001', name: 'Porta Madeira' },
-  //     { id: 'telhado_001', name: 'Telhado Fibrocimento' }
-  //   ];
-
-  //   const result = createAutomaticLinks(elements3D, itens);
-  //   setAutoLinks(result.links);
-  //   setLinkingStats(result.statistics);
-  //   setShowAutoLinking(true);
-    
-  //   console.log('Links automáticos criados:', result);
-  // };
-
-  // Carregar links salvos do localStorage
-  useEffect(() => {
-    const savedLinks = localStorage.getItem('viewer5d_links');
-    if (savedLinks) {
-      try {
-        const links = JSON.parse(savedLinks);
-        setLinkingState(prev => ({
-          ...prev,
-          links: links.map((link: any) => ({
-            ...link,
-            linkedAt: new Date(link.linkedAt)
-          }))
-        }));
-      } catch (error) {
-        console.error('Erro ao carregar links salvos:', error);
-      }
-    }
-
-    // Carregar links automáticos salvos
-    const savedAutoLinks = localStorage.getItem('viewer5d_auto_links');
-    if (savedAutoLinks) {
-      try {
-        const autoLinks = JSON.parse(savedAutoLinks);
-        setAutoLinks(autoLinks.map((link: any) => ({
-          ...link,
-          linkedAt: new Date(link.linkedAt)
-        })));
-      } catch (error) {
-        console.error('Erro ao carregar links automáticos salvos:', error);
-      }
-    }
-  }, []);
 
   const formatarMoeda = (valor: number) => {
     return new Intl.NumberFormat('pt-BR', { 
@@ -591,13 +523,6 @@ const Viewer5D: React.FC = () => {
     }).format(valor);
   };
 
-  // Filtrar itens que estão linkados (removido por enquanto)
-  // const itensLinkados = itens.filter(item => 
-  //   linkedElements.some(linkedId => 
-  //     item.descricao.toLowerCase().includes(linkedId.toLowerCase()) ||
-  //     item.categoria.toLowerCase().includes(linkedId.toLowerCase())
-  //   )
-  // );
 
   return (
     <div className="space-y-4 lg:space-y-6">
@@ -642,42 +567,10 @@ const Viewer5D: React.FC = () => {
             </button>
             
             <button
-              onClick={toggleLinkMode}
-              className={`flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors text-xs lg:text-sm ${
-                linkingState.linkMode 
-                  ? 'bg-purple-600 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {linkingState.linkMode ? <Link className="h-3 w-3 lg:h-4 lg:w-4" /> : <Unlink className="h-3 w-3 lg:h-4 lg:w-4" />}
-              <span className="hidden sm:inline">Modo Link</span>
-              <span className="sm:hidden">Link</span>
-            </button>
-            
-            <button
-              onClick={() => setLinkingState(prev => ({ ...prev, showLinkedOnly: !prev.showLinkedOnly }))}
-              className={`flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors text-xs lg:text-sm ${
-                linkingState.showLinkedOnly 
-                  ? 'bg-orange-600 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              <Filter className="h-3 w-3 lg:h-4 lg:w-4" />
-              <span className="hidden sm:inline">Linkados</span>
-              <span className="sm:hidden">Linkados</span>
-            </button>
-            
-            <button
-              onClick={createAutoLinks}
-              className="flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors bg-green-600 text-white hover:bg-green-700 text-xs lg:text-sm"
-            >
-              <Link className="h-3 w-3 lg:h-4 lg:w-4" />
-              <span className="hidden sm:inline">Auto Link</span>
-              <span className="sm:hidden">Auto</span>
-            </button>
-            
-            <button
-              onClick={() => setHighlightedElements([])}
+              onClick={() => {
+                setHighlightedElements([]);
+                setSelectedItems([]);
+              }}
               className="flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors bg-red-600 text-white hover:bg-red-700 text-xs lg:text-sm"
             >
               <EyeOff className="h-3 w-3 lg:h-4 lg:w-4" />
@@ -685,108 +578,21 @@ const Viewer5D: React.FC = () => {
               <span className="sm:hidden">Limpar</span>
             </button>
             
+            {/* Indicador de seleção */}
+            {selectedItems.length > 0 && (
+              <div className="flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md bg-orange-100 text-orange-800 text-xs lg:text-sm">
+                <span className="font-medium">{selectedItems.length}</span>
+                <span className="hidden sm:inline">selecionado{selectedItems.length > 1 ? 's' : ''}</span>
+                <span className="sm:hidden">sel.</span>
+              </div>
+            )}
+            
           </div>
         </div>
 
-        {/* Status do Sistema de Linking */}
-        {(linkingState.selectedElement || linkingState.selectedItem) && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-            <h3 className="font-semibold text-blue-800 mb-3">Sistema de Linking:</h3>
-            
-            {linkingState.selectedElement && (
-              <div className="mb-3 p-3 bg-blue-100 rounded-lg">
-                <h4 className="font-medium text-blue-900 mb-2">Elemento 3D Selecionado:</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                  <div><span className="font-medium">Nome:</span> {linkingState.selectedElement.data.name || linkingState.selectedElement.id}</div>
-                  <div><span className="font-medium">ID:</span> {linkingState.selectedElement.id}</div>
-                </div>
-              </div>
-            )}
-            
-            {linkingState.selectedItem && (
-              <div className="mb-3 p-3 bg-green-100 rounded-lg">
-                <h4 className="font-medium text-green-900 mb-2">Item da Planilha Selecionado:</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                  <div><span className="font-medium">Código:</span> {linkingState.selectedItem.codigo}</div>
-                  <div><span className="font-medium">Descrição:</span> {linkingState.selectedItem.descricao}</div>
-                </div>
-              </div>
-            )}
-            
-            {linkingState.selectedElement && linkingState.selectedItem && (
-              <div className="flex gap-2">
-                <button
-                  onClick={createLink}
-                  className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>Criar Link</span>
-                </button>
-                <button
-                  onClick={() => setLinkingState(prev => ({ ...prev, selectedElement: null, selectedItem: null }))}
-                  className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
-                >
-                  <Trash2 className="h-4 w-4" />
-                  <span>Cancelar</span>
-                </button>
-              </div>
-            )}
-          </div>
-        )}
 
 
-        {/* Links Automáticos Criados */}
-        {autoLinks.length > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-            <h3 className="font-semibold text-blue-800 mb-3 flex items-center">
-              <Link className="h-5 w-5 mr-2" />
-              Links Automáticos Criados ({autoLinks.length})
-            </h3>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {autoLinks.map((link) => (
-                <div key={link.id} className="flex items-center justify-between p-2 bg-white rounded border">
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">{link.elementName}</div>
-                    <div className="text-xs text-gray-600">{link.itemCode} - {link.itemDescription}</div>
-                    <div className="text-xs text-blue-600">{link.notes}</div>
-                  </div>
-                  <button
-                    onClick={() => setAutoLinks(prev => prev.filter(l => l.id !== link.id))}
-                    className="p-1 text-red-600 hover:bg-red-100 rounded"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
-        {/* Lista de Links Criados Online */}
-        {linkingState.links.length > 0 && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-            <h3 className="font-semibold text-green-800 mb-3 flex items-center">
-              <Check className="h-5 w-5 mr-2" />
-              Links Manuais Criados ({linkingState.links.length})
-            </h3>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {linkingState.links.map((link) => (
-                <div key={link.id} className="flex items-center justify-between p-2 bg-white rounded border">
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">{link.elementName}</div>
-                    <div className="text-xs text-gray-600">{link.itemCode} - {link.itemDescription}</div>
-                  </div>
-                  <button
-                    onClick={() => removeLink(link.id)}
-                    className="p-1 text-red-600 hover:bg-red-100 rounded"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Layout Principal */}
@@ -804,9 +610,6 @@ const Viewer5D: React.FC = () => {
               <Canvas camera={{ position: [10, 10, 10], fov: 50 }}>
                 <Suspense fallback={<Loader />}>
                   <StructuralModel 
-                    onElementSelect={handleElementSelect}
-                    selectedElementId={linkingState.selectedElement?.id || null}
-                    linkedElements={linkingState.links.map(link => link.elementId)}
                     highlightedElements={highlightedElements}
                   />
                   <OrbitControls 
@@ -825,15 +628,7 @@ const Viewer5D: React.FC = () => {
                 </Suspense>
               </Canvas>
               
-              {/* Overlay de Instruções */}
-              <div className="absolute top-4 left-4 bg-black bg-opacity-75 text-white p-3 rounded-lg text-sm">
-                <p className="font-semibold mb-2">Como Linkar:</p>
-                <p>1. Ative "Modo Link"</p>
-                <p>2. Clique em um elemento 3D</p>
-                <p>3. Clique em um item da planilha</p>
-                <p>4. Clique "Criar Link"</p>
-                <p className="mt-2 text-xs text-gray-300">• Use mouse para navegar no 3D</p>
-              </div>
+              
             </div>
           </div>
         )}
@@ -856,13 +651,13 @@ const Viewer5D: React.FC = () => {
                   <input
                     type="text"
                     placeholder="Buscar por código ou descrição..."
-                    value={linkingState.searchTerm}
-                    onChange={(e) => setLinkingState(prev => ({ ...prev, searchTerm: e.target.value }))}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-8 lg:pl-10 pr-3 lg:pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm lg:text-base"
                   />
                 </div>
                 <button
-                  onClick={() => setLinkingState(prev => ({ ...prev, searchTerm: '' }))}
+                  onClick={() => setSearchTerm('')}
                   className="px-3 py-2 text-gray-600 hover:text-gray-800"
                 >
                   Limpar
@@ -892,35 +687,25 @@ const Viewer5D: React.FC = () => {
                     <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Total
                     </th>
-                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Link
-                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {loading ? (
                     <tr>
-                      <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                      <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
                         Carregando dados 5D...
                       </td>
                     </tr>
                   ) : (
                     itens5D
                     .filter(item => {
-                      if (linkingState.showLinkedOnly) {
-                        return linkingState.links.some(link => link.itemId === item.id) ||
-                               autoLinks.some(link => link.itemId === item.id);
-                      }
-                      if (linkingState.searchTerm) {
-                        return item.descricao.toLowerCase().includes(linkingState.searchTerm.toLowerCase()) ||
-                               item.codigo.toLowerCase().includes(linkingState.searchTerm.toLowerCase());
+                      if (searchTerm) {
+                        return item.descricao.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                               item.codigo.toLowerCase().includes(searchTerm.toLowerCase());
                       }
                       return true;
                     })
                     .map((item) => {
-                      const isSelected = linkingState.selectedItem?.id === item.id;
-                      const isLinked = linkingState.links.some(link => link.itemId === item.id);
-                      const isAutoLinked = autoLinks.some(link => link.itemId === item.id);
                       const isEtapaTotal = item.isEtapaTotal;
                       
                       return (
@@ -929,15 +714,11 @@ const Viewer5D: React.FC = () => {
                           className={`hover:bg-gray-50 cursor-pointer transition-colors ${
                             isEtapaTotal
                               ? 'bg-blue-100 border-l-4 border-blue-600 font-bold'
-                              : isSelected
-                              ? 'bg-green-50 border-l-4 border-green-500'
-                              : isAutoLinked
-                              ? 'bg-blue-50 border-l-4 border-blue-500'
-                              : isLinked
-                              ? 'bg-purple-50 border-l-2 border-purple-300'
+                              : selectedItems.includes(item.id)
+                              ? 'bg-orange-100 border-l-4 border-orange-500'
                               : ''
                           }`}
-                          onClick={() => handleItemSelect(item)}
+                          onClick={(e) => handleItemSelect(item, e)}
                         >
                       <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs font-medium text-gray-900">
                         {item.codigo || item.id}
@@ -967,23 +748,6 @@ const Viewer5D: React.FC = () => {
                       }`}>
                         {formatarMoeda(item.total)}
                       </td>
-                      <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs">
-                        {isEtapaTotal ? (
-                          <span className="px-1 lg:px-2 py-1 rounded-full text-xs bg-blue-200 text-blue-800 font-bold">
-                            Total
-                          </span>
-                        ) : (
-                          <span className={`px-1 lg:px-2 py-1 rounded-full text-xs ${
-                            isAutoLinked
-                              ? 'bg-blue-100 text-blue-800'
-                              : isLinked
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-gray-100 text-gray-500'
-                          }`}>
-                            {isAutoLinked ? 'Auto' : isLinked ? 'Manual' : 'Não'}
-                          </span>
-                        )}
-                      </td>
                     </tr>
                       );
                     })
@@ -995,33 +759,6 @@ const Viewer5D: React.FC = () => {
         )}
       </div>
 
-      {/* Resumo dos Elementos Linkados */}
-      {linkingState.links.length > 0 && (
-        <div className="bg-white rounded-lg shadow-md p-4 lg:p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-            <Link className="h-5 w-5 mr-2 text-purple-600" />
-            Elementos Linkados ({linkingState.links.length})
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {linkingState.links.map((link) => (
-              <div key={link.id} className="bg-purple-50 border border-purple-200 rounded-lg p-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-sm font-medium text-purple-800">{link.elementName}</span>
-                    <div className="text-xs text-gray-600">{link.itemCode}</div>
-                  </div>
-                  <button
-                    onClick={() => removeLink(link.id)}
-                    className="text-purple-600 hover:text-purple-800 text-xs"
-                  >
-                    <Unlink className="h-3 w-3" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Instruções de Uso */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 lg:p-6">
@@ -1030,14 +767,16 @@ const Viewer5D: React.FC = () => {
         </h3>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm text-blue-700">
           <div>
-            <p className="mb-2"><strong>1.</strong> Clique nos elementos 3D para selecioná-los</p>
-            <p className="mb-2"><strong>2.</strong> Ative "Modo Link" para linkar elementos</p>
-            <p className="mb-2"><strong>3.</strong> Clique nos itens da planilha para destacar</p>
+            <p className="mb-2"><strong>1.</strong> Clique nos itens da planilha para destacar elementos 3D</p>
+            <p className="mb-2"><strong>2.</strong> <strong>Ctrl+Clique</strong> para seleção múltipla</p>
+            <p className="mb-2"><strong>3.</strong> Use os botões para mostrar/ocultar 3D e planilha</p>
+            <p className="mb-2"><strong>4.</strong> Navegue no 3D com mouse (arrastar, zoom, rotação)</p>
           </div>
           <div>
-            <p className="mb-2"><strong>4.</strong> Use os botões para mostrar/ocultar 3D e planilha</p>
-            <p className="mb-2"><strong>5.</strong> Elementos linkados ficam destacados</p>
-            <p className="mb-2"><strong>6.</strong> Navegue no 3D com mouse (arrastar, zoom, rotação)</p>
+            <p className="mb-2"><strong>5.</strong> Use "Limpar" para remover todas as seleções</p>
+            <p className="mb-2"><strong>6.</strong> Elementos destacados aparecem em laranja no 3D</p>
+            <p className="mb-2"><strong>7.</strong> Linhas selecionadas ficam destacadas em laranja</p>
+            <p className="mb-2"><strong>8.</strong> Contador mostra quantos itens estão selecionados</p>
           </div>
         </div>
       </div>
