@@ -257,9 +257,15 @@ export const processarDadosExcel5D = (excelData: ArrayBuffer): OrcamentoItem[] =
       continue;
     }
     
-    // Incluir linhas de totais por etapa (ex: "1 Fundação", "2 Térreo", etc.)
-    const isEtapaTotal = descricao.includes('Fundação') || descricao.includes('Térreo') || 
-                        descricao.includes('Pavimento Superior') || descricao.includes('Totais');
+    // Identificar totais por etapa (que DEVEM ser incluídos)
+    const isEtapaTotal = (item === '1' && descricao.includes('Fundação')) ||
+                        (item === '2' && descricao.includes('Térreo')) ||
+                        (item === '3' && descricao.includes('Pavimento Superior'));
+    
+    // EXCLUIR apenas linhas de totais gerais e itens não visíveis na imagem
+    if (descricao.includes('Totais') || descricao.includes('->')) {
+      continue;
+    }
     
     // Determinar categoria e subcategoria baseado no item
     let categoria = 'Fundação';
@@ -284,7 +290,7 @@ export const processarDadosExcel5D = (excelData: ArrayBuffer): OrcamentoItem[] =
     
     // Criar item com dados processados
     const itemProcessado = {
-      id: item || `etapa-${i}`,
+      id: item || `item-${i}`,
       codigo: '', // Não disponível no Excel
       nome: descricao.length > 50 ? descricao.substring(0, 50) + '...' : descricao,
       descricao: descricao,
