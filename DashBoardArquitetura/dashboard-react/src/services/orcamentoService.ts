@@ -21,7 +21,7 @@ const processarDadosCSV = (csvContent: string): OrcamentoItem[] => {
       const valorUnitario = parseFloat(columns[4]?.replace(',', '.') || '0');
       const maoDeObra = parseFloat(columns[5]?.replace(',', '.') || '0');
       const materiais = parseFloat(columns[6]?.replace(',', '.') || '0');
-      const total = parseFloat(columns[7]?.replace(',', '.') || '0');
+      // const total = parseFloat(columns[7]?.replace(',', '.') || '0');
       const maoDeObraTotal = parseFloat(columns[8]?.replace(',', '.') || '0');
       const materiaisTotal = parseFloat(columns[9]?.replace(',', '.') || '0');
       const totalFinal = parseFloat(columns[10]?.replace(',', '.') || '0');
@@ -29,7 +29,7 @@ const processarDadosCSV = (csvContent: string): OrcamentoItem[] => {
       
       if (item && descricao && quantidade > 0) {
         // Determinar pavimento baseado no item
-        let pavimento = 'Térreo';
+        let pavimento: 'Térreo' | 'Superior' = 'Térreo';
         if (item.startsWith('2.')) {
           pavimento = 'Superior';
         }
@@ -751,7 +751,7 @@ export const extrairCategoriaPorItem = (item: string): string => {
   if (item.includes('.')) {
     const parts = item.split('.');
     if (parts.length >= 2) {
-      const mainPart = parts[0];
+      // const mainPart = parts[0];
       const subPart = parts[1];
       
       // Categorias arquiteturais

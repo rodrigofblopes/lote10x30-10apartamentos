@@ -417,9 +417,9 @@ export const processarDadosCSV = (csvContent: string): OrcamentoItem[] => {
       const unidade = columns[2]?.trim();
       const quantidade = parseFloat(columns[3]?.replace(',', '.') || '0');
       const valorUnitario = parseFloat(columns[4]?.replace(',', '.') || '0');
-      const maoDeObra = parseFloat(columns[5]?.replace(',', '.') || '0');
-      const materiais = parseFloat(columns[6]?.replace(',', '.') || '0');
-      const total = parseFloat(columns[7]?.replace(',', '.') || '0');
+      // const maoDeObra = parseFloat(columns[5]?.replace(',', '.') || '0');
+      // const materiais = parseFloat(columns[6]?.replace(',', '.') || '0');
+      // const total = parseFloat(columns[7]?.replace(',', '.') || '0');
       const maoDeObraTotal = parseFloat(columns[8]?.replace(',', '.') || '0');
       const materiaisTotal = parseFloat(columns[9]?.replace(',', '.') || '0');
       const totalFinal = parseFloat(columns[10]?.replace(',', '.') || '0');
