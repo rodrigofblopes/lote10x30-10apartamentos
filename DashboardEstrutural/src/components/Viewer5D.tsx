@@ -232,7 +232,6 @@ const Viewer5D: React.FC = () => {
 
   // Estado para links automáticos
   const [autoLinks, setAutoLinks] = useState<ElementLink[]>([]);
-  const [showAutoLinks, setShowAutoLinks] = useState(false);
 
   // Estado para links automáticos (removido por enquanto)
   // const [autoLinks, setAutoLinks] = useState<AutoLink[]>([]);
@@ -373,7 +372,6 @@ const Viewer5D: React.FC = () => {
     });
 
     setAutoLinks(newAutoLinks);
-    setShowAutoLinks(true);
     
     // Salvar no localStorage
     localStorage.setItem('viewer5d_auto_links', JSON.stringify(newAutoLinks));
