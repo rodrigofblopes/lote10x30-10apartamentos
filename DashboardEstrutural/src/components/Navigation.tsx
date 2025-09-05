@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart3, Calculator, PieChart, Box } from 'lucide-react';
+import { BarChart3, Calculator, PieChart, Box, Layers } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: string;
@@ -31,6 +31,12 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
       label: 'Visualizador 3D',
       icon: <Box className="h-4 w-4" />,
       description: 'Modelo estrutural em 3D'
+    },
+    {
+      id: '5d',
+      label: 'Visualizador 5D',
+      icon: <Layers className="h-4 w-4" />,
+      description: '3D + Orçamento integrados'
     },
     {
       id: 'graficos',

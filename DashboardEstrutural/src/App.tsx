@@ -7,6 +7,7 @@ import ResumoExecutivo from './components/ResumoExecutivo';
 import GridOrcamento from './components/GridOrcamento';
 import CotacaoReal from './components/CotacaoReal';
 import IFCViewer from './components/IFCViewer';
+import Viewer5D from './components/Viewer5D';
 import Graficos from './components/Graficos';
 import LoadingSpinner from './components/LoadingSpinner';
 
@@ -45,6 +46,8 @@ function App() {
         return <CotacaoReal />;
       case '3d':
         return <IFCViewer />;
+      case '5d':
+        return <Viewer5D />;
       case 'graficos':
         return <Graficos />;
       default:
