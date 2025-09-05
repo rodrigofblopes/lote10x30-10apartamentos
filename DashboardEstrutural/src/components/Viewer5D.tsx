@@ -353,47 +353,46 @@ const Viewer5D: React.FC = () => {
   const [showSpreadsheet, setShowSpreadsheet] = useState(true);
 
   // Função para selecionar item da planilha e destacar elementos 3D
-  const handleItemSelect = (item: any, event: React.MouseEvent) => {
+  const handleItemSelect = (item: any) => {
     const itemId = item.id;
     
-    // Se Ctrl/Cmd está pressionado, adicionar/remover da seleção múltipla
-    if (event.ctrlKey || event.metaKey) {
-      setSelectedItems(prev => {
-        const isSelected = prev.includes(itemId);
-        let newSelection: string[];
-        
-        if (isSelected) {
-          // Remover da seleção
-          newSelection = prev.filter(id => id !== itemId);
-        } else {
-          // Adicionar à seleção
-          newSelection = [...prev, itemId];
-        }
-        
-        // Atualizar elementos destacados no 3D
-        updateHighlightedElements(newSelection);
-        return newSelection;
-      });
-    } else {
-      // Seleção única (substitui seleção anterior)
-      setSelectedItems([itemId]);
-      updateHighlightedElements([itemId]);
-    }
+    setSelectedItems(prev => {
+      const isSelected = prev.includes(itemId);
+      let newSelection: string[];
+      
+      if (isSelected) {
+        // Remover da seleção (toggle off)
+        newSelection = prev.filter(id => id !== itemId);
+      } else {
+        // Adicionar à seleção (toggle on)
+        newSelection = [...prev, itemId];
+      }
+      
+      // Atualizar elementos destacados no 3D
+      updateHighlightedElements(newSelection);
+      return newSelection;
+    });
   };
 
   // Função para atualizar elementos destacados baseado na seleção múltipla
   const updateHighlightedElements = (selectedItemIds: string[]) => {
+    console.log('=== ATUALIZANDO ELEMENTOS DESTACADOS ===');
+    console.log('Itens selecionados:', selectedItemIds);
+    
     const allElementsToHighlight: string[] = [];
     
     selectedItemIds.forEach(itemId => {
-      const item = itens5D.find(i => i.id === itemId);
-      if (item) {
-        const patterns = generateSearchPatterns(itemId);
-        allElementsToHighlight.push(...patterns);
-      }
+      const patterns = generateSearchPatterns(itemId);
+      allElementsToHighlight.push(...patterns);
+      console.log(`Padrões para ${itemId}:`, patterns.length, 'padrões');
     });
     
-    setHighlightedElements(allElementsToHighlight);
+    // Remover duplicatas
+    const uniqueElements = [...new Set(allElementsToHighlight)];
+    
+    console.log('Total de elementos únicos para destacar:', uniqueElements.length);
+    setHighlightedElements(uniqueElements);
+    console.log('=== FIM ATUALIZAÇÃO ===');
   };
 
   // Função para gerar padrões de busca (extraída da função anterior)
@@ -578,14 +577,6 @@ const Viewer5D: React.FC = () => {
               <span className="sm:hidden">Limpar</span>
             </button>
             
-            {/* Indicador de seleção */}
-            {selectedItems.length > 0 && (
-              <div className="flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md bg-orange-100 text-orange-800 text-xs lg:text-sm">
-                <span className="font-medium">{selectedItems.length}</span>
-                <span className="hidden sm:inline">selecionado{selectedItems.length > 1 ? 's' : ''}</span>
-                <span className="sm:hidden">sel.</span>
-              </div>
-            )}
             
           </div>
         </div>
@@ -711,14 +702,14 @@ const Viewer5D: React.FC = () => {
                       return (
                         <tr 
                           key={item.id} 
-                          className={`hover:bg-gray-50 cursor-pointer transition-colors ${
+                          className={`hover:bg-gray-50 cursor-pointer transition-all duration-200 ease-in-out ${
                             isEtapaTotal
                               ? 'bg-blue-100 border-l-4 border-blue-600 font-bold'
                               : selectedItems.includes(item.id)
-                              ? 'bg-orange-100 border-l-4 border-orange-500'
+                              ? 'bg-orange-100 border-l-4 border-orange-500 shadow-sm'
                               : ''
                           }`}
-                          onClick={(e) => handleItemSelect(item, e)}
+                          onClick={() => handleItemSelect(item)}
                         >
                       <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs font-medium text-gray-900">
                         {item.codigo || item.id}
@@ -768,15 +759,15 @@ const Viewer5D: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm text-blue-700">
           <div>
             <p className="mb-2"><strong>1.</strong> Clique nos itens da planilha para destacar elementos 3D</p>
-            <p className="mb-2"><strong>2.</strong> <strong>Ctrl+Clique</strong> para seleção múltipla</p>
-            <p className="mb-2"><strong>3.</strong> Use os botões para mostrar/ocultar 3D e planilha</p>
-            <p className="mb-2"><strong>4.</strong> Navegue no 3D com mouse (arrastar, zoom, rotação)</p>
+            <p className="mb-2"><strong>2.</strong> Clique novamente para <strong>deselecionar</strong></p>
+            <p className="mb-2"><strong>3.</strong> Selecione múltiplos itens clicando em várias linhas</p>
+            <p className="mb-2"><strong>4.</strong> Use os botões para mostrar/ocultar 3D e planilha</p>
           </div>
           <div>
-            <p className="mb-2"><strong>5.</strong> Use "Limpar" para remover todas as seleções</p>
-            <p className="mb-2"><strong>6.</strong> Elementos destacados aparecem em laranja no 3D</p>
-            <p className="mb-2"><strong>7.</strong> Linhas selecionadas ficam destacadas em laranja</p>
-            <p className="mb-2"><strong>8.</strong> Contador mostra quantos itens estão selecionados</p>
+            <p className="mb-2"><strong>5.</strong> Navegue no 3D com mouse (arrastar, zoom, rotação)</p>
+            <p className="mb-2"><strong>6.</strong> Use "Limpar" para remover todas as seleções</p>
+            <p className="mb-2"><strong>7.</strong> Elementos destacados aparecem em laranja no 3D</p>
+            <p className="mb-2"><strong>8.</strong> Linhas selecionadas ficam destacadas em laranja</p>
           </div>
         </div>
       </div>
