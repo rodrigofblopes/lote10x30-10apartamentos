@@ -226,7 +226,7 @@ const Arquitetura3D: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
           <div className="mb-4 lg:mb-0">
             <h2 className="text-xl lg:text-2xl font-bold text-blue-700 flex items-center">
-              🏠 Visualizador 3D Arquitetônico - Vila Andriw
+              🏠 Visualizador 3D Arquitetônico
             </h2>
             <p className="text-sm lg:text-base text-gray-600 mt-2">
               Modelo 3D completo dos 10 apartamentos - Clique nos elementos para interagir
@@ -290,7 +290,7 @@ const Arquitetura3D: React.FC = () => {
         <div className="bg-gray-800 text-white px-4 py-2">
           <h3 className="font-semibold flex items-center">
             <Box className="h-5 w-5 mr-2" />
-            Modelo 3D - 10 Apartamentos Vila Andriw
+            Modelo 3D - 10 Apartamentos
           </h3>
         </div>
         <div className="h-96 lg:h-[600px] relative">

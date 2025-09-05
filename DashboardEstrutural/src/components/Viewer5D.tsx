@@ -53,6 +53,28 @@ function StructuralModel({ onElementSelect, selectedElementId: _selectedElementI
 
   // Carregar o modelo GLB com coleções renomeadas
   const { scene } = useGLTF('/Estrutural.glb');
+  
+  // Extrair coleções do modelo GLB
+  const extractCollections = (scene: THREE.Group): string[] => {
+    const collections: string[] = [];
+    
+    scene.traverse((child) => {
+      if (child.name && child.name.trim() !== '') {
+        collections.push(child.name);
+      }
+    });
+    
+    return collections;
+  };
+  
+  // Expor coleções para o componente pai
+  useEffect(() => {
+    if (scene) {
+      const collections = extractCollections(scene);
+      console.log('Coleções encontradas no GLB:', collections);
+      // Aqui você pode passar as coleções para o componente pai se necessário
+    }
+  }, [scene]);
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -301,71 +323,66 @@ const Viewer5D: React.FC = () => {
     }));
   };
 
-  // Função para criar links automáticos baseados no matching dos nomes
+  // Função para criar links automáticos baseados no matching direto dos códigos
   const createAutoLinks = () => {
     const newAutoLinks: ElementLink[] = [];
     
-    // Simular elementos 3D baseados no padrão esperado (viga 1.1_Viga...)
-    const elements3D = [
-      { id: 'viga 1.1_Viga', name: 'Viga 1.1' },
-      { id: 'viga 1.1.1_Armação', name: 'Armação Viga 1.1.1' },
-      { id: 'viga 1.1.2_Concreto', name: 'Concreto Viga 1.1.2' },
-      { id: 'viga 1.1.3_Forma', name: 'Forma Viga 1.1.3' },
-      { id: 'pilar 1.2_Pilar', name: 'Pilar 1.2' },
-      { id: 'pilar 1.2.1_Armação', name: 'Armação Pilar 1.2.1' },
-      { id: 'pilar 1.2.2_Concreto', name: 'Concreto Pilar 1.2.2' },
-      { id: 'pilar 1.2.3_Forma', name: 'Forma Pilar 1.2.3' },
-      { id: 'fundação 1.3_Fundação', name: 'Fundação 1.3' },
-      { id: 'fundação 1.3.1_Armação', name: 'Armação Fundação 1.3.1' },
-      { id: 'fundação 1.3.2_Concreto', name: 'Concreto Fundação 1.3.2' },
-      { id: 'fundação 1.3.3_Forma', name: 'Forma Fundação 1.3.3' },
-      { id: 'viga 2.1_Viga', name: 'Viga 2.1' },
-      { id: 'viga 2.1.1_Armação', name: 'Armação Viga 2.1.1' },
-      { id: 'viga 2.1.2_Concreto', name: 'Concreto Viga 2.1.2' },
-      { id: 'viga 2.1.3_Forma', name: 'Forma Viga 2.1.3' },
-      { id: 'pilar 2.2_Pilar', name: 'Pilar 2.2' },
-      { id: 'pilar 2.2.1_Armação', name: 'Armação Pilar 2.2.1' },
-      { id: 'pilar 2.2.2_Concreto', name: 'Concreto Pilar 2.2.2' },
-      { id: 'pilar 2.2.3_Forma', name: 'Forma Pilar 2.2.3' },
-      { id: 'laje 2.3_Laje', name: 'Laje 2.3' },
-      { id: 'laje 2.3.1_Armação', name: 'Armação Laje 2.3.1' },
-      { id: 'laje 2.3.2_Concreto', name: 'Concreto Laje 2.3.2' },
-      { id: 'viga 3.1_Viga', name: 'Viga 3.1' },
-      { id: 'viga 3.1.1_Armação', name: 'Armação Viga 3.1.1' },
-      { id: 'viga 3.1.2_Concreto', name: 'Concreto Viga 3.1.2' },
-      { id: 'viga 3.1.3_Forma', name: 'Forma Viga 3.1.3' },
-      { id: 'pilar 3.2_Pilar', name: 'Pilar 3.2' },
-      { id: 'pilar 3.2.1_Armação', name: 'Armação Pilar 3.2.1' },
-      { id: 'pilar 3.2.2_Concreto', name: 'Concreto Pilar 3.2.2' },
-      { id: 'pilar 3.2.3_Forma', name: 'Forma Pilar 3.2.3' },
-      { id: 'laje 3.3_Laje', name: 'Laje 3.3' },
-      { id: 'laje 3.3.1_Armação', name: 'Armação Laje 3.3.1' },
-      { id: 'laje 3.3.2_Concreto', name: 'Concreto Laje 3.3.2' }
+    // Simular coleções do GLB baseadas na estrutura real (como visto na imagem)
+    const glbCollections = [
+      '1.1_', '1.1_.001', '1.1_.002', '1.1_.003', '1.1_.004', '1.1_.005', '1.1_.006', '1.1_.007', '1.1_.008', '1.1_.009', '1.1_.010', '1.1_.011', '1.1_.012', '1.1_.013', '1.1_.014', '1.1_.015', '1.1_.016', '1.1_.017', '1.1_.018', '1.1_.019', '1.1_.020', '1.1_.021', '1.1_.022',
+      '1.2_', '1.2_.001', '1.2_.002', '1.2_.003', '1.2_.004', '1.2_.005', '1.2_.006', '1.2_.007', '1.2_.008', '1.2_.009', '1.2_.010', '1.2_.011', '1.2_.012', '1.2_.013', '1.2_.014', '1.2_.015', '1.2_.016', '1.2_.017', '1.2_.018', '1.2_.019', '1.2_.020', '1.2_.021', '1.2_.022',
+      '1.3_', '1.3_.001', '1.3_.002', '1.3_.003', '1.3_.004', '1.3_.005', '1.3_.006', '1.3_.007', '1.3_.008', '1.3_.009', '1.3_.010', '1.3_.011', '1.3_.012', '1.3_.013', '1.3_.014', '1.3_.015', '1.3_.016', '1.3_.017', '1.3_.018', '1.3_.019', '1.3_.020', '1.3_.021', '1.3_.022',
+      '2.1_', '2.1_.001', '2.1_.002', '2.1_.003', '2.1_.004', '2.1_.005', '2.1_.006', '2.1_.007', '2.1_.008', '2.1_.009', '2.1_.010', '2.1_.011', '2.1_.012', '2.1_.013', '2.1_.014', '2.1_.015', '2.1_.016', '2.1_.017', '2.1_.018', '2.1_.019', '2.1_.020', '2.1_.021', '2.1_.022',
+      '2.2_', '2.2_.001', '2.2_.002', '2.2_.003', '2.2_.004', '2.2_.005', '2.2_.006', '2.2_.007', '2.2_.008', '2.2_.009', '2.2_.010', '2.2_.011', '2.2_.012', '2.2_.013', '2.2_.014', '2.2_.015', '2.2_.016', '2.2_.017', '2.2_.018', '2.2_.019', '2.2_.020', '2.2_.021', '2.2_.022',
+      '2.3_', '2.3_.001', '2.3_.002', '2.3_.003', '2.3_.004', '2.3_.005', '2.3_.006', '2.3_.007', '2.3_.008', '2.3_.009', '2.3_.010', '2.3_.011', '2.3_.012', '2.3_.013', '2.3_.014', '2.3_.015', '2.3_.016', '2.3_.017', '2.3_.018', '2.3_.019', '2.3_.020', '2.3_.021', '2.3_.022',
+      '3.1_', '3.1_.001', '3.1_.002', '3.1_.003', '3.1_.004', '3.1_.005', '3.1_.006', '3.1_.007', '3.1_.008', '3.1_.009', '3.1_.010', '3.1_.011', '3.1_.012', '3.1_.013', '3.1_.014', '3.1_.015', '3.1_.016', '3.1_.017', '3.1_.018', '3.1_.019', '3.1_.020', '3.1_.021', '3.1_.022',
+      '3.2_', '3.2_.001', '3.2_.002', '3.2_.003', '3.2_.004', '3.2_.005', '3.2_.006', '3.2_.007', '3.2_.008', '3.2_.009', '3.2_.010', '3.2_.011', '3.2_.012', '3.2_.013', '3.2_.014', '3.2_.015', '3.2_.016', '3.2_.017', '3.2_.018', '3.2_.019', '3.2_.020', '3.2_.021', '3.2_.022',
+      '3.3_', '3.3_.001', '3.3_.002', '3.3_.003', '3.3_.004', '3.3_.005', '3.3_.006', '3.3_.007', '3.3_.008', '3.3_.009', '3.3_.010', '3.3_.011', '3.3_.012', '3.3_.013', '3.3_.014', '3.3_.015', '3.3_.016', '3.3_.017', '3.3_.018', '3.3_.019', '3.3_.020', '3.3_.021', '3.3_.022'
     ];
 
-    // Fazer matching entre elementos 3D e itens da planilha
-    elements3D.forEach(element3D => {
+    // Fazer matching direto entre coleções GLB e itens da planilha
+    glbCollections.forEach(collectionId => {
+      // Extrair o código base da coleção (ex: 1.1_ -> 1.1)
+      const baseCode = collectionId.replace(/[._]/g, '.').replace(/\.$/, '');
+      
+      // Procurar item correspondente na planilha
       const matchingItem = itens.find(item => {
-        // Extrair o código do item (ex: 1.1.1)
-        const itemCode = item.id;
+        const itemCode = item.id.trim();
         
-        // Extrair o código do elemento 3D (ex: viga 1.1_Viga -> 1.1)
-        const elementCode = element3D.id.split('_')[0].split(' ')[1];
+        // Matching exato para códigos principais (1.1, 1.2, etc.)
+        if (baseCode === itemCode) {
+          return true;
+        }
         
-        // Verificar se o código do item começa com o código do elemento
-        return itemCode.startsWith(elementCode);
+        // Matching para subitens (1.1.1, 1.1.2, etc.)
+        if (itemCode.startsWith(baseCode + '.')) {
+          return true;
+        }
+        
+        // Matching para elementos com sufixo (1.1_.001 -> 1.1.1)
+        if (collectionId.includes('_')) {
+          const [code, suffix] = collectionId.split('_');
+          const cleanCode = code.replace(/\.$/, '');
+          
+          if (suffix && suffix.startsWith('.')) {
+            const subCode = cleanCode + suffix;
+            return itemCode === subCode;
+          }
+        }
+        
+        return false;
       });
 
       if (matchingItem) {
         const newLink: ElementLink = {
-          id: `auto_link_${element3D.id}_${matchingItem.id}`,
-          elementId: element3D.id,
-          elementName: element3D.name,
+          id: `auto_link_${collectionId}_${matchingItem.id}`,
+          elementId: collectionId,
+          elementName: `${matchingItem.descricao} (${collectionId})`,
           itemId: matchingItem.id,
           itemDescription: matchingItem.descricao,
           itemCode: matchingItem.codigo,
           linkedAt: new Date(),
-          notes: 'Link automático baseado no matching de códigos'
+          notes: `Link automático: ${collectionId} → ${matchingItem.id}`
         };
         newAutoLinks.push(newLink);
       }
@@ -377,6 +394,7 @@ const Viewer5D: React.FC = () => {
     localStorage.setItem('viewer5d_auto_links', JSON.stringify(newAutoLinks));
     
     console.log('Links automáticos criados:', newAutoLinks.length);
+    console.log('Detalhes dos links:', newAutoLinks);
   };
 
   // Função para criar links automáticos (comentada por enquanto)
