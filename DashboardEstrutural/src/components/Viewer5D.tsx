@@ -3,7 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Html, useProgress, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { carregarDados5D } from '../services/orcamento5DService';
-import { Calculator, Eye, EyeOff, Box, Search, Settings } from 'lucide-react';
+import { Calculator, Box, Search, Settings } from 'lucide-react';
 import { generateSearchPatterns, getElementColor, getElementType } from '../config/elementLinkingConfig';
 import BlenderCollectionAnalyzer from './BlenderCollectionAnalyzer';
 import { blenderCollectionService, BlenderCollection } from '../services/blenderCollectionService';
@@ -199,33 +199,59 @@ function StructuralModel({ highlightedElements, blenderCollections = [] }: Struc
             
             // Função de matching melhorada usando coleções analisadas
             const isMatch = (searchPattern: string, objectName: string): boolean => {
+              console.log(`🔍 Verificando match: "${searchPattern}" vs "${objectName}"`);
+              
               // Matching exato
-              if (objectName === searchPattern) return true;
+              if (objectName === searchPattern) {
+                console.log(`✅ MATCH EXATO: ${objectName}`);
+                return true;
+              }
               
               // Matching por início (mais comum para coleções)
-              if (objectName.startsWith(searchPattern)) return true;
+              if (objectName.startsWith(searchPattern)) {
+                console.log(`✅ MATCH INÍCIO: ${objectName} starts with ${searchPattern}`);
+                return true;
+              }
               
               // Matching específico para padrões de coleção do Blender
-              if (searchPattern.endsWith('_') && objectName.startsWith(searchPattern)) return true;
+              if (searchPattern.endsWith('_') && objectName.startsWith(searchPattern)) {
+                console.log(`✅ MATCH UNDERSCORE: ${objectName} starts with ${searchPattern}`);
+                return true;
+              }
               
               // Matching para padrões como "2.1_.001" (com underscore e ponto)
-              if (searchPattern.includes('_.') && objectName.startsWith(searchPattern)) return true;
+              if (searchPattern.includes('_.') && objectName.startsWith(searchPattern)) {
+                console.log(`✅ MATCH PONTO: ${objectName} starts with ${searchPattern}`);
+                return true;
+              }
               
               // Matching por contém (para casos como "2.1_.001" contém "2.1_")
-              if (objectName.includes(searchPattern)) return true;
+              if (objectName.includes(searchPattern)) {
+                console.log(`✅ MATCH CONTÉM: ${objectName} contains ${searchPattern}`);
+                return true;
+              }
               
               // Matching com variações de separadores
               const normalizedPattern = searchPattern.replace(/[._-]/g, '');
               const normalizedName = objectName.replace(/[._-]/g, '');
-              if (normalizedName.startsWith(normalizedPattern)) return true;
+              if (normalizedName.startsWith(normalizedPattern)) {
+                console.log(`✅ MATCH NORMALIZADO: ${objectName} normalized starts with ${searchPattern} normalized`);
+                return true;
+              }
               
               // Matching hierárquico para coleções
               if (searchPattern.includes('.') && !searchPattern.endsWith('_')) {
                 const basePattern = searchPattern + '_.';
-                if (objectName.startsWith(basePattern)) return true;
+                if (objectName.startsWith(basePattern)) {
+                  console.log(`✅ MATCH HIERÁRQUICO 1: ${objectName} starts with ${basePattern}`);
+                  return true;
+                }
                 
                 const basePattern2 = searchPattern + '_';
-                if (objectName.startsWith(basePattern2)) return true;
+                if (objectName.startsWith(basePattern2)) {
+                  console.log(`✅ MATCH HIERÁRQUICO 2: ${objectName} starts with ${basePattern2}`);
+                  return true;
+                }
               }
               
               // Matching usando coleções analisadas
@@ -234,6 +260,8 @@ function StructuralModel({ highlightedElements, blenderCollections = [] }: Struc
               );
               
               if (matchingCollection) {
+                console.log(`📋 Coleção encontrada: ${matchingCollection.name}`);
+                
                 // Verificar se a coleção corresponde ao padrão de busca
                 const collectionName = matchingCollection.name.toLowerCase();
                 const searchLower = searchPattern.toLowerCase();
@@ -241,6 +269,7 @@ function StructuralModel({ highlightedElements, blenderCollections = [] }: Struc
                 if (collectionName.includes(searchLower) || 
                     collectionName.startsWith(searchLower) ||
                     collectionName.endsWith(searchLower)) {
+                  console.log(`✅ MATCH COLEÇÃO: ${matchingCollection.name} matches ${searchPattern}`);
                   return true;
                 }
                 
@@ -248,22 +277,45 @@ function StructuralModel({ highlightedElements, blenderCollections = [] }: Struc
                 if (matchingCollection.userData) {
                   const userDataStr = JSON.stringify(matchingCollection.userData).toLowerCase();
                   if (userDataStr.includes(searchLower)) {
+                    console.log(`✅ MATCH USERDATA: ${matchingCollection.name} userData contains ${searchPattern}`);
                     return true;
                   }
                 }
               }
               
               // Matching para coleções pai (IfcBuildingStorey)
-              if (searchPattern === '2' && objectName.includes('Térreo')) return true;
-              if (searchPattern === '1' && objectName.includes('Fundação')) return true;
-              if (searchPattern === '3' && objectName.includes('Superior')) return true;
+              if (searchPattern === '2' && objectName.includes('Térreo')) {
+                console.log(`✅ MATCH TÉRREO: ${objectName}`);
+                return true;
+              }
+              if (searchPattern === '1' && objectName.includes('Fundação')) {
+                console.log(`✅ MATCH FUNDAÇÃO: ${objectName}`);
+                return true;
+              }
+              if (searchPattern === '3' && objectName.includes('Superior')) {
+                console.log(`✅ MATCH SUPERIOR: ${objectName}`);
+                return true;
+              }
               
               // Matching por palavras-chave específicas
-              if (searchPattern.includes('Viga') && objectName.toLowerCase().includes('viga')) return true;
-              if (searchPattern.includes('Pilar') && objectName.toLowerCase().includes('pilar')) return true;
-              if (searchPattern.includes('Laje') && objectName.toLowerCase().includes('laje')) return true;
-              if (searchPattern.includes('Fundacao') && objectName.toLowerCase().includes('fundacao')) return true;
+              if (searchPattern.includes('Viga') && objectName.toLowerCase().includes('viga')) {
+                console.log(`✅ MATCH VIGA: ${objectName}`);
+                return true;
+              }
+              if (searchPattern.includes('Pilar') && objectName.toLowerCase().includes('pilar')) {
+                console.log(`✅ MATCH PILAR: ${objectName}`);
+                return true;
+              }
+              if (searchPattern.includes('Laje') && objectName.toLowerCase().includes('laje')) {
+                console.log(`✅ MATCH LAJE: ${objectName}`);
+                return true;
+              }
+              if (searchPattern.includes('Fundacao') && objectName.toLowerCase().includes('fundacao')) {
+                console.log(`✅ MATCH FUNDAÇÃO: ${objectName}`);
+                return true;
+              }
               
+              console.log(`❌ SEM MATCH: ${objectName} não corresponde a ${searchPattern}`);
               return false;
             };
             
@@ -380,9 +432,9 @@ const Viewer5D: React.FC = () => {
   
 
   // Estados de visibilidade
-  const [show3D, setShow3D] = useState(true);
-  const [showSpreadsheet, setShowSpreadsheet] = useState(true);
-  const [showCollectionAnalyzer, setShowCollectionAnalyzer] = useState(false);
+  const [show3D] = useState(true);
+  const [showSpreadsheet] = useState(true);
+  const [showCollectionAnalyzer] = useState(false);
   
   // Estado para coleções do Blender
   const [blenderCollections, setBlenderCollections] = useState<BlenderCollection[]>([]);
@@ -413,19 +465,35 @@ const Viewer5D: React.FC = () => {
   const updateHighlightedElements = (selectedItemIds: string[]) => {
     console.log('=== ATUALIZANDO ELEMENTOS DESTACADOS ===');
     console.log('Itens selecionados:', selectedItemIds);
+    console.log('Coleções disponíveis:', blenderCollections.length);
     
     const allElementsToHighlight: string[] = [];
     
     selectedItemIds.forEach(itemId => {
-      const patterns = generateSearchPatterns(itemId);
-      allElementsToHighlight.push(...patterns);
-      console.log(`Padrões para ${itemId}:`, patterns.length, 'padrões');
+      // Primeiro, tentar encontrar correspondências diretas nas coleções
+      const directMatches = blenderCollections.filter(collection => {
+        const collectionTitle = blenderCollectionService.extractCollectionTitle(collection.name);
+        return collectionTitle === itemId || 
+               collectionTitle.startsWith(itemId) || 
+               collection.name.includes(itemId);
+      });
+      
+      if (directMatches.length > 0) {
+        console.log(`✅ MATCHES DIRETOS para ${itemId}:`, directMatches.map(c => c.name));
+        allElementsToHighlight.push(...directMatches.map(c => c.name));
+      } else {
+        // Fallback para padrões gerados
+        const patterns = generateSearchPatterns(itemId);
+        allElementsToHighlight.push(...patterns);
+        console.log(`⚠️ Usando padrões gerados para ${itemId}:`, patterns.length, 'padrões');
+      }
     });
     
     // Remover duplicatas
     const uniqueElements = [...new Set(allElementsToHighlight)];
     
     console.log('Total de elementos únicos para destacar:', uniqueElements.length);
+    console.log('Elementos para destacar:', uniqueElements);
     setHighlightedElements(uniqueElements);
     console.log('=== FIM ATUALIZAÇÃO ===');
   };
@@ -434,6 +502,12 @@ const Viewer5D: React.FC = () => {
   const handleCollectionsFound = (collections: any[]) => {
     console.log('=== PROCESSANDO COLEÇÕES ENCONTRADAS ===');
     console.log('Total de coleções:', collections.length);
+    
+    // Mostrar todas as coleções com seus títulos extraídos
+    collections.forEach(collection => {
+      const title = blenderCollectionService.extractCollectionTitle(collection.name);
+      console.log(`📋 ${collection.name} -> Título: "${title}"`);
+    });
     
     setBlenderCollections(collections);
     
@@ -480,70 +554,6 @@ const Viewer5D: React.FC = () => {
 
   return (
     <div className="space-y-2 sm:space-y-4 lg:space-y-6">
-      {/* Header e Controles */}
-      <div className="bg-white rounded-lg shadow-md p-3 sm:p-4 lg:p-6">
-        <div className="flex flex-col space-y-3 lg:space-y-0 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex-1 min-w-0">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-700 flex items-center">
-              <span className="mr-2">🏗️</span>
-              <span className="truncate">Visualizador 5D - Lote 10x30</span>
-            </h2>
-            <p className="text-xs sm:text-sm lg:text-base text-gray-600 mt-1 lg:mt-2">
-              Integração 3D + Orçamento - Linke elementos do modelo com itens da planilha
-            </p>
-          </div>
-          
-          {/* Controles Mobile-First */}
-          <div className="flex flex-wrap gap-1 sm:gap-2 lg:gap-3">
-            <button
-              onClick={() => setShow3D(!show3D)}
-              className={`flex items-center space-x-1 px-2 sm:px-3 py-2 rounded-md transition-colors text-xs sm:text-sm ${
-                show3D 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {show3D ? <Eye className="h-3 w-3 sm:h-4 sm:w-4" /> : <EyeOff className="h-3 w-3 sm:h-4 sm:w-4" />}
-              <span className="hidden xs:inline">3D</span>
-            </button>
-            
-            <button
-              onClick={() => setShowSpreadsheet(!showSpreadsheet)}
-              className={`flex items-center space-x-1 px-2 sm:px-3 py-2 rounded-md transition-colors text-xs sm:text-sm ${
-                showSpreadsheet 
-                  ? 'bg-green-600 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {showSpreadsheet ? <Eye className="h-3 w-3 sm:h-4 sm:w-4" /> : <EyeOff className="h-3 w-3 sm:h-4 sm:w-4" />}
-              <span className="hidden xs:inline">Planilha</span>
-            </button>
-            
-            <button
-              onClick={() => {
-                setHighlightedElements([]);
-                setSelectedItems([]);
-              }}
-              className="flex items-center space-x-1 px-2 sm:px-3 py-2 rounded-md transition-colors bg-red-600 text-white hover:bg-red-700 text-xs sm:text-sm"
-            >
-              <EyeOff className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden xs:inline">Limpar</span>
-            </button>
-            
-            <button
-              onClick={() => setShowCollectionAnalyzer(!showCollectionAnalyzer)}
-              className={`flex items-center space-x-1 px-2 sm:px-3 py-2 rounded-md transition-colors text-xs sm:text-sm ${
-                showCollectionAnalyzer 
-                  ? 'bg-purple-600 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden xs:inline">Coleções</span>
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* Layout Principal - Mobile First */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-4 lg:gap-6">
