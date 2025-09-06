@@ -3,7 +3,10 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Html, useProgress, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { carregarDados5D } from '../services/orcamento5DService';
-import { Calculator, Eye, EyeOff, Box, Search } from 'lucide-react';
+import { Calculator, Eye, EyeOff, Box, Search, Settings } from 'lucide-react';
+import { generateSearchPatterns, getElementColor, getElementType } from '../config/elementLinkingConfig';
+import BlenderCollectionAnalyzer from './BlenderCollectionAnalyzer';
+import { blenderCollectionService, BlenderCollection } from '../services/blenderCollectionService';
 
 
 // Componente de loading
@@ -23,9 +26,10 @@ function Loader() {
 // Componente para carregar o modelo GLB com interatividade
 interface StructuralModelProps {
   highlightedElements: string[];
+  blenderCollections?: BlenderCollection[];
 }
 
-function StructuralModel({ highlightedElements }: StructuralModelProps) {
+function StructuralModel({ highlightedElements, blenderCollections = [] }: StructuralModelProps) {
   const meshRef = useRef<THREE.Group>(null);
 
   // Carregar o modelo GLB com coleções renomeadas
@@ -193,7 +197,7 @@ function StructuralModel({ highlightedElements }: StructuralModelProps) {
             const childName = child.name || '';
             console.log('Verificando objeto na cena:', childName);
             
-            // Função de matching mais inteligente para coleções do Blender
+            // Função de matching melhorada usando coleções analisadas
             const isMatch = (searchPattern: string, objectName: string): boolean => {
               // Matching exato
               if (objectName === searchPattern) return true;
@@ -202,7 +206,6 @@ function StructuralModel({ highlightedElements }: StructuralModelProps) {
               if (objectName.startsWith(searchPattern)) return true;
               
               // Matching específico para padrões de coleção do Blender
-              // Ex: "2.1_" deve match com "2.1_.001", "2.1_.002", etc.
               if (searchPattern.endsWith('_') && objectName.startsWith(searchPattern)) return true;
               
               // Matching para padrões como "2.1_.001" (com underscore e ponto)
@@ -217,13 +220,37 @@ function StructuralModel({ highlightedElements }: StructuralModelProps) {
               if (normalizedName.startsWith(normalizedPattern)) return true;
               
               // Matching hierárquico para coleções
-              // Se procurar por "2.1", deve encontrar "2.1_.001", "2.1_.002", etc.
               if (searchPattern.includes('.') && !searchPattern.endsWith('_')) {
                 const basePattern = searchPattern + '_.';
                 if (objectName.startsWith(basePattern)) return true;
                 
                 const basePattern2 = searchPattern + '_';
                 if (objectName.startsWith(basePattern2)) return true;
+              }
+              
+              // Matching usando coleções analisadas
+              const matchingCollection = blenderCollections.find(collection => 
+                collection.name === objectName
+              );
+              
+              if (matchingCollection) {
+                // Verificar se a coleção corresponde ao padrão de busca
+                const collectionName = matchingCollection.name.toLowerCase();
+                const searchLower = searchPattern.toLowerCase();
+                
+                if (collectionName.includes(searchLower) || 
+                    collectionName.startsWith(searchLower) ||
+                    collectionName.endsWith(searchLower)) {
+                  return true;
+                }
+                
+                // Verificar userData se disponível
+                if (matchingCollection.userData) {
+                  const userDataStr = JSON.stringify(matchingCollection.userData).toLowerCase();
+                  if (userDataStr.includes(searchLower)) {
+                    return true;
+                  }
+                }
               }
               
               // Matching para coleções pai (IfcBuildingStorey)
@@ -251,6 +278,10 @@ function StructuralModel({ highlightedElements }: StructuralModelProps) {
           const mesh = targetObject as any;
           if (mesh.geometry) {
             console.log('Renderizando elemento destacado:', elementId, '->', (targetObject as any).name);
+            
+            // Usar a função de cor da configuração
+            const elementColor = getElementColor(elementId);
+            
             return (
               <mesh
                 key={`highlight-${elementId}-${(targetObject as any).name}`}
@@ -260,10 +291,10 @@ function StructuralModel({ highlightedElements }: StructuralModelProps) {
                 scale={mesh.scale}
               >
                 <meshStandardMaterial 
-                  color="#ff6b35" 
+                  color={elementColor}
                   transparent 
                   opacity={0.8}
-                  emissive="#ff6b35"
+                  emissive={elementColor}
                   emissiveIntensity={0.3}
                 />
               </mesh>
@@ -351,6 +382,10 @@ const Viewer5D: React.FC = () => {
   // Estados de visibilidade
   const [show3D, setShow3D] = useState(true);
   const [showSpreadsheet, setShowSpreadsheet] = useState(true);
+  const [showCollectionAnalyzer, setShowCollectionAnalyzer] = useState(false);
+  
+  // Estado para coleções do Blender
+  const [blenderCollections, setBlenderCollections] = useState<BlenderCollection[]>([]);
 
   // Função para selecionar item da planilha e destacar elementos 3D
   const handleItemSelect = (item: any) => {
@@ -395,120 +430,21 @@ const Viewer5D: React.FC = () => {
     console.log('=== FIM ATUALIZAÇÃO ===');
   };
 
-  // Função para gerar padrões de busca (extraída da função anterior)
-  const generateSearchPatterns = (code: string): string[] => {
-    const patterns: string[] = [];
+  // Função para processar coleções encontradas pelo analisador
+  const handleCollectionsFound = (collections: any[]) => {
+    console.log('=== PROCESSANDO COLEÇÕES ENCONTRADAS ===');
+    console.log('Total de coleções:', collections.length);
     
-    // Padrão exato
-    patterns.push(code);
+    setBlenderCollections(collections);
     
-    // Padrões com underscore (mais comum no Blender)
-    patterns.push(`${code}_`);
-    patterns.push(`${code.replace('.', '_')}_`);
+    // Gerar mapeamentos automáticos
+    const mappings = blenderCollectionService.generateAutomaticMappings();
     
-    // Padrões específicos para coleções do Blender (baseado na estrutura mostrada)
-    if (code === '1') {
-      // Fundação - incluir todas as sub-coleções
-      patterns.push('1_', '1.1_', '1.2_', '1.3_');
-      // Padrões com numeração sequencial para sub-itens (formato: 1.1_.001, 1.1_.002, etc.)
-      for (let i = 1; i <= 50; i++) {
-        const num = i.toString().padStart(3, '0');
-        patterns.push(`1.1_.${num}`);
-        patterns.push(`1.2_.${num}`);
-        patterns.push(`1.3_.${num}`);
-      }
-    } else if (code === '1.1') {
-      // Vigas da fundação
-      patterns.push('1.1_');
-      for (let i = 1; i <= 50; i++) {
-        const num = i.toString().padStart(3, '0');
-        patterns.push(`1.1_.${num}`);
-      }
-    } else if (code === '1.2') {
-      // Pilares da fundação
-      patterns.push('1.2_');
-      for (let i = 1; i <= 50; i++) {
-        const num = i.toString().padStart(3, '0');
-        patterns.push(`1.2_.${num}`);
-      }
-    } else if (code === '1.3') {
-      // Fundações
-      patterns.push('1.3_');
-      for (let i = 1; i <= 50; i++) {
-        const num = i.toString().padStart(3, '0');
-        patterns.push(`1.3_.${num}`);
-      }
-    } else if (code === '2') {
-      // Térreo - incluir todas as sub-coleções
-      patterns.push('2_', '2.1_', '2.2_', '2.3_');
-      for (let i = 1; i <= 50; i++) {
-        const num = i.toString().padStart(3, '0');
-        patterns.push(`2.1_.${num}`);
-        patterns.push(`2.2_.${num}`);
-        patterns.push(`2.3_.${num}`);
-      }
-    } else if (code === '2.1') {
-      // Vigas do térreo (como mostrado na imagem: 2.1_.001, 2.1_.002, etc.)
-      patterns.push('2.1_');
-      for (let i = 1; i <= 50; i++) {
-        const num = i.toString().padStart(3, '0');
-        patterns.push(`2.1_.${num}`);
-      }
-    } else if (code === '2.2') {
-      // Pilares do térreo
-      patterns.push('2.2_');
-      for (let i = 1; i <= 50; i++) {
-        const num = i.toString().padStart(3, '0');
-        patterns.push(`2.2_.${num}`);
-      }
-    } else if (code === '2.3') {
-      // Lajes do térreo
-      patterns.push('2.3_');
-      for (let i = 1; i <= 50; i++) {
-        const num = i.toString().padStart(3, '0');
-        patterns.push(`2.3_.${num}`);
-      }
-    } else if (code === '3') {
-      // Pavimento Superior
-      patterns.push('3_', '3.1_', '3.3_');
-      for (let i = 1; i <= 50; i++) {
-        const num = i.toString().padStart(3, '0');
-        patterns.push(`3.1_.${num}`);
-        patterns.push(`3.3_.${num}`);
-      }
-    } else if (code === '3.1') {
-      // Vigas do pavimento superior
-      patterns.push('3.1_');
-      for (let i = 1; i <= 50; i++) {
-        const num = i.toString().padStart(3, '0');
-        patterns.push(`3.1_.${num}`);
-      }
-    } else if (code === '3.3') {
-      // Pilares do pavimento superior
-      patterns.push('3.3_');
-      for (let i = 1; i <= 50; i++) {
-        const num = i.toString().padStart(3, '0');
-        patterns.push(`3.3_.${num}`);
-      }
-    }
-    
-    // Padrões genéricos com numeração sequencial
-    for (let i = 1; i <= 50; i++) {
-      const num = i.toString().padStart(3, '0');
-      patterns.push(`${code}_${num}`);
-      patterns.push(`${code.replace('.', '_')}_${num}`);
-      patterns.push(`${code}.${num}`);
-      patterns.push(`${code}_${i}`);
-      patterns.push(`${code.replace('.', '_')}_${i}`);
-    }
-    
-    // Padrões com espaços e hífens
-    patterns.push(`${code} `);
-    patterns.push(`${code}-`);
-    patterns.push(`${code.replace('.', '-')}`);
-    
-    return patterns;
+    console.log('Mapeamentos gerados:', mappings);
+    console.log('=== FIM PROCESSAMENTO ===');
   };
+
+  // Usar a função de geração de padrões da configuração
   
 
 
@@ -522,47 +458,65 @@ const Viewer5D: React.FC = () => {
     }).format(valor);
   };
 
+  // Função para determinar a classe de destaque baseada no código
+  const getRowHighlightClass = (code: string) => {
+    const elementType = getElementType(code);
+    
+    switch (elementType) {
+      case 'viga':
+        return 'bg-orange-100 border-l-4 border-orange-500 shadow-sm';
+      case 'pilar':
+        return 'bg-teal-100 border-l-4 border-teal-500 shadow-sm';
+      case 'laje':
+      case 'fundacao':
+        return 'bg-blue-100 border-l-4 border-blue-500 shadow-sm';
+      case 'grupo':
+        return 'bg-green-100 border-l-4 border-green-500 shadow-sm';
+      default:
+        return 'bg-orange-100 border-l-4 border-orange-500 shadow-sm';
+    }
+  };
+
 
   return (
-    <div className="space-y-4 lg:space-y-6">
+    <div className="space-y-2 sm:space-y-4 lg:space-y-6">
       {/* Header e Controles */}
-      <div className="bg-white rounded-lg shadow-md p-4 lg:p-6">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
-          <div className="mb-4 lg:mb-0">
-            <h2 className="text-xl lg:text-2xl font-bold text-blue-700 flex items-center">
-              🏗️ Visualizador 5D - Lote 10x30
+      <div className="bg-white rounded-lg shadow-md p-3 sm:p-4 lg:p-6">
+        <div className="flex flex-col space-y-3 lg:space-y-0 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-700 flex items-center">
+              <span className="mr-2">🏗️</span>
+              <span className="truncate">Visualizador 5D - Lote 10x30</span>
             </h2>
-            <p className="text-sm lg:text-base text-gray-600 mt-2">
+            <p className="text-xs sm:text-sm lg:text-base text-gray-600 mt-1 lg:mt-2">
               Integração 3D + Orçamento - Linke elementos do modelo com itens da planilha
             </p>
           </div>
           
-          {/* Controles */}
-          <div className="flex flex-wrap gap-2 lg:gap-3">
+          {/* Controles Mobile-First */}
+          <div className="flex flex-wrap gap-1 sm:gap-2 lg:gap-3">
             <button
               onClick={() => setShow3D(!show3D)}
-              className={`flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors text-xs lg:text-sm ${
+              className={`flex items-center space-x-1 px-2 sm:px-3 py-2 rounded-md transition-colors text-xs sm:text-sm ${
                 show3D 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              {show3D ? <Eye className="h-3 w-3 lg:h-4 lg:w-4" /> : <EyeOff className="h-3 w-3 lg:h-4 lg:w-4" />}
-              <span className="hidden sm:inline">3D</span>
-              <span className="sm:hidden">3D</span>
+              {show3D ? <Eye className="h-3 w-3 sm:h-4 sm:w-4" /> : <EyeOff className="h-3 w-3 sm:h-4 sm:w-4" />}
+              <span className="hidden xs:inline">3D</span>
             </button>
             
             <button
               onClick={() => setShowSpreadsheet(!showSpreadsheet)}
-              className={`flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors text-xs lg:text-sm ${
+              className={`flex items-center space-x-1 px-2 sm:px-3 py-2 rounded-md transition-colors text-xs sm:text-sm ${
                 showSpreadsheet 
                   ? 'bg-green-600 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              {showSpreadsheet ? <Eye className="h-3 w-3 lg:h-4 lg:w-4" /> : <EyeOff className="h-3 w-3 lg:h-4 lg:w-4" />}
-              <span className="hidden sm:inline">Planilha</span>
-              <span className="sm:hidden">Planilha</span>
+              {showSpreadsheet ? <Eye className="h-3 w-3 sm:h-4 sm:w-4" /> : <EyeOff className="h-3 w-3 sm:h-4 sm:w-4" />}
+              <span className="hidden xs:inline">Planilha</span>
             </button>
             
             <button
@@ -570,38 +524,48 @@ const Viewer5D: React.FC = () => {
                 setHighlightedElements([]);
                 setSelectedItems([]);
               }}
-              className="flex items-center space-x-1 lg:space-x-2 px-2 lg:px-3 py-2 rounded-md transition-colors bg-red-600 text-white hover:bg-red-700 text-xs lg:text-sm"
+              className="flex items-center space-x-1 px-2 sm:px-3 py-2 rounded-md transition-colors bg-red-600 text-white hover:bg-red-700 text-xs sm:text-sm"
             >
-              <EyeOff className="h-3 w-3 lg:h-4 lg:w-4" />
-              <span className="hidden sm:inline">Limpar</span>
-              <span className="sm:hidden">Limpar</span>
+              <EyeOff className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden xs:inline">Limpar</span>
             </button>
             
-            
+            <button
+              onClick={() => setShowCollectionAnalyzer(!showCollectionAnalyzer)}
+              className={`flex items-center space-x-1 px-2 sm:px-3 py-2 rounded-md transition-colors text-xs sm:text-sm ${
+                showCollectionAnalyzer 
+                  ? 'bg-purple-600 text-white' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden xs:inline">Coleções</span>
+            </button>
           </div>
         </div>
-
-
-
-
       </div>
 
-      {/* Layout Principal */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
+      {/* Layout Principal - Mobile First */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-4 lg:gap-6">
         {/* Visualizador 3D */}
         {show3D && (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-gray-800 text-white px-3 lg:px-4 py-2">
-              <h3 className="font-semibold flex items-center text-sm lg:text-base">
-                <Box className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
-                Modelo 3D - 10 Apartamentos
+          <div className="bg-white rounded-lg shadow-md overflow-hidden order-2 lg:order-1">
+            <div className="bg-gray-800 text-white px-2 sm:px-3 lg:px-4 py-2">
+              <h3 className="font-semibold flex items-center text-xs sm:text-sm lg:text-base">
+                <Box className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 mr-1 sm:mr-2" />
+                <span className="truncate">Modelo 3D - 10 Apartamentos</span>
               </h3>
             </div>
-            <div className="h-64 sm:h-80 lg:h-96 xl:h-[500px] relative">
-              <Canvas camera={{ position: [10, 10, 10], fov: 50 }}>
+            <div className="h-48 sm:h-64 md:h-80 lg:h-96 xl:h-[500px] relative">
+              <Canvas 
+                camera={{ position: [10, 10, 10], fov: 50 }}
+                dpr={[1, 2]} // Otimização para mobile
+                performance={{ min: 0.5 }} // Performance otimizada
+              >
                 <Suspense fallback={<Loader />}>
                   <StructuralModel 
                     highlightedElements={highlightedElements}
+                    blenderCollections={blenderCollections}
                   />
                   <OrbitControls 
                     enablePan={true}
@@ -611,71 +575,79 @@ const Viewer5D: React.FC = () => {
                     maxDistance={50}
                     minPolarAngle={Math.PI / 6}
                     maxPolarAngle={Math.PI - Math.PI / 6}
+                    // Otimizações para touch
+                    touches={{
+                      ONE: 1, // Um dedo para rotação
+                      TWO: 2  // Dois dedos para zoom e pan
+                    }}
+                    mouseButtons={{
+                      LEFT: 1, // Botão esquerdo para rotação
+                      MIDDLE: 2, // Scroll para zoom
+                      RIGHT: 2 // Botão direito para pan
+                    }}
                   />
                   <Environment preset="city" />
                   
-                  {/* Efeitos de pós-processamento */}
+                  {/* Efeitos de pós-processamento otimizados para mobile */}
                   <fog attach="fog" args={['#87ceeb', 20, 100]} />
                 </Suspense>
               </Canvas>
-              
-              
             </div>
           </div>
         )}
 
         {/* Planilha de Orçamento */}
         {showSpreadsheet && (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-gray-800 text-white px-3 lg:px-4 py-2">
-              <h3 className="font-semibold flex items-center text-sm lg:text-base">
-                <Calculator className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
-                Orçamento 5DEST (Por Etapas)
+          <div className="bg-white rounded-lg shadow-md overflow-hidden order-1 lg:order-2">
+            <div className="bg-gray-800 text-white px-2 sm:px-3 lg:px-4 py-2">
+              <h3 className="font-semibold flex items-center text-xs sm:text-sm lg:text-base">
+                <Calculator className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 mr-1 sm:mr-2" />
+                <span className="truncate">Orçamento 5DEST (Por Etapas)</span>
               </h3>
             </div>
             
-            {/* Barra de Busca */}
-            <div className="p-3 lg:p-4 border-b border-gray-200">
+            {/* Barra de Busca Mobile-First */}
+            <div className="p-2 sm:p-3 lg:p-4 border-b border-gray-200">
               <div className="flex flex-col sm:flex-row gap-2">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Buscar por código ou descrição..."
+                    placeholder="Buscar..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-8 lg:pl-10 pr-3 lg:pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm lg:text-base"
+                    className="w-full pl-6 sm:pl-8 lg:pl-10 pr-2 sm:pr-3 lg:pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-xs sm:text-sm lg:text-base"
                   />
                 </div>
                 <button
                   onClick={() => setSearchTerm('')}
-                  className="px-3 py-2 text-gray-600 hover:text-gray-800"
+                  className="px-2 sm:px-3 py-2 text-gray-600 hover:text-gray-800 text-xs sm:text-sm"
                 >
                   Limpar
                 </button>
               </div>
             </div>
             
-            <div className="overflow-x-auto max-h-96 lg:max-h-[500px]">
-              <table className="min-w-full divide-y divide-gray-200 text-xs lg:text-sm">
+            <div className="overflow-x-auto max-h-64 sm:max-h-80 lg:max-h-96 xl:max-h-[500px]">
+              <table className="min-w-full divide-y divide-gray-200 text-xs sm:text-sm">
                 <thead className="bg-gray-50 sticky top-0">
                   <tr>
-                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-1 sm:px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Código
                     </th>
-                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-1 sm:px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Descrição
                     </th>
-                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-1 sm:px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                       Qtd
                     </th>
-                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-1 sm:px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                       M.O.
                     </th>
-                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-1 sm:px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                       Material
                     </th>
-                    <th className="px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-1 sm:px-2 lg:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Total
                     </th>
                   </tr>
@@ -706,35 +678,35 @@ const Viewer5D: React.FC = () => {
                             isEtapaTotal
                               ? 'bg-blue-100 border-l-4 border-blue-600 font-bold'
                               : selectedItems.includes(item.id)
-                              ? 'bg-orange-100 border-l-4 border-orange-500 shadow-sm'
+                              ? getRowHighlightClass(item.codigo || item.id)
                               : ''
                           }`}
                           onClick={() => handleItemSelect(item)}
                         >
-                      <td className="px-2 lg:px-3 py-2 whitespace-nowrap text-xs font-medium text-gray-900">
+                      <td className="px-1 sm:px-2 lg:px-3 py-2 whitespace-nowrap text-xs font-medium text-gray-900">
                         {item.codigo || item.id}
                       </td>
-                      <td className={`px-2 lg:px-3 py-2 text-xs max-w-[150px] lg:max-w-[200px] truncate ${
+                      <td className={`px-1 sm:px-2 lg:px-3 py-2 text-xs max-w-[120px] sm:max-w-[150px] lg:max-w-[200px] truncate ${
                         isEtapaTotal ? 'font-bold text-blue-800' : 'text-gray-900'
                       }`} title={item.descricao}>
                         {item.descricao}
                       </td>
-                      <td className={`px-2 lg:px-3 py-2 whitespace-nowrap text-xs ${
+                      <td className={`px-1 sm:px-2 lg:px-3 py-2 whitespace-nowrap text-xs hidden sm:table-cell ${
                         isEtapaTotal ? 'font-bold text-blue-800' : 'text-gray-900'
                       }`}>
                         {isEtapaTotal ? '-' : `${item.quantidade.toFixed(2)} ${item.unidade}`}
                       </td>
-                      <td className={`px-2 lg:px-3 py-2 whitespace-nowrap text-xs ${
+                      <td className={`px-1 sm:px-2 lg:px-3 py-2 whitespace-nowrap text-xs hidden md:table-cell ${
                         isEtapaTotal ? 'font-bold text-blue-800' : 'text-gray-900'
                       }`}>
                         {formatarMoeda(item.maoDeObra)}
                       </td>
-                      <td className={`px-2 lg:px-3 py-2 whitespace-nowrap text-xs ${
+                      <td className={`px-1 sm:px-2 lg:px-3 py-2 whitespace-nowrap text-xs hidden md:table-cell ${
                         isEtapaTotal ? 'font-bold text-blue-800' : 'text-gray-900'
                       }`}>
                         {formatarMoeda(item.materiais)}
                       </td>
-                      <td className={`px-2 lg:px-3 py-2 whitespace-nowrap text-xs font-medium ${
+                      <td className={`px-1 sm:px-2 lg:px-3 py-2 whitespace-nowrap text-xs font-medium ${
                         isEtapaTotal ? 'text-blue-800 font-bold' : 'text-blue-600'
                       }`}>
                         {formatarMoeda(item.total)}
@@ -750,24 +722,63 @@ const Viewer5D: React.FC = () => {
         )}
       </div>
 
+      {/* Analisador de Coleções Blender */}
+      {showCollectionAnalyzer && (
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="bg-purple-800 text-white px-2 sm:px-3 lg:px-4 py-2">
+            <h3 className="font-semibold flex items-center text-xs sm:text-sm lg:text-base">
+              <Settings className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 mr-1 sm:mr-2" />
+              <span className="truncate">Analisador de Coleções Blender</span>
+            </h3>
+          </div>
+          <div className="p-2 sm:p-3 lg:p-4">
+            <BlenderCollectionAnalyzer onCollectionsFound={handleCollectionsFound} />
+          </div>
+        </div>
+      )}
 
-      {/* Instruções de Uso */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 lg:p-6">
-        <h3 className="text-base lg:text-lg font-semibold text-blue-800 mb-3">
+      {/* Legenda de Cores */}
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4 lg:p-6">
+        <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
+          🎨 Legenda de Cores:
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 text-xs sm:text-sm">
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 bg-orange-500 rounded"></div>
+            <span className="text-gray-700">Vigas</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 bg-teal-500 rounded"></div>
+            <span className="text-gray-700">Pilares</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 bg-blue-500 rounded"></div>
+            <span className="text-gray-700">Lajes/Fundações</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 bg-green-500 rounded"></div>
+            <span className="text-gray-700">Grupos Principais</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Instruções de Uso Mobile-First */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4 lg:p-6">
+        <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-blue-800 mb-2 sm:mb-3">
           💡 Como Usar o Visualizador 5D:
         </h3>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm text-blue-700">
-          <div>
-            <p className="mb-2"><strong>1.</strong> Clique nos itens da planilha para destacar elementos 3D</p>
-            <p className="mb-2"><strong>2.</strong> Clique novamente para <strong>deselecionar</strong></p>
-            <p className="mb-2"><strong>3.</strong> Selecione múltiplos itens clicando em várias linhas</p>
-            <p className="mb-2"><strong>4.</strong> Use os botões para mostrar/ocultar 3D e planilha</p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm text-blue-700">
+          <div className="space-y-1 sm:space-y-2">
+            <p><strong>1.</strong> Toque nos itens da planilha para destacar elementos 3D</p>
+            <p><strong>2.</strong> Toque novamente para <strong>deselecionar</strong></p>
+            <p><strong>3.</strong> Selecione múltiplos itens tocando em várias linhas</p>
+            <p><strong>4.</strong> Use os botões para mostrar/ocultar 3D e planilha</p>
           </div>
-          <div>
-            <p className="mb-2"><strong>5.</strong> Navegue no 3D com mouse (arrastar, zoom, rotação)</p>
-            <p className="mb-2"><strong>6.</strong> Use "Limpar" para remover todas as seleções</p>
-            <p className="mb-2"><strong>7.</strong> Elementos destacados aparecem em laranja no 3D</p>
-            <p className="mb-2"><strong>8.</strong> Linhas selecionadas ficam destacadas em laranja</p>
+          <div className="space-y-1 sm:space-y-2">
+            <p><strong>5.</strong> Navegue no 3D com toque (arrastar, zoom, rotação)</p>
+            <p><strong>6.</strong> Use "Limpar" para remover todas as seleções</p>
+            <p><strong>7.</strong> Elementos destacados aparecem com cores específicas no 3D</p>
+            <p><strong>8.</strong> Linhas selecionadas ficam destacadas com cores correspondentes</p>
           </div>
         </div>
       </div>

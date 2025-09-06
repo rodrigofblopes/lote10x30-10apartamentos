@@ -11,6 +11,7 @@ import IFCViewer from './components/IFCViewer';
 import Viewer5D from './components/Viewer5D';
 import Graficos from './components/Graficos';
 import LoadingSpinner from './components/LoadingSpinner';
+import MobileOrientationHelper from './components/MobileOrientationHelper';
 
 function App() {
   const [activeTab, setActiveTab] = useState('resumo');
@@ -60,12 +61,13 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       <BackToHub dashboardName="Dashboard Estrutural" />
       <Header />
-      <div className="container mx-auto px-4 py-4 lg:py-8">
+      <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-4 lg:py-8">
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
-        <div className="mt-4">
+        <div className="mt-2 sm:mt-4">
           {renderContent()}
         </div>
       </div>
+      <MobileOrientationHelper />
     </div>
   );
 }
