@@ -170,7 +170,7 @@ export const dadosMockados5D: OrcamentoItem[] = [
     peso: 11.24
   },
   {
-    id: '3.3',
+    id: '3.2',
     codigo: '',
     nome: 'Pilares',
     descricao: 'Pilares',
@@ -198,7 +198,7 @@ export const processarDadosExcel5D = (excelData: ArrayBuffer): OrcamentoItem[] =
   
   const dados: OrcamentoItem[] = [];
   
-  console.log('Dados Excel carregados:', jsonData.slice(0, 10)); // Debug
+  console.log('📊 Dados Excel carregados:', jsonData.slice(0, 15)); // Debug
   
   // Pular as primeiras linhas (cabeçalho) e processar a partir da linha 4
   for (let i = 3; i < jsonData.length; i++) {
@@ -212,8 +212,6 @@ export const processarDadosExcel5D = (excelData: ArrayBuffer): OrcamentoItem[] =
     const quantidade = parseFloat(row[3]?.toString().replace(',', '.') || '0');
     
     // Valores unitários (colunas F, G, H)
-    // const maoDeObraUnit = parseFloat(row[5]?.toString().replace(',', '.') || '0');
-    // const materiaisUnit = parseFloat(row[6]?.toString().replace(',', '.') || '0');
     const totalUnit = parseFloat(row[7]?.toString().replace(',', '.') || '0');
     
     // Valores totais (colunas I, J, K)
@@ -225,7 +223,7 @@ export const processarDadosExcel5D = (excelData: ArrayBuffer): OrcamentoItem[] =
     const pesoPercentual = parseFloat(row[11]?.toString().replace('%', '').replace(',', '.') || '0');
     
     // Pular linhas vazias ou com dados inválidos
-    if (!item || !descricao || quantidade <= 0) {
+    if (!item || !descricao) {
       continue;
     }
     
@@ -282,10 +280,96 @@ export const processarDadosExcel5D = (excelData: ArrayBuffer): OrcamentoItem[] =
       isEtapaTotal: isEtapaTotal // Flag para identificar totais por etapa
     };
     
+    console.log(`📋 Item processado: ${item} - ${descricao} (${categoria}/${subcategoria})`);
     dados.push(itemProcessado);
   }
   
-  console.log('Dados processados:', dados.length, 'itens'); // Debug
+  console.log('✅ Dados Excel processados:', dados.length, 'itens'); // Debug
+  return dados;
+};
+
+// Função para processar dados do CSV 5DEST.csv
+export const processarDadosCSV5D = (csvText: string): OrcamentoItem[] => {
+  const lines = csvText.split('\n');
+  const dados: OrcamentoItem[] = [];
+  
+  console.log('📊 Processando CSV 5DEST.csv...');
+  
+  // Pular as primeiras linhas (cabeçalho) e processar a partir da linha 4
+  for (let i = 3; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    
+    const columns = line.split(';');
+    if (columns.length < 12) continue;
+    
+    const item = columns[0]?.trim();
+    const descricao = columns[1]?.trim();
+    const unidade = columns[2]?.trim();
+    const quantidade = parseFloat(columns[3]?.replace(',', '.') || '0');
+    
+    // Valores totais (colunas 8, 9, 10)
+    const maoDeObraTotal = parseFloat(columns[8]?.replace(',', '.') || '0');
+    const materiaisTotal = parseFloat(columns[9]?.replace(',', '.') || '0');
+    const totalFinal = parseFloat(columns[10]?.replace(',', '.') || '0');
+    
+    // Peso percentual (coluna 11)
+    const pesoPercentual = parseFloat(columns[11]?.replace('%', '').replace(',', '.') || '0');
+    
+    // Pular linhas vazias ou com dados inválidos
+    if (!item || !descricao || item.includes('Totais')) {
+      continue;
+    }
+    
+    // Identificar totais por etapa
+    const isEtapaTotal = (item === '1' && descricao.includes('Fundação')) ||
+                        (item === '2' && descricao.includes('Térreo')) ||
+                        (item === '3' && descricao.includes('Pavimento Superior'));
+    
+    // Determinar categoria e subcategoria
+    let categoria = 'Fundação';
+    let subcategoria = 'Outros';
+    
+    if (item.startsWith('1.') || descricao.includes('Fundação')) {
+      categoria = 'Fundação';
+      if (item.includes('1.1') || descricao.includes('Vigas')) subcategoria = 'Vigas';
+      else if (item.includes('1.2') || descricao.includes('Pilares')) subcategoria = 'Pilares';
+      else if (item.includes('1.3') || descricao.includes('Fundações')) subcategoria = 'Fundações';
+    } else if (item.startsWith('2.') || descricao.includes('Térreo')) {
+      categoria = 'Térreo';
+      if (item.includes('2.1') || descricao.includes('Vigas')) subcategoria = 'Vigas';
+      else if (item.includes('2.2') || descricao.includes('Pilares')) subcategoria = 'Pilares';
+      else if (item.includes('2.3') || descricao.includes('Lajes')) subcategoria = 'Lajes';
+    } else if (item.startsWith('3.') || descricao.includes('Pavimento Superior')) {
+      categoria = 'Pavimento Superior';
+      if (item.includes('3.1') || descricao.includes('Vigas')) subcategoria = 'Vigas';
+      else if (item.includes('3.2') || descricao.includes('Pilares')) subcategoria = 'Pilares';
+      else if (item.includes('3.3') || descricao.includes('Lajes')) subcategoria = 'Lajes';
+    }
+    
+    // Criar item com dados processados
+    const itemProcessado = {
+      id: item || `item-${i}`,
+      codigo: '',
+      nome: descricao.length > 50 ? descricao.substring(0, 50) + '...' : descricao,
+      descricao: descricao,
+      categoria: categoria,
+      subcategoria: subcategoria,
+      unidade: unidade || 'un',
+      quantidade: quantidade,
+      valorUnitario: 0,
+      maoDeObra: maoDeObraTotal,
+      materiais: materiaisTotal,
+      total: totalFinal,
+      area: 149,
+      peso: pesoPercentual,
+      isEtapaTotal: isEtapaTotal
+    };
+    
+    dados.push(itemProcessado);
+  }
+  
+  console.log('✅ Dados CSV processados:', dados.length, 'itens');
   return dados;
 };
 

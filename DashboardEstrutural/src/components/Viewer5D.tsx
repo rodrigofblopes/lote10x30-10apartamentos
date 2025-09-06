@@ -29,7 +29,7 @@ interface StructuralModelProps {
   blenderCollections?: BlenderCollection[];
 }
 
-function StructuralModel({ highlightedElements, blenderCollections = [] }: StructuralModelProps) {
+function StructuralModel({ highlightedElements }: StructuralModelProps) {
   const meshRef = useRef<THREE.Group>(null);
 
   // Carregar o modelo GLB com coleções renomeadas
@@ -197,125 +197,23 @@ function StructuralModel({ highlightedElements, blenderCollections = [] }: Struc
             const childName = child.name || '';
             console.log('Verificando objeto na cena:', childName);
             
-            // Função de matching melhorada usando coleções analisadas
+            // Função de matching simplificada e mais eficiente
             const isMatch = (searchPattern: string, objectName: string): boolean => {
-              console.log(`🔍 Verificando match: "${searchPattern}" vs "${objectName}"`);
-              
               // Matching exato
               if (objectName === searchPattern) {
-                console.log(`✅ MATCH EXATO: ${objectName}`);
                 return true;
               }
               
               // Matching por início (mais comum para coleções)
               if (objectName.startsWith(searchPattern)) {
-                console.log(`✅ MATCH INÍCIO: ${objectName} starts with ${searchPattern}`);
                 return true;
               }
               
-              // Matching específico para padrões de coleção do Blender
-              if (searchPattern.endsWith('_') && objectName.startsWith(searchPattern)) {
-                console.log(`✅ MATCH UNDERSCORE: ${objectName} starts with ${searchPattern}`);
-                return true;
-              }
-              
-              // Matching para padrões como "2.1_.001" (com underscore e ponto)
-              if (searchPattern.includes('_.') && objectName.startsWith(searchPattern)) {
-                console.log(`✅ MATCH PONTO: ${objectName} starts with ${searchPattern}`);
-                return true;
-              }
-              
-              // Matching por contém (para casos como "2.1_.001" contém "2.1_")
+              // Matching por contém (para casos especiais)
               if (objectName.includes(searchPattern)) {
-                console.log(`✅ MATCH CONTÉM: ${objectName} contains ${searchPattern}`);
                 return true;
               }
               
-              // Matching com variações de separadores
-              const normalizedPattern = searchPattern.replace(/[._-]/g, '');
-              const normalizedName = objectName.replace(/[._-]/g, '');
-              if (normalizedName.startsWith(normalizedPattern)) {
-                console.log(`✅ MATCH NORMALIZADO: ${objectName} normalized starts with ${searchPattern} normalized`);
-                return true;
-              }
-              
-              // Matching hierárquico para coleções
-              if (searchPattern.includes('.') && !searchPattern.endsWith('_')) {
-                const basePattern = searchPattern + '_.';
-                if (objectName.startsWith(basePattern)) {
-                  console.log(`✅ MATCH HIERÁRQUICO 1: ${objectName} starts with ${basePattern}`);
-                  return true;
-                }
-                
-                const basePattern2 = searchPattern + '_';
-                if (objectName.startsWith(basePattern2)) {
-                  console.log(`✅ MATCH HIERÁRQUICO 2: ${objectName} starts with ${basePattern2}`);
-                  return true;
-                }
-              }
-              
-              // Matching usando coleções analisadas
-              const matchingCollection = blenderCollections.find(collection => 
-                collection.name === objectName
-              );
-              
-              if (matchingCollection) {
-                console.log(`📋 Coleção encontrada: ${matchingCollection.name}`);
-                
-                // Verificar se a coleção corresponde ao padrão de busca
-                const collectionName = matchingCollection.name.toLowerCase();
-                const searchLower = searchPattern.toLowerCase();
-                
-                if (collectionName.includes(searchLower) || 
-                    collectionName.startsWith(searchLower) ||
-                    collectionName.endsWith(searchLower)) {
-                  console.log(`✅ MATCH COLEÇÃO: ${matchingCollection.name} matches ${searchPattern}`);
-                  return true;
-                }
-                
-                // Verificar userData se disponível
-                if (matchingCollection.userData) {
-                  const userDataStr = JSON.stringify(matchingCollection.userData).toLowerCase();
-                  if (userDataStr.includes(searchLower)) {
-                    console.log(`✅ MATCH USERDATA: ${matchingCollection.name} userData contains ${searchPattern}`);
-                    return true;
-                  }
-                }
-              }
-              
-              // Matching para coleções pai (IfcBuildingStorey)
-              if (searchPattern === '2' && objectName.includes('Térreo')) {
-                console.log(`✅ MATCH TÉRREO: ${objectName}`);
-                return true;
-              }
-              if (searchPattern === '1' && objectName.includes('Fundação')) {
-                console.log(`✅ MATCH FUNDAÇÃO: ${objectName}`);
-                return true;
-              }
-              if (searchPattern === '3' && objectName.includes('Superior')) {
-                console.log(`✅ MATCH SUPERIOR: ${objectName}`);
-                return true;
-              }
-              
-              // Matching por palavras-chave específicas
-              if (searchPattern.includes('Viga') && objectName.toLowerCase().includes('viga')) {
-                console.log(`✅ MATCH VIGA: ${objectName}`);
-                return true;
-              }
-              if (searchPattern.includes('Pilar') && objectName.toLowerCase().includes('pilar')) {
-                console.log(`✅ MATCH PILAR: ${objectName}`);
-                return true;
-              }
-              if (searchPattern.includes('Laje') && objectName.toLowerCase().includes('laje')) {
-                console.log(`✅ MATCH LAJE: ${objectName}`);
-                return true;
-              }
-              if (searchPattern.includes('Fundacao') && objectName.toLowerCase().includes('fundacao')) {
-                console.log(`✅ MATCH FUNDAÇÃO: ${objectName}`);
-                return true;
-              }
-              
-              console.log(`❌ SEM MATCH: ${objectName} não corresponde a ${searchPattern}`);
               return false;
             };
             
@@ -470,17 +368,42 @@ const Viewer5D: React.FC = () => {
     const allElementsToHighlight: string[] = [];
     
     selectedItemIds.forEach(itemId => {
-      // Primeiro, tentar encontrar correspondências diretas nas coleções
-      const directMatches = blenderCollections.filter(collection => {
-        const collectionTitle = blenderCollectionService.extractCollectionTitle(collection.name);
-        return collectionTitle === itemId || 
-               collectionTitle.startsWith(itemId) || 
-               collection.name.includes(itemId);
+      console.log(`🔍 Processando item da planilha: ${itemId}`);
+      
+      // Encontrar TODAS as coleções do GLB que começam com os mesmos caracteres até o "_"
+      const matchingCollections = blenderCollections.filter(collection => {
+        const collectionName = collection.name;
+        
+        // Extrair os primeiros caracteres até o "_" da coleção
+        const underscoreIndex = collectionName.indexOf('_');
+        if (underscoreIndex === -1) return false;
+        
+        const collectionPrefix = collectionName.substring(0, underscoreIndex);
+        
+        // Verificar se o prefixo da coleção corresponde ao código da planilha
+        if (collectionPrefix === itemId) {
+          console.log(`✅ MATCH PREFIXO: ${collectionName} (prefixo: ${collectionPrefix}) = ${itemId}`);
+          return true;
+        }
+        
+        // Matching por início (para casos como "1.1" matching "1.1_.001")
+        if (collectionPrefix.startsWith(itemId)) {
+          console.log(`✅ MATCH INÍCIO: ${collectionName} (prefixo: ${collectionPrefix}) starts with ${itemId}`);
+          return true;
+        }
+        
+        // Matching por contém (para casos especiais)
+        if (collectionPrefix.includes(itemId)) {
+          console.log(`✅ MATCH CONTÉM: ${collectionName} (prefixo: ${collectionPrefix}) contains ${itemId}`);
+          return true;
+        }
+        
+        return false;
       });
       
-      if (directMatches.length > 0) {
-        console.log(`✅ MATCHES DIRETOS para ${itemId}:`, directMatches.map(c => c.name));
-        allElementsToHighlight.push(...directMatches.map(c => c.name));
+      if (matchingCollections.length > 0) {
+        console.log(`✅ MATCHES ENCONTRADOS para ${itemId}:`, matchingCollections.map(c => c.name));
+        allElementsToHighlight.push(...matchingCollections.map(c => c.name));
       } else {
         // Fallback para padrões gerados
         const patterns = generateSearchPatterns(itemId);
@@ -503,10 +426,30 @@ const Viewer5D: React.FC = () => {
     console.log('=== PROCESSANDO COLEÇÕES ENCONTRADAS ===');
     console.log('Total de coleções:', collections.length);
     
-    // Mostrar todas as coleções com seus títulos extraídos
+    // Mostrar todas as coleções com seus prefixos extraídos
     collections.forEach(collection => {
-      const title = blenderCollectionService.extractCollectionTitle(collection.name);
-      console.log(`📋 ${collection.name} -> Título: "${title}"`);
+      const underscoreIndex = collection.name.indexOf('_');
+      const prefix = underscoreIndex !== -1 ? collection.name.substring(0, underscoreIndex) : collection.name;
+      console.log(`📋 ${collection.name} -> Prefixo: "${prefix}"`);
+    });
+    
+    // Agrupar coleções por prefixo para análise
+    const prefixGroups: { [key: string]: string[] } = {};
+    collections.forEach(collection => {
+      const underscoreIndex = collection.name.indexOf('_');
+      if (underscoreIndex !== -1) {
+        const prefix = collection.name.substring(0, underscoreIndex);
+        if (!prefixGroups[prefix]) {
+          prefixGroups[prefix] = [];
+        }
+        prefixGroups[prefix].push(collection.name);
+      }
+    });
+    
+    console.log('=== GRUPOS POR PREFIXO ===');
+    Object.entries(prefixGroups).forEach(([prefix, collectionNames]) => {
+      console.log(`🔹 Prefixo "${prefix}": ${collectionNames.length} coleções`);
+      collectionNames.forEach(name => console.log(`   - ${name}`));
     });
     
     setBlenderCollections(collections);
