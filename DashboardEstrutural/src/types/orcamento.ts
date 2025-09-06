@@ -14,6 +14,7 @@ export interface OrcamentoItem {
   area?: number;
   peso: number;
   isEtapaTotal?: boolean; // Flag para identificar totais por etapa
+  elementos3D?: string; // IDs dos elementos 3D para linking
 }
 
 export interface ResumoExecutivo {

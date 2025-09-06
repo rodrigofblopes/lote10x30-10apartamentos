@@ -1,381 +1,192 @@
 import { OrcamentoItem } from '../types/orcamento';
 import * as XLSX from 'xlsx';
 
-// Dados reais baseados na planilha CSV do Lote 10x30 - 10 Apartamentos
-// Área total: 298 m² (149 m² por pavimento)
+// Dados reais baseados na planilha CSV consolidada do Lote 10x30 - 10 Apartamentos
+// Estrutura consolidada por categoria principal
 export const dadosMockados: OrcamentoItem[] = [
   // FUNDAÇÃO - Total: R$ 39.241,02 (30,81%)
   {
-    id: '1.1.1',
-    codigo: '92761',
-    nome: 'Fundação - Vigas - Armação',
-    descricao: 'ARMAÇÃO DE PILAR OU VIGA DE ESTRUTURA CONVENCIONAL DE CONCRETO ARMADO UTILIZANDO AÇO CA-50 DE 8,0 MM - MONTAGEM. AF_06/2022',
+    id: '1',
+    codigo: 'FUNDACAO',
+    nome: 'Fundação',
+    descricao: 'Fundação',
     categoria: 'Fundação',
-    subcategoria: 'Vigas',
-    unidade: 'KG',
-    quantidade: 390.9,
-    valorUnitario: 15.05,
-    maoDeObra: 758.34,
-    materiais: 5124.70,
-    total: 5883.04,
-    area: 149, // Área do pavimento térreo
-    peso: 4.62
+    subcategoria: 'Total',
+    unidade: 'm³',
+    quantidade: 105.4, // Total consolidado
+    valorUnitario: 372.25, // Valor médio por m³
+    maoDeObra: 10846.10, // Total M.O.
+    materiais: 28394.92, // Total MAT.
+    total: 39241.02,
+    area: 149,
+    peso: 30.81,
+    isEtapaTotal: true
   },
   {
-    id: '1.1.2',
-    codigo: '94965',
-    nome: 'Fundação - Vigas - Concreto',
-    descricao: 'CONCRETO FCK = 25MPA, TRAÇO 1:2,3:2,7 (EM MASSA SECA DE CIMENTO/ AREIA MÉDIA/ BRITA 1) - PREPARO MECÂNICO COM BETONEIRA 400 L. AF_05/2021',
+    id: '1.1',
+    codigo: 'VIGAS_FUND',
+    nome: 'Vigas da Fundação',
+    descricao: 'Vigas da Fundação',
     categoria: 'Fundação',
     subcategoria: 'Vigas',
     unidade: 'm³',
-    quantidade: 5.9,
-    valorUnitario: 740.54,
-    maoDeObra: 438.01,
-    materiais: 3931.17,
-    total: 4369.18,
-    area: 149, // Área do pavimento térreo
-    peso: 3.43
-  },
-  {
-    id: '1.1.3',
-    codigo: '96533',
-    nome: 'Fundação - Vigas - Formas',
-    descricao: 'FABRICAÇÃO, MONTAGEM E DESMONTAGEM DE FÔRMA PARA VIGA BALDRAME, EM MADEIRA SERRADA, E=25 MM, 2 UTILIZAÇÕES. AF_01/2024',
-    categoria: 'Fundação',
-    subcategoria: 'Vigas',
-    unidade: 'm²',
     quantidade: 98.6,
-    valorUnitario: 93.02,
-    maoDeObra: 4177.68,
-    materiais: 4994.09,
-    total: 9171.77,
-    area: 149, // Área do pavimento térreo
-    peso: 7.20
+    valorUnitario: 197.00,
+    maoDeObra: 5374.03,
+    materiais: 14049.96,
+    total: 19423.99,
+    area: 149,
+    peso: 15.25
   },
   {
-    id: '1.2.1',
-    codigo: '92763',
-    nome: 'Fundação - Pilares - Armação',
-    descricao: 'ARMAÇÃO DE PILAR OU VIGA DE ESTRUTURA CONVENCIONAL DE CONCRETO ARMADO UTILIZANDO AÇO CA-50 DE 12,5 MM - MONTAGEM. AF_06/2022',
-    categoria: 'Fundação',
-    subcategoria: 'Pilares',
-    unidade: 'KG',
-    quantidade: 204.3,
-    valorUnitario: 11.33,
-    maoDeObra: 163.44,
-    materiais: 2151.27,
-    total: 2314.71,
-    area: 149, // Área do pavimento térreo
-    peso: 1.82
-  },
-  {
-    id: '1.2.2',
-    codigo: '94965',
-    nome: 'Fundação - Pilares - Concreto',
-    descricao: 'CONCRETO FCK = 25MPA, TRAÇO 1:2,3:2,7 (EM MASSA SECA DE CIMENTO/ AREIA MÉDIA/ BRITA 1) - PREPARO MECÂNICO COM BETONEIRA 400 L. AF_05/2021',
+    id: '1.2',
+    codigo: 'PILARES_FUND',
+    nome: 'Pilares da Fundação',
+    descricao: 'Pilares da Fundação',
     categoria: 'Fundação',
     subcategoria: 'Pilares',
     unidade: 'm³',
     quantidade: 1.4,
-    valorUnitario: 740.54,
-    maoDeObra: 103.93,
-    materiais: 932.82,
-    total: 1036.75,
-    area: 149, // Área do pavimento térreo
-    peso: 0.81
+    valorUnitario: 6641.16,
+    maoDeObra: 2394.23,
+    materiais: 6903.39,
+    total: 9297.62,
+    area: 149,
+    peso: 7.30
   },
   {
-    id: '1.2.3',
-    codigo: '92417',
-    nome: 'Fundação - Pilares - Formas',
-    descricao: 'MONTAGEM E DESMONTAGEM DE FÔRMA DE PILARES RETANGULARES E ESTRUTURAS SIMILARES, PÉ-DIREITO DUPLO, EM CHAPA DE MADEIRA COMPENSADA RESINADA, 2 UTILIZAÇÕES. AF_09/2020',
-    categoria: 'Fundação',
-    subcategoria: 'Pilares',
-    unidade: 'm²',
-    quantidade: 29,
-    valorUnitario: 205.04,
-    maoDeObra: 2126.86,
-    materiais: 3819.30,
-    total: 5946.16,
-    area: 149, // Área do pavimento térreo
-    peso: 4.67
-  },
-  {
-    id: '1.3.1',
-    codigo: '104918',
-    nome: 'Fundação - Sapatas - Armação',
-    descricao: 'ARMAÇÃO DE SAPATA ISOLADA, VIGA BALDRAME E SAPATA CORRIDA UTILIZANDO AÇO CA-50 DE 8 MM - MONTAGEM. AF_01/2024',
-    categoria: 'Fundação',
-    subcategoria: 'Fundações',
-    unidade: 'KG',
-    quantidade: 171.3,
-    valorUnitario: 17.28,
-    maoDeObra: 625.24,
-    materiais: 2334.82,
-    total: 2960.06,
-    area: 149, // Área do pavimento térreo
-    peso: 2.32
-  },
-  {
-    id: '1.3.2',
-    codigo: '94965',
-    nome: 'Fundação - Sapatas - Concreto',
-    descricao: 'CONCRETO FCK = 25MPA, TRAÇO 1:2,3:2,7 (EM MASSA SECA DE CIMENTO/ AREIA MÉDIA/ BRITA 1) - PREPARO MECÂNICO COM BETONEIRA 400 L. AF_05/2021',
+    id: '1.3',
+    codigo: 'FUNDACOES',
+    nome: 'Fundações',
+    descricao: 'Fundações',
     categoria: 'Fundação',
     subcategoria: 'Fundações',
     unidade: 'm³',
     quantidade: 5.4,
-    valorUnitario: 740.54,
-    maoDeObra: 400.89,
-    materiais: 3598.02,
-    total: 3998.91,
-    area: 149, // Área do pavimento térreo
-    peso: 3.14
-  },
-  {
-    id: '1.3.3',
-    codigo: '96532',
-    nome: 'Fundação - Sapatas - Formas',
-    descricao: 'FABRICAÇÃO, MONTAGEM E DESMONTAGEM DE FÔRMA PARA SAPATA, EM MADEIRA SERRADA, E=25 MM, 2 UTILIZAÇÕES. AF_01/2024',
-    categoria: 'Fundação',
-    subcategoria: 'Fundações',
-    unidade: 'm²',
-    quantidade: 19.2,
-    valorUnitario: 185.44,
-    maoDeObra: 2051.71,
-    materiais: 1508.73,
-    total: 3560.44,
-    area: 149, // Área do pavimento térreo
-    peso: 2.80
+    valorUnitario: 1948.04,
+    maoDeObra: 3077.84,
+    materiais: 7441.57,
+    total: 10519.41,
+    area: 149,
+    peso: 8.26
   },
 
-  // TÉRREO - Total: R$ 47.368,32 (37,20%) - Área: 149 m²
+  // TÉRREO - Total: R$ 47.368,32 (37,20%)
   {
-    id: '2.1.1',
-    codigo: '92761',
-    nome: 'Térreo - Vigas - Armação',
-    descricao: 'ARMAÇÃO DE PILAR OU VIGA DE ESTRUTURA CONVENCIONAL DE CONCRETO ARMADO UTILIZANDO AÇO CA-50 DE 8,0 MM - MONTAGEM. AF_06/2022',
+    id: '2',
+    codigo: 'TERREO',
+    nome: 'Térreo',
+    descricao: 'Térreo',
     categoria: 'Térreo',
-    subcategoria: 'Vigas',
-    unidade: 'KG',
-    quantidade: 486.2,
-    valorUnitario: 15.05,
-    maoDeObra: 943.22,
-    materiais: 6374.09,
-    total: 7317.31,
-    area: 149, // Área do pavimento térreo
-    peso: 5.75
+    subcategoria: 'Total',
+    unidade: 'm³',
+    quantidade: 16.7, // Total consolidado
+    valorUnitario: 2836.43, // Valor médio por m³
+    maoDeObra: 10925.65, // Total M.O.
+    materiais: 36442.67, // Total MAT.
+    total: 47368.32,
+    area: 149,
+    peso: 37.20,
+    isEtapaTotal: true
   },
   {
-    id: '2.1.2',
-    codigo: '94965',
-    nome: 'Térreo - Vigas - Concreto',
-    descricao: 'CONCRETO FCK = 25MPA, TRAÇO 1:2,3:2,7 (EM MASSA SECA DE CIMENTO/ AREIA MÉDIA/ BRITA 1) - PREPARO MECÂNICO COM BETONEIRA 400 L. AF_05/2021',
+    id: '2.1',
+    codigo: 'VIGAS_TERREO',
+    nome: 'Vigas do Térreo',
+    descricao: 'Vigas do Térreo',
     categoria: 'Térreo',
     subcategoria: 'Vigas',
     unidade: 'm³',
     quantidade: 6.2,
-    valorUnitario: 740.54,
-    maoDeObra: 460.28,
-    materiais: 4131.06,
-    total: 4591.34,
-    area: 149, // Área do pavimento térreo
-    peso: 3.61
+    valorUnitario: 2802.94,
+    maoDeObra: 3894.85,
+    materiais: 13483.37,
+    total: 17378.22,
+    area: 149,
+    peso: 13.65
   },
   {
-    id: '2.1.3',
-    codigo: '96533',
-    nome: 'Térreo - Vigas - Formas',
-    descricao: 'FABRICAÇÃO, MONTAGEM E DESMONTAGEM DE FÔRMA PARA VIGA BALDRAME, EM MADEIRA SERRADA, E=25 MM, 2 UTILIZAÇÕES. AF_01/2024',
-    categoria: 'Térreo',
-    subcategoria: 'Vigas',
-    unidade: 'm²',
-    quantidade: 58.8,
-    valorUnitario: 93.02,
-    maoDeObra: 2491.35,
-    materiais: 2978.22,
-    total: 5469.57,
-    area: 149, // Área do pavimento térreo
-    peso: 4.30
-  },
-  {
-    id: '2.2.1',
-    codigo: '92763',
-    nome: 'Térreo - Pilares - Armação',
-    descricao: 'ARMAÇÃO DE PILAR OU VIGA DE ESTRUTURA CONVENCIONAL DE CONCRETO ARMADO UTILIZANDO AÇO CA-50 DE 12,5 MM - MONTAGEM. AF_06/2022',
-    categoria: 'Térreo',
-    subcategoria: 'Pilares',
-    unidade: 'KG',
-    quantidade: 358,
-    valorUnitario: 11.33,
-    maoDeObra: 286.40,
-    materiais: 3769.74,
-    total: 4056.14,
-    area: 149, // Área do pavimento térreo
-    peso: 3.19
-  },
-  {
-    id: '2.2.2',
-    codigo: '94965',
-    nome: 'Térreo - Pilares - Concreto',
-    descricao: 'CONCRETO FCK = 25MPA, TRAÇO 1:2,3:2,7 (EM MASSA SECA DE CIMENTO/ AREIA MÉDIA/ BRITA 1) - PREPARO MECÂNICO COM BETONEIRA 400 L. AF_05/2021',
+    id: '2.2',
+    codigo: 'PILARES_TERREO',
+    nome: 'Pilares do Térreo',
+    descricao: 'Pilares do Térreo',
     categoria: 'Térreo',
     subcategoria: 'Pilares',
     unidade: 'm³',
     quantidade: 3.8,
-    valorUnitario: 740.54,
-    maoDeObra: 282.11,
-    materiais: 2531.94,
-    total: 2814.05,
-    area: 149, // Área do pavimento térreo
-    peso: 2.21
+    valorUnitario: 5887.16,
+    maoDeObra: 6113.01,
+    materiais: 16258.20,
+    total: 22371.21,
+    area: 149,
+    peso: 17.57
   },
   {
-    id: '2.2.3',
-    codigo: '92417',
-    nome: 'Térreo - Pilares - Formas',
-    descricao: 'MONTAGEM E DESMONTAGEM DE FÔRMA DE PILARES RETANGULARES E ESTRUTURAS SIMILARES, PÉ-DIREITO DUPLO, EM CHAPA DE MADEIRA COMPENSADA RESINADA, 2 UTILIZAÇÕES. AF_09/2020',
-    categoria: 'Térreo',
-    subcategoria: 'Pilares',
-    unidade: 'm²',
-    quantidade: 75.6,
-    valorUnitario: 205.04,
-    maoDeObra: 5544.50,
-    materiais: 9956.52,
-    total: 15501.02,
-    area: 149, // Área do pavimento térreo
-    peso: 12.17
-  },
-  {
-    id: '2.3.1',
-    codigo: '92769',
-    nome: 'Térreo - Lajes - Armação',
-    descricao: 'ARMAÇÃO DE LAJE DE ESTRUTURA CONVENCIONAL DE CONCRETO ARMADO UTILIZANDO AÇO CA-50 DE 6,3 MM - MONTAGEM. AF_06/2022',
-    categoria: 'Térreo',
-    subcategoria: 'Lajes',
-    unidade: 'KG',
-    quantidade: 173,
-    valorUnitario: 15.36,
-    maoDeObra: 420.39,
-    materiais: 2236.89,
-    total: 2657.28,
-    area: 149, // Área do pavimento térreo
-    peso: 2.09
-  },
-  {
-    id: '2.3.2',
-    codigo: '94965',
-    nome: 'Térreo - Lajes - Concreto',
-    descricao: 'CONCRETO FCK = 25MPA, TRAÇO 1:2,3:2,7 (EM MASSA SECA DE CIMENTO/ AREIA MÉDIA/ BRITA 1) - PREPARO MECÂNICO COM BETONEIRA 400 L. AF_05/2021',
+    id: '2.3',
+    codigo: 'LAJES_TERREO',
+    nome: 'Lajes do Térreo',
+    descricao: 'Lajes do Térreo',
     categoria: 'Térreo',
     subcategoria: 'Lajes',
     unidade: 'm³',
     quantidade: 6.7,
-    valorUnitario: 740.54,
-    maoDeObra: 497.40,
-    materiais: 4464.21,
-    total: 4961.61,
-    area: 149, // Área do pavimento térreo
-    peso: 3.90
+    valorUnitario: 1137.15,
+    maoDeObra: 917.79,
+    materiais: 6701.10,
+    total: 7618.89,
+    area: 149,
+    peso: 5.98
   },
 
-  // PAVIMENTO SUPERIOR - Total: R$ 40.737,19 (31,99%) - Área: 149 m²
+  // PAVIMENTO SUPERIOR - Total: R$ 40.737,19 (31,99%)
   {
-    id: '3.1.1',
-    codigo: '92761',
-    nome: 'Pavimento Superior - Vigas - Armação',
-    descricao: 'ARMAÇÃO DE PILAR OU VIGA DE ESTRUTURA CONVENCIONAL DE CONCRETO ARMADO UTILIZANDO AÇO CA-50 DE 8,0 MM - MONTAGEM. AF_06/2022',
+    id: '3',
+    codigo: 'PAVIMENTO_SUPERIOR',
+    nome: 'Pavimento Superior',
+    descricao: 'Pavimento Superior',
     categoria: 'Pavimento Superior',
-    subcategoria: 'Vigas',
-    unidade: 'KG',
-    quantidade: 390.9,
-    valorUnitario: 15.05,
-    maoDeObra: 758.34,
-    materiais: 5124.70,
-    total: 5883.04,
-    area: 149, // Área do pavimento superior
-    peso: 4.62
+    subcategoria: 'Total',
+    unidade: 'm³',
+    quantidade: 9.7, // Total consolidado
+    valorUnitario: 4200.74, // Valor médio por m³
+    maoDeObra: 11125.92, // Total M.O.
+    materiais: 29611.27, // Total MAT.
+    total: 40737.19,
+    area: 149,
+    peso: 31.99,
+    isEtapaTotal: true
   },
   {
-    id: '3.1.2',
-    codigo: '96533',
-    nome: 'Pavimento Superior - Vigas - Formas',
-    descricao: 'FABRICAÇÃO, MONTAGEM E DESMONTAGEM DE FÔRMA PARA VIGA BALDRAME, EM MADEIRA SERRADA, E=25 MM, 2 UTILIZAÇÕES. AF_01/2024',
+    id: '3.1',
+    codigo: 'VIGAS_SUPERIOR',
+    nome: 'Vigas do Pavimento Superior',
+    descricao: 'Vigas do Pavimento Superior',
     categoria: 'Pavimento Superior',
     subcategoria: 'Vigas',
-    unidade: 'm²',
-    quantidade: 90.6,
-    valorUnitario: 93.02,
-    maoDeObra: 3838.72,
-    materiais: 4588.89,
-    total: 8427.61,
-    area: 149, // Área do pavimento superior
-    peso: 6.62
+    unidade: 'm³',
+    quantidade: 5.9,
+    valorUnitario: 2425.53,
+    maoDeObra: 5035.07,
+    materiais: 13644.76,
+    total: 14310.65,
+    area: 149,
+    peso: 11.24
   },
   {
     id: '3.2',
-    codigo: '94965',
-    nome: 'Pavimento Superior - Concreto',
-    descricao: 'CONCRETO FCK = 25MPA, TRAÇO 1:2,3:2,7 (EM MASSA SECA DE CIMENTO/ AREIA MÉDIA/ BRITA 1) - PREPARO MECÂNICO COM BETONEIRA 400 L. AF_05/2021',
-    categoria: 'Pavimento Superior',
-    subcategoria: 'Concreto',
-    unidade: 'm³',
-    quantidade: 5.9,
-    valorUnitario: 740.54,
-    maoDeObra: 438.01,
-    materiais: 3931.17,
-    total: 4369.18,
-    area: 149, // Área do pavimento superior
-    peso: 3.43
-  },
-  {
-    id: '3.3.1',
-    codigo: '94965',
-    nome: 'Pavimento Superior - Pilares - Concreto',
-    descricao: 'CONCRETO FCK = 25MPA, TRAÇO 1:2,3:2,7 (EM MASSA SECA DE CIMENTO/ AREIA MÉDIA/ BRITA 1) - PREPARO MECÂNICO COM BETONEIRA 400 L. AF_05/2021',
+    codigo: 'PILARES_SUPERIOR',
+    nome: 'Pilares do Pavimento Superior',
+    descricao: 'Pilares do Pavimento Superior',
     categoria: 'Pavimento Superior',
     subcategoria: 'Pilares',
     unidade: 'm³',
     quantidade: 3.8,
-    valorUnitario: 740.54,
-    maoDeObra: 282.11,
-    materiais: 2531.94,
-    total: 2814.05,
-    area: 149, // Área do pavimento superior
-    peso: 2.21
-  },
-  {
-    id: '3.4',
-    codigo: '92763',
-    nome: 'Pavimento Superior - Pilares - Armação',
-    descricao: 'ARMAÇÃO DE PILAR OU VIGA DE ESTRUTURA CONVENCIONAL DE CONCRETO ARMADO UTILIZANDO AÇO CA-50 DE 12,5 MM - MONTAGEM. AF_06/2022',
-    categoria: 'Pavimento Superior',
-    subcategoria: 'Pilares',
-    unidade: 'KG',
-    quantidade: 330.3,
-    valorUnitario: 11.33,
-    maoDeObra: 264.24,
-    materiais: 3478.05,
-    total: 3742.29,
-    area: 149, // Área do pavimento superior
-    peso: 2.94
-  },
-  {
-    id: '3.5',
-    codigo: '92417',
-    nome: 'Pavimento Superior - Pilares - Formas',
-    descricao: 'MONTAGEM E DESMONTAGEM DE FÔRMA DE PILARES RETANGULARES E ESTRUTURAS SIMILARES, PÉ-DIREITO DUPLO, EM CHAPA DE MADEIRA COMPENSADA RESINADA, 2 UTILIZAÇÕES. AF_09/2020',
-    categoria: 'Pavimento Superior',
-    subcategoria: 'Pilares',
-    unidade: 'm²',
-    quantidade: 75.6,
-    valorUnitario: 205.04,
-    maoDeObra: 5544.50,
-    materiais: 9956.52,
-    total: 15501.02,
-    area: 149, // Área do pavimento superior
-    peso: 12.17
+    valorUnitario: 740.53,
+    maoDeObra: 6090.85,
+    materiais: 15966.51,
+    total: 22057.36,
+    area: 149,
+    peso: 17.32
   }
 ];
 
@@ -407,7 +218,7 @@ export const processarDadosCSV = (csvContent: string): OrcamentoItem[] => {
   // Pular as primeiras 3 linhas (cabeçalho)
   for (let i = 3; i < lines.length; i++) {
     const line = lines[i].trim();
-    if (!line || line.startsWith(';') || line.includes('Fundação') || line.includes('Vigas') || line.includes('Pilares') || line.includes('Fundações') || line.includes('Térreo') || line.includes('Lajes') || line.includes('Pavimento Superior')) {
+    if (!line || line.startsWith(';') || line.includes('Totais') || line.includes('Total sem BDI')) {
       continue;
     }
     
@@ -425,33 +236,48 @@ export const processarDadosCSV = (csvContent: string): OrcamentoItem[] => {
       const materiaisTotal = parseFloat(columns[9]?.replace(',', '.') || '0');
       const totalFinal = parseFloat(columns[10]?.replace(',', '.') || '0');
       const pesoPercentual = parseFloat(columns[11]?.replace('%', '').replace(',', '.') || '0');
+      const elementos3D = columns[12]?.trim() || ''; // Nova coluna Elementos 3D
       
       if (item && descricao && quantidade > 0) {
-        // Determinar categoria e subcategoria baseado no item
+        // Determinar categoria e subcategoria baseado no item e descrição
         let categoria = 'Fundação';
         let subcategoria = 'Outros';
+        let isEtapaTotal = false;
         
-        if (item.startsWith('1.')) {
+        // Verificar se é um total de etapa (sem subitem)
+        if (item === '1' || item === '2' || item === '3') {
+          isEtapaTotal = true;
+          if (item === '1') {
+            categoria = 'Fundação';
+            subcategoria = 'Total';
+          } else if (item === '2') {
+            categoria = 'Térreo';
+            subcategoria = 'Total';
+          } else if (item === '3') {
+            categoria = 'Pavimento Superior';
+            subcategoria = 'Total';
+          }
+        } else if (item.startsWith('1.')) {
           categoria = 'Fundação';
-          if (item.includes('1.1')) subcategoria = 'Vigas';
-          else if (item.includes('1.2')) subcategoria = 'Pilares';
-          else if (item.includes('1.3')) subcategoria = 'Fundações';
+          if (item === '1.1') subcategoria = 'Vigas';
+          else if (item === '1.2') subcategoria = 'Pilares';
+          else if (item === '1.3') subcategoria = 'Fundações';
         } else if (item.startsWith('2.')) {
           categoria = 'Térreo';
-          if (item.includes('2.1')) subcategoria = 'Vigas';
-          else if (item.includes('2.2')) subcategoria = 'Pilares';
-          else if (item.includes('2.3')) subcategoria = 'Lajes';
+          if (item === '2.1') subcategoria = 'Vigas';
+          else if (item === '2.2') subcategoria = 'Pilares';
+          else if (item === '2.3') subcategoria = 'Lajes';
         } else if (item.startsWith('3.')) {
           categoria = 'Pavimento Superior';
-          if (item.includes('3.1')) subcategoria = 'Vigas';
-          else if (item.includes('3.2')) subcategoria = 'Pilares';
-          else if (item.includes('3.3')) subcategoria = 'Lajes';
+          if (item === '3.1') subcategoria = 'Vigas';
+          else if (item === '3.2') subcategoria = 'Pilares';
+          else if (item === '3.3') subcategoria = 'Lajes';
         }
         
         dados.push({
           id: item,
           codigo: '', // Não disponível no CSV
-          nome: descricao.substring(0, 50) + '...', // Nome resumido
+          nome: descricao.length > 50 ? descricao.substring(0, 50) + '...' : descricao,
           descricao: descricao,
           categoria: categoria,
           subcategoria: subcategoria,
@@ -462,7 +288,9 @@ export const processarDadosCSV = (csvContent: string): OrcamentoItem[] => {
           materiais: materiaisTotal,
           total: totalFinal,
           area: 149, // Área padrão por pavimento
-          peso: pesoPercentual
+          peso: pesoPercentual,
+          isEtapaTotal: isEtapaTotal,
+          elementos3D: elementos3D // Nova propriedade para linking 3D
         });
       }
     }
@@ -541,7 +369,8 @@ export const processarDadosExcel = (excelData: ArrayBuffer): OrcamentoItem[] => 
       materiais: materiaisTotal,
       total: totalFinal,
       area: 149, // Área padrão por pavimento
-      peso: pesoPercentual
+      peso: pesoPercentual,
+      elementos3D: '' // Elementos 3D não disponíveis no Excel por enquanto
     });
   }
   

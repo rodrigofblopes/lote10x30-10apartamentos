@@ -6,7 +6,7 @@ export const dadosMockados5D: OrcamentoItem[] = [
   // FUNDAÇÃO - Total: R$ 39.241,02 (30,81%)
   {
     id: '1',
-    codigo: '',
+    codigo: '1',
     nome: 'Fundação',
     descricao: 'Fundação',
     categoria: 'Fundação',
@@ -19,11 +19,12 @@ export const dadosMockados5D: OrcamentoItem[] = [
     total: 39241.02,
     area: 149,
     peso: 30.81,
-    isEtapaTotal: true
+    isEtapaTotal: true,
+    elementos3D: ''
   },
   {
     id: '1.1',
-    codigo: '',
+    codigo: '1.1',
     nome: 'Vigas',
     descricao: 'Vigas',
     categoria: 'Fundação',
@@ -35,11 +36,12 @@ export const dadosMockados5D: OrcamentoItem[] = [
     materiais: 14049.96,
     total: 19423.99,
     area: 149,
-    peso: 15.25
+    peso: 15.25,
+    elementos3D: 'Viga_1.1_001,Viga_1.1_002,Viga_1.1_003'
   },
   {
     id: '1.2',
-    codigo: '',
+    codigo: '1.2',
     nome: 'Pilares',
     descricao: 'Pilares',
     categoria: 'Fundação',
@@ -51,11 +53,12 @@ export const dadosMockados5D: OrcamentoItem[] = [
     materiais: 6903.39,
     total: 9297.62,
     area: 149,
-    peso: 7.30
+    peso: 7.30,
+    elementos3D: 'Pilar_1.2_001,Pilar_1.2_002,Pilar_1.2_003'
   },
   {
     id: '1.3',
-    codigo: '',
+    codigo: '1.3',
     nome: 'Fundações',
     descricao: 'Fundações',
     categoria: 'Fundação',
@@ -67,12 +70,13 @@ export const dadosMockados5D: OrcamentoItem[] = [
     materiais: 7441.57,
     total: 10519.41,
     area: 149,
-    peso: 8.26
+    peso: 8.26,
+    elementos3D: 'Fundacao_1.3_001,Fundacao_1.3_002,Fundacao_1.3_003'
   },
   // TÉRREO - Total: R$ 47.368,32 (37,20%)
   {
     id: '2',
-    codigo: '',
+    codigo: '2',
     nome: 'Térreo',
     descricao: 'Térreo',
     categoria: 'Térreo',
@@ -85,11 +89,12 @@ export const dadosMockados5D: OrcamentoItem[] = [
     total: 47368.32,
     area: 149,
     peso: 37.20,
-    isEtapaTotal: true
+    isEtapaTotal: true,
+    elementos3D: ''
   },
   {
     id: '2.1',
-    codigo: '',
+    codigo: '2.1',
     nome: 'Vigas',
     descricao: 'Vigas',
     categoria: 'Térreo',
@@ -101,11 +106,12 @@ export const dadosMockados5D: OrcamentoItem[] = [
     materiais: 13483.37,
     total: 17378.22,
     area: 149,
-    peso: 13.65
+    peso: 13.65,
+    elementos3D: 'Viga_2.1_001,Viga_2.1_002,Viga_2.1_003'
   },
   {
     id: '2.2',
-    codigo: '',
+    codigo: '2.2',
     nome: 'Pilares',
     descricao: 'Pilares',
     categoria: 'Térreo',
@@ -117,11 +123,12 @@ export const dadosMockados5D: OrcamentoItem[] = [
     materiais: 16258.20,
     total: 22371.21,
     area: 149,
-    peso: 17.57
+    peso: 17.57,
+    elementos3D: 'Pilar_2.2_001,Pilar_2.2_002,Pilar_2.2_003'
   },
   {
     id: '2.3',
-    codigo: '',
+    codigo: '2.3',
     nome: 'Lajes',
     descricao: 'Lajes',
     categoria: 'Térreo',
@@ -133,12 +140,13 @@ export const dadosMockados5D: OrcamentoItem[] = [
     materiais: 6701.10,
     total: 7618.89,
     area: 149,
-    peso: 5.98
+    peso: 5.98,
+    elementos3D: 'Laje_2.3_001,Laje_2.3_002,Laje_2.3_003'
   },
   // PAVIMENTO SUPERIOR - Total: R$ 40.737,19 (31,99%)
   {
     id: '3',
-    codigo: '',
+    codigo: '3',
     nome: 'Pavimento Superior',
     descricao: 'Pavimento Superior',
     categoria: 'Pavimento Superior',
@@ -151,11 +159,12 @@ export const dadosMockados5D: OrcamentoItem[] = [
     total: 40737.19,
     area: 149,
     peso: 31.99,
-    isEtapaTotal: true
+    isEtapaTotal: true,
+    elementos3D: ''
   },
   {
     id: '3.1',
-    codigo: '',
+    codigo: '3.1',
     nome: 'Vigas',
     descricao: 'Vigas',
     categoria: 'Pavimento Superior',
@@ -167,11 +176,12 @@ export const dadosMockados5D: OrcamentoItem[] = [
     materiais: 13644.76,
     total: 14310.65,
     area: 149,
-    peso: 11.24
+    peso: 11.24,
+    elementos3D: 'Viga_3.1_001,Viga_3.1_002,Viga_3.1_003'
   },
   {
     id: '3.2',
-    codigo: '',
+    codigo: '3.2',
     nome: 'Pilares',
     descricao: 'Pilares',
     categoria: 'Pavimento Superior',
@@ -183,7 +193,8 @@ export const dadosMockados5D: OrcamentoItem[] = [
     materiais: 15966.51,
     total: 2814.05,
     area: 149,
-    peso: 2.21
+    peso: 2.21,
+    elementos3D: 'Pilar_3.2_001,Pilar_3.2_002,Pilar_3.2_003'
   }
 ];
 
@@ -264,7 +275,7 @@ export const processarDadosExcel5D = (excelData: ArrayBuffer): OrcamentoItem[] =
     // Criar item com dados processados
     const itemProcessado = {
       id: item || `item-${i}`,
-      codigo: '', // Não disponível no Excel
+      codigo: item || `item-${i}`, // Usar o item como código
       nome: descricao.length > 50 ? descricao.substring(0, 50) + '...' : descricao,
       descricao: descricao,
       categoria: categoria,
@@ -394,7 +405,7 @@ export const processarDadosCSV5D = (csvText: string): OrcamentoItem[] => {
     // Criar item com dados processados
     const itemProcessado = {
       id: item || `item-${i}`,
-      codigo: '',
+      codigo: item || `item-${i}`,
       nome: descricaoLimpa.length > 50 ? descricaoLimpa.substring(0, 50) + '...' : descricaoLimpa,
       descricao: descricaoLimpa,
       categoria: categoria,
@@ -407,7 +418,8 @@ export const processarDadosCSV5D = (csvText: string): OrcamentoItem[] => {
       total: totalFinal,
       area: 149,
       peso: pesoPercentual,
-      isEtapaTotal: isEtapaTotal
+      isEtapaTotal: isEtapaTotal,
+      elementos3D: '' // Campo para linking 3D
     };
     
     dados.push(itemProcessado);
