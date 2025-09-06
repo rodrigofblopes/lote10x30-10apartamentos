@@ -1,0 +1,200 @@
+{
+  "links": [
+    {
+      "id": "element_001-1.1",
+      "element3D": {
+        "id": "element_001",
+        "name": "1.1_.001",
+        "type": "Mesh",
+        "category": "Estrutura",
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "customProperties": {
+          "budgetCode": "1.1.1"
+        },
+        "children": []
+      },
+      "budgetItem": {
+        "id": "1.1",
+        "codigo": "",
+        "nome": "Vigas",
+        "descricao": "Vigas da Fundação",
+        "categoria": "Fundação",
+        "subcategoria": "Vigas",
+        "unidade": "m³",
+        "quantidade": 5.9,
+        "valorUnitario": 2631.35,
+        "maoDeObra": 5374.03,
+        "materiais": 14049.96,
+        "total": 19423.99,
+        "area": 149,
+        "peso": 15.25
+      },
+      "confidence": 90,
+      "matchType": "pattern",
+      "searchPatterns": [
+        "1.1",
+        "1.1_",
+        "1_1_",
+        "1.1_001",
+        "1_1_001",
+        "1.1_002",
+        "1_1_002",
+        "1.1_003",
+        "1_1_003",
+        "1.1_004",
+        "1_1_004",
+        "1.1_005",
+        "1_1_005",
+        "1.1_006",
+        "1_1_006",
+        "1.1_007",
+        "1_1_007",
+        "1.1_008",
+        "1_1_008",
+        "1.1_009",
+        "1_1_009",
+        "1.1_010",
+        "1_1_010"
+      ],
+      "createdAt": "2025-09-06T11:15:27.755Z",
+      "validated": true
+    },
+    {
+      "id": "element_002-2.2",
+      "element3D": {
+        "id": "element_002",
+        "name": "2.2_.002",
+        "type": "Mesh",
+        "category": "Estrutura",
+        "position": {
+          "x": 5,
+          "y": 0,
+          "z": 0
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "customProperties": {},
+        "children": []
+      },
+      "budgetItem": {
+        "id": "2.2",
+        "codigo": "",
+        "nome": "Pilares",
+        "descricao": "Pilares do Térreo",
+        "categoria": "Térreo",
+        "subcategoria": "Pilares",
+        "unidade": "m³",
+        "quantidade": 3.8,
+        "valorUnitario": 5887.16,
+        "maoDeObra": 6113.01,
+        "materiais": 16258.2,
+        "total": 22371.21,
+        "area": 149,
+        "peso": 17.57
+      },
+      "confidence": 90,
+      "matchType": "pattern",
+      "searchPatterns": [
+        "2.2",
+        "2.2_",
+        "2_2_",
+        "2.2_001",
+        "2_2_001",
+        "2.2_002",
+        "2_2_002",
+        "2.2_003",
+        "2_2_003",
+        "2.2_004",
+        "2_2_004",
+        "2.2_005",
+        "2_2_005",
+        "2.2_006",
+        "2_2_006",
+        "2.2_007",
+        "2_2_007",
+        "2.2_008",
+        "2_2_008",
+        "2.2_009",
+        "2_2_009",
+        "2.2_010",
+        "2_2_010"
+      ],
+      "createdAt": "2025-09-06T11:15:27.756Z",
+      "validated": true
+    }
+  ],
+  "unmatchedElements": [
+    {
+      "id": "element_003",
+      "name": "Viga_Terreo_001",
+      "type": "Mesh",
+      "category": "Estrutura",
+      "position": {
+        "x": 10,
+        "y": 0,
+        "z": 0
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "customProperties": {},
+      "children": []
+    }
+  ],
+  "unmatchedBudgetItems": [
+    {
+      "id": "2.1",
+      "codigo": "",
+      "nome": "Vigas",
+      "descricao": "Vigas do Térreo",
+      "categoria": "Térreo",
+      "subcategoria": "Vigas",
+      "unidade": "m³",
+      "quantidade": 6.2,
+      "valorUnitario": 2802.97,
+      "maoDeObra": 3894.85,
+      "materiais": 13483.37,
+      "total": 17378.22,
+      "area": 149,
+      "peso": 13.65
+    }
+  ],
+  "statistics": {
+    "totalLinks": 2,
+    "highConfidence": 2,
+    "mediumConfidence": 0,
+    "lowConfidence": 0,
+    "exactMatches": 0,
+    "patternMatches": 2,
+    "categoryMatches": 0
+  }
+}

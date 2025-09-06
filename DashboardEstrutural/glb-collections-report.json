@@ -1,0 +1,3585 @@
+{
+  "filePath": "C:\\Users\\USUARIO\\Desktop\\lote10x30-10apartamentos\\DashboardEstrutural\\public\\Estrutural.glb",
+  "fileSize": 677172,
+  "version": 2,
+  "totalLength": 677172,
+  "jsonSize": 171536,
+  "structure": {
+    "scenes": 1,
+    "nodes": 296,
+    "meshes": 296,
+    "materials": 3
+  },
+  "collections": [
+    {
+      "type": "node",
+      "index": 0,
+      "name": "2.1_",
+      "mesh": 0
+    },
+    {
+      "type": "node",
+      "index": 1,
+      "name": "2.1_.011",
+      "mesh": 1
+    },
+    {
+      "type": "node",
+      "index": 2,
+      "name": "2.1_.015",
+      "mesh": 2
+    },
+    {
+      "type": "node",
+      "index": 3,
+      "name": "2.1_.017",
+      "mesh": 3
+    },
+    {
+      "type": "node",
+      "index": 4,
+      "name": "2.1_.013",
+      "mesh": 4
+    },
+    {
+      "type": "node",
+      "index": 5,
+      "name": "2.1_.012",
+      "mesh": 5
+    },
+    {
+      "type": "node",
+      "index": 6,
+      "name": "2.1_.014",
+      "mesh": 6
+    },
+    {
+      "type": "node",
+      "index": 7,
+      "name": "2.1_.018",
+      "mesh": 7
+    },
+    {
+      "type": "node",
+      "index": 8,
+      "name": "2.1_.020",
+      "mesh": 8
+    },
+    {
+      "type": "node",
+      "index": 9,
+      "name": "2.1_.019",
+      "mesh": 9
+    },
+    {
+      "type": "node",
+      "index": 10,
+      "name": "2.1_.021",
+      "mesh": 10
+    },
+    {
+      "type": "node",
+      "index": 11,
+      "name": "2.1_.001",
+      "mesh": 11
+    },
+    {
+      "type": "node",
+      "index": 12,
+      "name": "2.1_.022",
+      "mesh": 12
+    },
+    {
+      "type": "node",
+      "index": 13,
+      "name": "2.1_.002",
+      "mesh": 13
+    },
+    {
+      "type": "node",
+      "index": 14,
+      "name": "2.1_.023",
+      "mesh": 14
+    },
+    {
+      "type": "node",
+      "index": 15,
+      "name": "2.1_.024",
+      "mesh": 15
+    },
+    {
+      "type": "node",
+      "index": 16,
+      "name": "2.1_.025",
+      "mesh": 16
+    },
+    {
+      "type": "node",
+      "index": 17,
+      "name": "2.1_.027",
+      "mesh": 17
+    },
+    {
+      "type": "node",
+      "index": 18,
+      "name": "2.1_.026",
+      "mesh": 18
+    },
+    {
+      "type": "node",
+      "index": 19,
+      "name": "2.1_.003",
+      "mesh": 19
+    },
+    {
+      "type": "node",
+      "index": 20,
+      "name": "2.1_.030",
+      "mesh": 20
+    },
+    {
+      "type": "node",
+      "index": 21,
+      "name": "2.1_.031",
+      "mesh": 21
+    },
+    {
+      "type": "node",
+      "index": 22,
+      "name": "2.1_.029",
+      "mesh": 22
+    },
+    {
+      "type": "node",
+      "index": 23,
+      "name": "2.1_.032",
+      "mesh": 23
+    },
+    {
+      "type": "node",
+      "index": 24,
+      "name": "2.1_.033",
+      "mesh": 24
+    },
+    {
+      "type": "node",
+      "index": 25,
+      "name": "2.1_.034",
+      "mesh": 25
+    },
+    {
+      "type": "node",
+      "index": 26,
+      "name": "2.1_.035",
+      "mesh": 26
+    },
+    {
+      "type": "node",
+      "index": 27,
+      "name": "2.1_.004",
+      "mesh": 27
+    },
+    {
+      "type": "node",
+      "index": 28,
+      "name": "2.1_.036",
+      "mesh": 28
+    },
+    {
+      "type": "node",
+      "index": 29,
+      "name": "2.1_.038",
+      "mesh": 29
+    },
+    {
+      "type": "node",
+      "index": 30,
+      "name": "2.1_.042",
+      "mesh": 30
+    },
+    {
+      "type": "node",
+      "index": 31,
+      "name": "2.1_.040",
+      "mesh": 31
+    },
+    {
+      "type": "node",
+      "index": 32,
+      "name": "2.1_.041",
+      "mesh": 32
+    },
+    {
+      "type": "node",
+      "index": 33,
+      "name": "2.1_.039",
+      "mesh": 33
+    },
+    {
+      "type": "node",
+      "index": 34,
+      "name": "2.1_.037",
+      "mesh": 34
+    },
+    {
+      "type": "node",
+      "index": 35,
+      "name": "2.1_.043",
+      "mesh": 35
+    },
+    {
+      "type": "node",
+      "index": 36,
+      "name": "2.1_.045",
+      "mesh": 36
+    },
+    {
+      "type": "node",
+      "index": 37,
+      "name": "2.1_.044",
+      "mesh": 37
+    },
+    {
+      "type": "node",
+      "index": 38,
+      "name": "2.1_.046",
+      "mesh": 38
+    },
+    {
+      "type": "node",
+      "index": 39,
+      "name": "2.1_.047",
+      "mesh": 39
+    },
+    {
+      "type": "node",
+      "index": 40,
+      "name": "2.1_.006",
+      "mesh": 40
+    },
+    {
+      "type": "node",
+      "index": 41,
+      "name": "2.1_.005",
+      "mesh": 41
+    },
+    {
+      "type": "node",
+      "index": 42,
+      "name": "2.1_.048",
+      "mesh": 42
+    },
+    {
+      "type": "node",
+      "index": 43,
+      "name": "2.1_.049",
+      "mesh": 43
+    },
+    {
+      "type": "node",
+      "index": 44,
+      "name": "2.1_.052",
+      "mesh": 44
+    },
+    {
+      "type": "node",
+      "index": 45,
+      "name": "2.1_.051",
+      "mesh": 45
+    },
+    {
+      "type": "node",
+      "index": 46,
+      "name": "2.1_.050",
+      "mesh": 46
+    },
+    {
+      "type": "node",
+      "index": 47,
+      "name": "2.1_.007",
+      "mesh": 47
+    },
+    {
+      "type": "node",
+      "index": 48,
+      "name": "2.1_.008",
+      "mesh": 48
+    },
+    {
+      "type": "node",
+      "index": 49,
+      "name": "2.1_.009",
+      "mesh": 49
+    },
+    {
+      "type": "node",
+      "index": 50,
+      "name": "2.1_.010",
+      "mesh": 50
+    },
+    {
+      "type": "node",
+      "index": 51,
+      "name": "2.2_.028",
+      "mesh": 51
+    },
+    {
+      "type": "node",
+      "index": 52,
+      "name": "2.2_.039",
+      "mesh": 52
+    },
+    {
+      "type": "node",
+      "index": 53,
+      "name": "2.2_.037",
+      "mesh": 53
+    },
+    {
+      "type": "node",
+      "index": 54,
+      "name": "2.2_.041",
+      "mesh": 54
+    },
+    {
+      "type": "node",
+      "index": 55,
+      "name": "2.2_.038",
+      "mesh": 55
+    },
+    {
+      "type": "node",
+      "index": 56,
+      "name": "2.2_.040",
+      "mesh": 56
+    },
+    {
+      "type": "node",
+      "index": 57,
+      "name": "2.2_.042",
+      "mesh": 57
+    },
+    {
+      "type": "node",
+      "index": 58,
+      "name": "2.2_.044",
+      "mesh": 58
+    },
+    {
+      "type": "node",
+      "index": 59,
+      "name": "2.2_.043",
+      "mesh": 59
+    },
+    {
+      "type": "node",
+      "index": 60,
+      "name": "2.2_.045",
+      "mesh": 60
+    },
+    {
+      "type": "node",
+      "index": 61,
+      "name": "2.2_.046",
+      "mesh": 61
+    },
+    {
+      "type": "node",
+      "index": 62,
+      "name": "2.2_.029",
+      "mesh": 62
+    },
+    {
+      "type": "node",
+      "index": 63,
+      "name": "2.2_.047",
+      "mesh": 63
+    },
+    {
+      "type": "node",
+      "index": 64,
+      "name": "2.2_.048",
+      "mesh": 64
+    },
+    {
+      "type": "node",
+      "index": 65,
+      "name": "2.2_.049",
+      "mesh": 65
+    },
+    {
+      "type": "node",
+      "index": 66,
+      "name": "2.2_.050",
+      "mesh": 66
+    },
+    {
+      "type": "node",
+      "index": 67,
+      "name": "2.2_.051",
+      "mesh": 67
+    },
+    {
+      "type": "node",
+      "index": 68,
+      "name": "2.2_.052",
+      "mesh": 68
+    },
+    {
+      "type": "node",
+      "index": 69,
+      "name": "2.2_.053",
+      "mesh": 69
+    },
+    {
+      "type": "node",
+      "index": 70,
+      "name": "2.2_.054",
+      "mesh": 70
+    },
+    {
+      "type": "node",
+      "index": 71,
+      "name": "2.2_.031",
+      "mesh": 71
+    },
+    {
+      "type": "node",
+      "index": 72,
+      "name": "2.2_.055",
+      "mesh": 72
+    },
+    {
+      "type": "node",
+      "index": 73,
+      "name": "2.2_.030",
+      "mesh": 73
+    },
+    {
+      "type": "node",
+      "index": 74,
+      "name": "2.2_.032",
+      "mesh": 74
+    },
+    {
+      "type": "node",
+      "index": 75,
+      "name": "2.2_.033",
+      "mesh": 75
+    },
+    {
+      "type": "node",
+      "index": 76,
+      "name": "2.2_.034",
+      "mesh": 76
+    },
+    {
+      "type": "node",
+      "index": 77,
+      "name": "2.2_.035",
+      "mesh": 77
+    },
+    {
+      "type": "node",
+      "index": 78,
+      "name": "2.2_.036",
+      "mesh": 78
+    },
+    {
+      "type": "node",
+      "index": 79,
+      "name": "2.3_.017",
+      "mesh": 79
+    },
+    {
+      "type": "node",
+      "index": 80,
+      "name": "2.3_.011",
+      "mesh": 80
+    },
+    {
+      "type": "node",
+      "index": 81,
+      "name": "2.3_.013",
+      "mesh": 81
+    },
+    {
+      "type": "node",
+      "index": 82,
+      "name": "2.3_.009",
+      "mesh": 82
+    },
+    {
+      "type": "node",
+      "index": 83,
+      "name": "2.3_.001",
+      "mesh": 83
+    },
+    {
+      "type": "node",
+      "index": 84,
+      "name": "2.3_.015",
+      "mesh": 84
+    },
+    {
+      "type": "node",
+      "index": 85,
+      "name": "2.3_",
+      "mesh": 85
+    },
+    {
+      "type": "node",
+      "index": 86,
+      "name": "2.3_.016",
+      "mesh": 86
+    },
+    {
+      "type": "node",
+      "index": 87,
+      "name": "2.3_.010",
+      "mesh": 87
+    },
+    {
+      "type": "node",
+      "index": 88,
+      "name": "2.3_.018",
+      "mesh": 88
+    },
+    {
+      "type": "node",
+      "index": 89,
+      "name": "2.3_.014",
+      "mesh": 89
+    },
+    {
+      "type": "node",
+      "index": 90,
+      "name": "2.3_.012",
+      "mesh": 90
+    },
+    {
+      "type": "node",
+      "index": 91,
+      "name": "2.3_.019",
+      "mesh": 91
+    },
+    {
+      "type": "node",
+      "index": 92,
+      "name": "2.3_.003",
+      "mesh": 92
+    },
+    {
+      "type": "node",
+      "index": 93,
+      "name": "2.3_.005",
+      "mesh": 93
+    },
+    {
+      "type": "node",
+      "index": 94,
+      "name": "2.3_.007",
+      "mesh": 94
+    },
+    {
+      "type": "node",
+      "index": 95,
+      "name": "2.3_.002",
+      "mesh": 95
+    },
+    {
+      "type": "node",
+      "index": 96,
+      "name": "2.3_.004",
+      "mesh": 96
+    },
+    {
+      "type": "node",
+      "index": 97,
+      "name": "2.1_.016",
+      "mesh": 97
+    },
+    {
+      "type": "node",
+      "index": 98,
+      "name": "2.3_.006",
+      "mesh": 98
+    },
+    {
+      "type": "node",
+      "index": 99,
+      "name": "2.3_.008",
+      "mesh": 99
+    },
+    {
+      "type": "node",
+      "index": 100,
+      "name": "2.1_.028",
+      "mesh": 100
+    },
+    {
+      "type": "node",
+      "index": 101,
+      "name": "1.1_.012",
+      "mesh": 101
+    },
+    {
+      "type": "node",
+      "index": 102,
+      "name": "1.1_",
+      "mesh": 102
+    },
+    {
+      "type": "node",
+      "index": 103,
+      "name": "1.1_.013",
+      "mesh": 103
+    },
+    {
+      "type": "node",
+      "index": 104,
+      "name": "1.1_.015",
+      "mesh": 104
+    },
+    {
+      "type": "node",
+      "index": 105,
+      "name": "1.1_.014",
+      "mesh": 105
+    },
+    {
+      "type": "node",
+      "index": 106,
+      "name": "1.1_.017",
+      "mesh": 106
+    },
+    {
+      "type": "node",
+      "index": 107,
+      "name": "1.1_.018",
+      "mesh": 107
+    },
+    {
+      "type": "node",
+      "index": 108,
+      "name": "1.1_.021",
+      "mesh": 108
+    },
+    {
+      "type": "node",
+      "index": 109,
+      "name": "1.1_.019",
+      "mesh": 109
+    },
+    {
+      "type": "node",
+      "index": 110,
+      "name": "1.1_.020",
+      "mesh": 110
+    },
+    {
+      "type": "node",
+      "index": 111,
+      "name": "1.1_.022",
+      "mesh": 111
+    },
+    {
+      "type": "node",
+      "index": 112,
+      "name": "1.1_.028",
+      "mesh": 112
+    },
+    {
+      "type": "node",
+      "index": 113,
+      "name": "1.1_.001",
+      "mesh": 113
+    },
+    {
+      "type": "node",
+      "index": 114,
+      "name": "1.1_.002",
+      "mesh": 114
+    },
+    {
+      "type": "node",
+      "index": 115,
+      "name": "1.1_.030",
+      "mesh": 115
+    },
+    {
+      "type": "node",
+      "index": 116,
+      "name": "1.1_.032",
+      "mesh": 116
+    },
+    {
+      "type": "node",
+      "index": 117,
+      "name": "1.1_.031",
+      "mesh": 117
+    },
+    {
+      "type": "node",
+      "index": 118,
+      "name": "1.1_.033",
+      "mesh": 118
+    },
+    {
+      "type": "node",
+      "index": 119,
+      "name": "1.1_.034",
+      "mesh": 119
+    },
+    {
+      "type": "node",
+      "index": 120,
+      "name": "1.1_.035",
+      "mesh": 120
+    },
+    {
+      "type": "node",
+      "index": 121,
+      "name": "1.1_.036",
+      "mesh": 121
+    },
+    {
+      "type": "node",
+      "index": 122,
+      "name": "1.1_.038",
+      "mesh": 122
+    },
+    {
+      "type": "node",
+      "index": 123,
+      "name": "1.1_.037",
+      "mesh": 123
+    },
+    {
+      "type": "node",
+      "index": 124,
+      "name": "1.1_.039",
+      "mesh": 124
+    },
+    {
+      "type": "node",
+      "index": 125,
+      "name": "1.1_.040",
+      "mesh": 125
+    },
+    {
+      "type": "node",
+      "index": 126,
+      "name": "1.1_.041",
+      "mesh": 126
+    },
+    {
+      "type": "node",
+      "index": 127,
+      "name": "1.1_.042",
+      "mesh": 127
+    },
+    {
+      "type": "node",
+      "index": 128,
+      "name": "1.1_.044",
+      "mesh": 128
+    },
+    {
+      "type": "node",
+      "index": 129,
+      "name": "1.1_.043",
+      "mesh": 129
+    },
+    {
+      "type": "node",
+      "index": 130,
+      "name": "1.1_.045",
+      "mesh": 130
+    },
+    {
+      "type": "node",
+      "index": 131,
+      "name": "1.1_.046",
+      "mesh": 131
+    },
+    {
+      "type": "node",
+      "index": 132,
+      "name": "1.1_.047",
+      "mesh": 132
+    },
+    {
+      "type": "node",
+      "index": 133,
+      "name": "1.1_.048",
+      "mesh": 133
+    },
+    {
+      "type": "node",
+      "index": 134,
+      "name": "1.1_.049",
+      "mesh": 134
+    },
+    {
+      "type": "node",
+      "index": 135,
+      "name": "1.1_.050",
+      "mesh": 135
+    },
+    {
+      "type": "node",
+      "index": 136,
+      "name": "1.1_.051",
+      "mesh": 136
+    },
+    {
+      "type": "node",
+      "index": 137,
+      "name": "1.1_.052",
+      "mesh": 137
+    },
+    {
+      "type": "node",
+      "index": 138,
+      "name": "1.1_.005",
+      "mesh": 138
+    },
+    {
+      "type": "node",
+      "index": 139,
+      "name": "1.1_.004",
+      "mesh": 139
+    },
+    {
+      "type": "node",
+      "index": 140,
+      "name": "1.1_.006",
+      "mesh": 140
+    },
+    {
+      "type": "node",
+      "index": 141,
+      "name": "1.1_.007",
+      "mesh": 141
+    },
+    {
+      "type": "node",
+      "index": 142,
+      "name": "1.1_.009",
+      "mesh": 142
+    },
+    {
+      "type": "node",
+      "index": 143,
+      "name": "1.1_.008",
+      "mesh": 143
+    },
+    {
+      "type": "node",
+      "index": 144,
+      "name": "1.1_.023",
+      "mesh": 144
+    },
+    {
+      "type": "node",
+      "index": 145,
+      "name": "1.1_.024",
+      "mesh": 145
+    },
+    {
+      "type": "node",
+      "index": 146,
+      "name": "1.1_.003",
+      "mesh": 146
+    },
+    {
+      "type": "node",
+      "index": 147,
+      "name": "1.1_.025",
+      "mesh": 147
+    },
+    {
+      "type": "node",
+      "index": 148,
+      "name": "1.1_.026",
+      "mesh": 148
+    },
+    {
+      "type": "node",
+      "index": 149,
+      "name": "1.1_.027",
+      "mesh": 149
+    },
+    {
+      "type": "node",
+      "index": 150,
+      "name": "1.1_.010",
+      "mesh": 150
+    },
+    {
+      "type": "node",
+      "index": 151,
+      "name": "1.1_.011",
+      "mesh": 151
+    },
+    {
+      "type": "node",
+      "index": 152,
+      "name": "1.2_",
+      "mesh": 152
+    },
+    {
+      "type": "node",
+      "index": 153,
+      "name": "1.2_.009",
+      "mesh": 153
+    },
+    {
+      "type": "node",
+      "index": 154,
+      "name": "1.2_.010",
+      "mesh": 154
+    },
+    {
+      "type": "node",
+      "index": 155,
+      "name": "1.2_.011",
+      "mesh": 155
+    },
+    {
+      "type": "node",
+      "index": 156,
+      "name": "1.2_.012",
+      "mesh": 156
+    },
+    {
+      "type": "node",
+      "index": 157,
+      "name": "1.2_.014",
+      "mesh": 157
+    },
+    {
+      "type": "node",
+      "index": 158,
+      "name": "1.2_.016",
+      "mesh": 158
+    },
+    {
+      "type": "node",
+      "index": 159,
+      "name": "1.2_.015",
+      "mesh": 159
+    },
+    {
+      "type": "node",
+      "index": 160,
+      "name": "1.2_.017",
+      "mesh": 160
+    },
+    {
+      "type": "node",
+      "index": 161,
+      "name": "1.2_.013",
+      "mesh": 161
+    },
+    {
+      "type": "node",
+      "index": 162,
+      "name": "1.2_.001",
+      "mesh": 162
+    },
+    {
+      "type": "node",
+      "index": 163,
+      "name": "1.2_.019",
+      "mesh": 163
+    },
+    {
+      "type": "node",
+      "index": 164,
+      "name": "1.2_.018",
+      "mesh": 164
+    },
+    {
+      "type": "node",
+      "index": 165,
+      "name": "1.2_.020",
+      "mesh": 165
+    },
+    {
+      "type": "node",
+      "index": 166,
+      "name": "1.2_.021",
+      "mesh": 166
+    },
+    {
+      "type": "node",
+      "index": 167,
+      "name": "1.2_.022",
+      "mesh": 167
+    },
+    {
+      "type": "node",
+      "index": 168,
+      "name": "1.2_.024",
+      "mesh": 168
+    },
+    {
+      "type": "node",
+      "index": 169,
+      "name": "1.2_.025",
+      "mesh": 169
+    },
+    {
+      "type": "node",
+      "index": 170,
+      "name": "1.2_.003",
+      "mesh": 170
+    },
+    {
+      "type": "node",
+      "index": 171,
+      "name": "1.2_.002",
+      "mesh": 171
+    },
+    {
+      "type": "node",
+      "index": 172,
+      "name": "1.2_.004",
+      "mesh": 172
+    },
+    {
+      "type": "node",
+      "index": 173,
+      "name": "1.2_.007",
+      "mesh": 173
+    },
+    {
+      "type": "node",
+      "index": 174,
+      "name": "1.2_.005",
+      "mesh": 174
+    },
+    {
+      "type": "node",
+      "index": 175,
+      "name": "1.2_.027",
+      "mesh": 175
+    },
+    {
+      "type": "node",
+      "index": 176,
+      "name": "1.2_.023",
+      "mesh": 176
+    },
+    {
+      "type": "node",
+      "index": 177,
+      "name": "1.2_.026",
+      "mesh": 177
+    },
+    {
+      "type": "node",
+      "index": 178,
+      "name": "1.2_.006",
+      "mesh": 178
+    },
+    {
+      "type": "node",
+      "index": 179,
+      "name": "1.2_.008",
+      "mesh": 179
+    },
+    {
+      "type": "node",
+      "index": 180,
+      "name": "1.3_.040",
+      "mesh": 180
+    },
+    {
+      "type": "node",
+      "index": 181,
+      "name": "1.3_.037",
+      "mesh": 181
+    },
+    {
+      "type": "node",
+      "index": 182,
+      "name": "1.3_.028",
+      "mesh": 182
+    },
+    {
+      "type": "node",
+      "index": 183,
+      "name": "1.3_.046",
+      "mesh": 183
+    },
+    {
+      "type": "node",
+      "index": 184,
+      "name": "1.3_.038",
+      "mesh": 184
+    },
+    {
+      "type": "node",
+      "index": 185,
+      "name": "1.3_.039",
+      "mesh": 185
+    },
+    {
+      "type": "node",
+      "index": 186,
+      "name": "1.3_.048",
+      "mesh": 186
+    },
+    {
+      "type": "node",
+      "index": 187,
+      "name": "1.3_.041",
+      "mesh": 187
+    },
+    {
+      "type": "node",
+      "index": 188,
+      "name": "1.3_.042",
+      "mesh": 188
+    },
+    {
+      "type": "node",
+      "index": 189,
+      "name": "1.3_.044",
+      "mesh": 189
+    },
+    {
+      "type": "node",
+      "index": 190,
+      "name": "1.3_.043",
+      "mesh": 190
+    },
+    {
+      "type": "node",
+      "index": 191,
+      "name": "1.3_.045",
+      "mesh": 191
+    },
+    {
+      "type": "node",
+      "index": 192,
+      "name": "1.3_.029",
+      "mesh": 192
+    },
+    {
+      "type": "node",
+      "index": 193,
+      "name": "1.3_.047",
+      "mesh": 193
+    },
+    {
+      "type": "node",
+      "index": 194,
+      "name": "1.3_.030",
+      "mesh": 194
+    },
+    {
+      "type": "node",
+      "index": 195,
+      "name": "1.3_.051",
+      "mesh": 195
+    },
+    {
+      "type": "node",
+      "index": 196,
+      "name": "1.3_.052",
+      "mesh": 196
+    },
+    {
+      "type": "node",
+      "index": 197,
+      "name": "1.3_.050",
+      "mesh": 197
+    },
+    {
+      "type": "node",
+      "index": 198,
+      "name": "1.3_.053",
+      "mesh": 198
+    },
+    {
+      "type": "node",
+      "index": 199,
+      "name": "1.3_.049",
+      "mesh": 199
+    },
+    {
+      "type": "node",
+      "index": 200,
+      "name": "1.3_.054",
+      "mesh": 200
+    },
+    {
+      "type": "node",
+      "index": 201,
+      "name": "1.3_.055",
+      "mesh": 201
+    },
+    {
+      "type": "node",
+      "index": 202,
+      "name": "1.3_.032",
+      "mesh": 202
+    },
+    {
+      "type": "node",
+      "index": 203,
+      "name": "1.3_.033",
+      "mesh": 203
+    },
+    {
+      "type": "node",
+      "index": 204,
+      "name": "1.3_.035",
+      "mesh": 204
+    },
+    {
+      "type": "node",
+      "index": 205,
+      "name": "1.3_.034",
+      "mesh": 205
+    },
+    {
+      "type": "node",
+      "index": 206,
+      "name": "1.3_.031",
+      "mesh": 206
+    },
+    {
+      "type": "node",
+      "index": 207,
+      "name": "1.3_.036",
+      "mesh": 207
+    },
+    {
+      "type": "node",
+      "index": 208,
+      "name": "1.1_.016",
+      "mesh": 208
+    },
+    {
+      "type": "node",
+      "index": 209,
+      "name": "1.1_.029",
+      "mesh": 209
+    },
+    {
+      "type": "node",
+      "index": 210,
+      "name": "3.1_",
+      "mesh": 210
+    },
+    {
+      "type": "node",
+      "index": 211,
+      "name": "3.1_.012",
+      "mesh": 211
+    },
+    {
+      "type": "node",
+      "index": 212,
+      "name": "3.1_.013",
+      "mesh": 212
+    },
+    {
+      "type": "node",
+      "index": 213,
+      "name": "3.1_.014",
+      "mesh": 213
+    },
+    {
+      "type": "node",
+      "index": 214,
+      "name": "3.1_.015",
+      "mesh": 214
+    },
+    {
+      "type": "node",
+      "index": 215,
+      "name": "3.1_.017",
+      "mesh": 215
+    },
+    {
+      "type": "node",
+      "index": 216,
+      "name": "3.1_.018",
+      "mesh": 216
+    },
+    {
+      "type": "node",
+      "index": 217,
+      "name": "3.1_.019",
+      "mesh": 217
+    },
+    {
+      "type": "node",
+      "index": 218,
+      "name": "3.1_.020",
+      "mesh": 218
+    },
+    {
+      "type": "node",
+      "index": 219,
+      "name": "3.1_.021",
+      "mesh": 219
+    },
+    {
+      "type": "node",
+      "index": 220,
+      "name": "3.1_.022",
+      "mesh": 220
+    },
+    {
+      "type": "node",
+      "index": 221,
+      "name": "3.1_.023",
+      "mesh": 221
+    },
+    {
+      "type": "node",
+      "index": 222,
+      "name": "3.1_.024",
+      "mesh": 222
+    },
+    {
+      "type": "node",
+      "index": 223,
+      "name": "3.1_.025",
+      "mesh": 223
+    },
+    {
+      "type": "node",
+      "index": 224,
+      "name": "3.1_.026",
+      "mesh": 224
+    },
+    {
+      "type": "node",
+      "index": 225,
+      "name": "3.1_.028",
+      "mesh": 225
+    },
+    {
+      "type": "node",
+      "index": 226,
+      "name": "3.1_.027",
+      "mesh": 226
+    },
+    {
+      "type": "node",
+      "index": 227,
+      "name": "3.1_.001",
+      "mesh": 227
+    },
+    {
+      "type": "node",
+      "index": 228,
+      "name": "3.1_.002",
+      "mesh": 228
+    },
+    {
+      "type": "node",
+      "index": 229,
+      "name": "3.1_.030",
+      "mesh": 229
+    },
+    {
+      "type": "node",
+      "index": 230,
+      "name": "3.1_.031",
+      "mesh": 230
+    },
+    {
+      "type": "node",
+      "index": 231,
+      "name": "3.1_.032",
+      "mesh": 231
+    },
+    {
+      "type": "node",
+      "index": 232,
+      "name": "3.1_.033",
+      "mesh": 232
+    },
+    {
+      "type": "node",
+      "index": 233,
+      "name": "3.1_.035",
+      "mesh": 233
+    },
+    {
+      "type": "node",
+      "index": 234,
+      "name": "3.1_.034",
+      "mesh": 234
+    },
+    {
+      "type": "node",
+      "index": 235,
+      "name": "3.1_.036",
+      "mesh": 235
+    },
+    {
+      "type": "node",
+      "index": 236,
+      "name": "3.1_.037",
+      "mesh": 236
+    },
+    {
+      "type": "node",
+      "index": 237,
+      "name": "3.1_.038",
+      "mesh": 237
+    },
+    {
+      "type": "node",
+      "index": 238,
+      "name": "3.1_.003",
+      "mesh": 238
+    },
+    {
+      "type": "node",
+      "index": 239,
+      "name": "3.1_.039",
+      "mesh": 239
+    },
+    {
+      "type": "node",
+      "index": 240,
+      "name": "3.1_.040",
+      "mesh": 240
+    },
+    {
+      "type": "node",
+      "index": 241,
+      "name": "3.1_.041",
+      "mesh": 241
+    },
+    {
+      "type": "node",
+      "index": 242,
+      "name": "3.1_.042",
+      "mesh": 242
+    },
+    {
+      "type": "node",
+      "index": 243,
+      "name": "3.1_.043",
+      "mesh": 243
+    },
+    {
+      "type": "node",
+      "index": 244,
+      "name": "3.1_.044",
+      "mesh": 244
+    },
+    {
+      "type": "node",
+      "index": 245,
+      "name": "3.1_.046",
+      "mesh": 245
+    },
+    {
+      "type": "node",
+      "index": 246,
+      "name": "3.1_.045",
+      "mesh": 246
+    },
+    {
+      "type": "node",
+      "index": 247,
+      "name": "3.1_.047",
+      "mesh": 247
+    },
+    {
+      "type": "node",
+      "index": 248,
+      "name": "3.1_.048",
+      "mesh": 248
+    },
+    {
+      "type": "node",
+      "index": 249,
+      "name": "3.1_.049",
+      "mesh": 249
+    },
+    {
+      "type": "node",
+      "index": 250,
+      "name": "3.1_.050",
+      "mesh": 250
+    },
+    {
+      "type": "node",
+      "index": 251,
+      "name": "3.1_.051",
+      "mesh": 251
+    },
+    {
+      "type": "node",
+      "index": 252,
+      "name": "3.1_.052",
+      "mesh": 252
+    },
+    {
+      "type": "node",
+      "index": 253,
+      "name": "3.1_.004",
+      "mesh": 253
+    },
+    {
+      "type": "node",
+      "index": 254,
+      "name": "3.1_.005",
+      "mesh": 254
+    },
+    {
+      "type": "node",
+      "index": 255,
+      "name": "3.1_.006",
+      "mesh": 255
+    },
+    {
+      "type": "node",
+      "index": 256,
+      "name": "3.1_.007",
+      "mesh": 256
+    },
+    {
+      "type": "node",
+      "index": 257,
+      "name": "3.1_.008",
+      "mesh": 257
+    },
+    {
+      "type": "node",
+      "index": 258,
+      "name": "3.1_.009",
+      "mesh": 258
+    },
+    {
+      "type": "node",
+      "index": 259,
+      "name": "3.1_.010",
+      "mesh": 259
+    },
+    {
+      "type": "node",
+      "index": 260,
+      "name": "3.1_.011",
+      "mesh": 260
+    },
+    {
+      "type": "node",
+      "index": 261,
+      "name": "3.2_.055",
+      "mesh": 261
+    },
+    {
+      "type": "node",
+      "index": 262,
+      "name": "3.2_.062",
+      "mesh": 262
+    },
+    {
+      "type": "node",
+      "index": 263,
+      "name": "3.2_.063",
+      "mesh": 263
+    },
+    {
+      "type": "node",
+      "index": 264,
+      "name": "3.2_.064",
+      "mesh": 264
+    },
+    {
+      "type": "node",
+      "index": 265,
+      "name": "3.2_.065",
+      "mesh": 265
+    },
+    {
+      "type": "node",
+      "index": 266,
+      "name": "3.2_.067",
+      "mesh": 266
+    },
+    {
+      "type": "node",
+      "index": 267,
+      "name": "3.2_.066",
+      "mesh": 267
+    },
+    {
+      "type": "node",
+      "index": 268,
+      "name": "3.2_.068",
+      "mesh": 268
+    },
+    {
+      "type": "node",
+      "index": 269,
+      "name": "3.2_.070",
+      "mesh": 269
+    },
+    {
+      "type": "node",
+      "index": 270,
+      "name": "3.2_.069",
+      "mesh": 270
+    },
+    {
+      "type": "node",
+      "index": 271,
+      "name": "3.2_.071",
+      "mesh": 271
+    },
+    {
+      "type": "node",
+      "index": 272,
+      "name": "3.2_.053",
+      "mesh": 272
+    },
+    {
+      "type": "node",
+      "index": 273,
+      "name": "3.2_.072",
+      "mesh": 273
+    },
+    {
+      "type": "node",
+      "index": 274,
+      "name": "3.2_.073",
+      "mesh": 274
+    },
+    {
+      "type": "node",
+      "index": 275,
+      "name": "3.2_.074",
+      "mesh": 275
+    },
+    {
+      "type": "node",
+      "index": 276,
+      "name": "3.2_.076",
+      "mesh": 276
+    },
+    {
+      "type": "node",
+      "index": 277,
+      "name": "3.2_.077",
+      "mesh": 277
+    },
+    {
+      "type": "node",
+      "index": 278,
+      "name": "3.2_.075",
+      "mesh": 278
+    },
+    {
+      "type": "node",
+      "index": 279,
+      "name": "3.2_.078",
+      "mesh": 279
+    },
+    {
+      "type": "node",
+      "index": 280,
+      "name": "3.2_.080",
+      "mesh": 280
+    },
+    {
+      "type": "node",
+      "index": 281,
+      "name": "3.2_.079",
+      "mesh": 281
+    },
+    {
+      "type": "node",
+      "index": 282,
+      "name": "3.2_.056",
+      "mesh": 282
+    },
+    {
+      "type": "node",
+      "index": 283,
+      "name": "3.2_.054",
+      "mesh": 283
+    },
+    {
+      "type": "node",
+      "index": 284,
+      "name": "3.2_.057",
+      "mesh": 284
+    },
+    {
+      "type": "node",
+      "index": 285,
+      "name": "3.2_.058",
+      "mesh": 285
+    },
+    {
+      "type": "node",
+      "index": 286,
+      "name": "3.2_.059",
+      "mesh": 286
+    },
+    {
+      "type": "node",
+      "index": 287,
+      "name": "3.2_.060",
+      "mesh": 287
+    },
+    {
+      "type": "node",
+      "index": 288,
+      "name": "3.3_.002",
+      "mesh": 288
+    },
+    {
+      "type": "node",
+      "index": 289,
+      "name": "3.3_",
+      "mesh": 289
+    },
+    {
+      "type": "node",
+      "index": 290,
+      "name": "3.2_.061",
+      "mesh": 290
+    },
+    {
+      "type": "node",
+      "index": 291,
+      "name": "3.1_.016",
+      "mesh": 291
+    },
+    {
+      "type": "node",
+      "index": 292,
+      "name": "3.3_.001",
+      "mesh": 292
+    },
+    {
+      "type": "node",
+      "index": 293,
+      "name": "3.1_.029",
+      "mesh": 293
+    },
+    {
+      "type": "node",
+      "index": 294,
+      "name": "3.3_.003",
+      "mesh": 294
+    },
+    {
+      "type": "node",
+      "index": 295,
+      "name": "3.3_.004",
+      "mesh": 295
+    },
+    {
+      "type": "mesh",
+      "index": 0,
+      "name": "20/65868",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 1,
+      "name": "20/65909",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 2,
+      "name": "20/66075",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 3,
+      "name": "20/66166",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 4,
+      "name": "20/66034",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 5,
+      "name": "20/65952",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 6,
+      "name": "20/65993",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 7,
+      "name": "20/66207",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 8,
+      "name": "20/66289",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 9,
+      "name": "20/66248",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 10,
+      "name": "20/66332",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 11,
+      "name": "20/66373",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 12,
+      "name": "20/66455",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 13,
+      "name": "20/66414",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 14,
+      "name": "20/66498",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 15,
+      "name": "20/66539",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 16,
+      "name": "20/66580",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 17,
+      "name": "20/66666",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 18,
+      "name": "20/66623",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 19,
+      "name": "20/66843",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 20,
+      "name": "20/66802",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 21,
+      "name": "20/66886",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 22,
+      "name": "20/66759",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 23,
+      "name": "20/66929",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 24,
+      "name": "20/66972",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 25,
+      "name": "20/67015",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 26,
+      "name": "20/67058",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 27,
+      "name": "20/67353",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 28,
+      "name": "20/67099",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 29,
+      "name": "20/67185",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 30,
+      "name": "20/67398",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 31,
+      "name": "20/67271",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 32,
+      "name": "20/67312",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 33,
+      "name": "20/67226",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 34,
+      "name": "20/67140",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 35,
+      "name": "20/67439",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 36,
+      "name": "20/67523",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 37,
+      "name": "20/67482",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 38,
+      "name": "20/67564",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 39,
+      "name": "20/67605",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 40,
+      "name": "20/67894",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 41,
+      "name": "20/67853",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 42,
+      "name": "20/67687",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 43,
+      "name": "20/67728",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 44,
+      "name": "20/67812",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 45,
+      "name": "20/67771",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 46,
+      "name": "20/67646",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 47,
+      "name": "20/67935",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 48,
+      "name": "20/67978",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 49,
+      "name": "20/68019",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 50,
+      "name": "20/68060",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 51,
+      "name": "20/68099",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 52,
+      "name": "20/68216",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 53,
+      "name": "20/68138",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 54,
+      "name": "20/68294",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 55,
+      "name": "20/68177",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 56,
+      "name": "20/68255",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 57,
+      "name": "20/68333",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 58,
+      "name": "20/68411",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 59,
+      "name": "20/68372",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 60,
+      "name": "20/68450",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 61,
+      "name": "20/68489",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 62,
+      "name": "20/68528",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 63,
+      "name": "20/68567",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 64,
+      "name": "20/68606",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 65,
+      "name": "20/68645",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 66,
+      "name": "20/68684",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 67,
+      "name": "20/68723",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 68,
+      "name": "20/68762",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 69,
+      "name": "20/68801",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 70,
+      "name": "20/68840",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 71,
+      "name": "20/68957",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 72,
+      "name": "20/68879",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 73,
+      "name": "20/68918",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 74,
+      "name": "20/68996",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 75,
+      "name": "20/69035",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 76,
+      "name": "20/69074",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 77,
+      "name": "20/69113",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 78,
+      "name": "20/69152",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 79,
+      "name": "20/109906",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 80,
+      "name": "20/104680",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 81,
+      "name": "20/106477",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 82,
+      "name": "20/102886",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 83,
+      "name": "20/111622",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 84,
+      "name": "20/108191",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 85,
+      "name": "20/101809",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 86,
+      "name": "20/108908",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 87,
+      "name": "20/103603",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 88,
+      "name": "20/110544",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 89,
+      "name": "20/107114",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 90,
+      "name": "20/105398",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 91,
+      "name": "20/112339",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 92,
+      "name": "20/114133",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 93,
+      "name": "20/115927",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 94,
+      "name": "20/117721",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 95,
+      "name": "20/113056",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 96,
+      "name": "20/114850",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 97,
+      "name": "20/66118",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 98,
+      "name": "20/116644",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 99,
+      "name": "20/118438",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 100,
+      "name": "20/66709",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 101,
+      "name": "20/27447",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 102,
+      "name": "1.1",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 103,
+      "name": "20/27529",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 104,
+      "name": "20/27570",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 105,
+      "name": "20/27488",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 106,
+      "name": "20/27700",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 107,
+      "name": "20/27659",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 108,
+      "name": "20/27823",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 109,
+      "name": "20/27741",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 110,
+      "name": "20/27782",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 111,
+      "name": "20/27864",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 112,
+      "name": "20/28110",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 113,
+      "name": "1.1_",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 114,
+      "name": "20/28151",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 115,
+      "name": "20/28281",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 116,
+      "name": "20/28363",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 117,
+      "name": "20/28322",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 118,
+      "name": "20/28404",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 119,
+      "name": "20/28445",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 120,
+      "name": "20/28486",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 121,
+      "name": "20/28527",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 122,
+      "name": "20/28609",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 123,
+      "name": "20/28568",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 124,
+      "name": "20/28650",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 125,
+      "name": "20/28732",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 126,
+      "name": "20/28773",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 127,
+      "name": "20/28814",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 128,
+      "name": "20/28896",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 129,
+      "name": "20/28855",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 130,
+      "name": "20/28937",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 131,
+      "name": "20/28978",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 132,
+      "name": "20/29019",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 133,
+      "name": "20/29101",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 134,
+      "name": "20/29142",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 135,
+      "name": "20/29183",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 136,
+      "name": "20/29060",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 137,
+      "name": "20/29224",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 138,
+      "name": "20/29306",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 139,
+      "name": "20/29265",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 140,
+      "name": "20/29347",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 141,
+      "name": "20/29388",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 142,
+      "name": "20/29470",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 143,
+      "name": "20/29429",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 144,
+      "name": "20/27987",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 145,
+      "name": "20/28069",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 146,
+      "name": "20/28691",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 147,
+      "name": "20/27905",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 148,
+      "name": "20/28028",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 149,
+      "name": "20/27946",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 150,
+      "name": "20/29511",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 151,
+      "name": "20/29552",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 152,
+      "name": "20/29591",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 153,
+      "name": "20/29630",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 154,
+      "name": "20/29669",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 155,
+      "name": "20/29708",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 156,
+      "name": "20/29747",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 157,
+      "name": "20/29825",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 158,
+      "name": "20/29903",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 159,
+      "name": "20/29864",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 160,
+      "name": "20/29942",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 161,
+      "name": "20/29786",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 162,
+      "name": "20/30020",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 163,
+      "name": "20/30059",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 164,
+      "name": "20/29981",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 165,
+      "name": "20/30098",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 166,
+      "name": "20/30137",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 167,
+      "name": "20/30176",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 168,
+      "name": "20/30254",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 169,
+      "name": "20/30293",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 170,
+      "name": "20/30449",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 171,
+      "name": "20/30410",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 172,
+      "name": "20/30488",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 173,
+      "name": "20/30605",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 174,
+      "name": "20/30527",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 175,
+      "name": "20/30371",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 176,
+      "name": "20/30215",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 177,
+      "name": "20/30332",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 178,
+      "name": "20/30566",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 179,
+      "name": "20/30644",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 180,
+      "name": "20/31061",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 181,
+      "name": "20/30773",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 182,
+      "name": "20/30677",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 183,
+      "name": "20/31637",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 184,
+      "name": "20/30869",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 185,
+      "name": "20/30965",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 186,
+      "name": "20/31925",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 187,
+      "name": "20/31157",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 188,
+      "name": "20/31253",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 189,
+      "name": "20/31445",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 190,
+      "name": "20/31349",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 191,
+      "name": "20/31541",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 192,
+      "name": "20/31733",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 193,
+      "name": "20/31829",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 194,
+      "name": "20/32693",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 195,
+      "name": "20/32213",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 196,
+      "name": "20/32309",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 197,
+      "name": "20/32117",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 198,
+      "name": "20/32405",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 199,
+      "name": "20/32021",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 200,
+      "name": "20/32501",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 201,
+      "name": "20/32597",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 202,
+      "name": "20/32885",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 203,
+      "name": "20/32981",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 204,
+      "name": "20/33173",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 205,
+      "name": "20/33077",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 206,
+      "name": "20/32789",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 207,
+      "name": "20/33269",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 208,
+      "name": "20/27611",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 209,
+      "name": "20/28233",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 210,
+      "name": "20/119523",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 211,
+      "name": "20/119564",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 212,
+      "name": "20/119605",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 213,
+      "name": "20/119646",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 214,
+      "name": "20/119687",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 215,
+      "name": "20/119776",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 216,
+      "name": "20/119817",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 217,
+      "name": "20/119858",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 218,
+      "name": "20/119899",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 219,
+      "name": "20/119940",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 220,
+      "name": "20/119981",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 221,
+      "name": "20/120022",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 222,
+      "name": "20/120063",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 223,
+      "name": "20/120104",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 224,
+      "name": "20/120145",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 225,
+      "name": "20/120227",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 226,
+      "name": "20/120186",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 227,
+      "name": "20/120268",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 228,
+      "name": "20/120309",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 229,
+      "name": "20/120398",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 230,
+      "name": "20/120439",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 231,
+      "name": "20/120480",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 232,
+      "name": "20/120521",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 233,
+      "name": "20/120603",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 234,
+      "name": "20/120562",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 235,
+      "name": "20/120644",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 236,
+      "name": "20/120685",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 237,
+      "name": "20/120726",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 238,
+      "name": "20/120767",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 239,
+      "name": "20/120808",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 240,
+      "name": "20/120849",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 241,
+      "name": "20/120890",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 242,
+      "name": "20/120931",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 243,
+      "name": "20/120972",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 244,
+      "name": "20/121013",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 245,
+      "name": "20/121095",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 246,
+      "name": "20/121054",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 247,
+      "name": "20/121136",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 248,
+      "name": "20/121177",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 249,
+      "name": "20/121218",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 250,
+      "name": "20/121300",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 251,
+      "name": "20/121259",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 252,
+      "name": "20/121341",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 253,
+      "name": "20/121382",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 254,
+      "name": "20/121423",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 255,
+      "name": "20/121464",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 256,
+      "name": "20/121505",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 257,
+      "name": "20/121546",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 258,
+      "name": "20/121587",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 259,
+      "name": "20/121628",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 260,
+      "name": "20/121669",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 261,
+      "name": "20/121708",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 262,
+      "name": "20/121747",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 263,
+      "name": "20/121786",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 264,
+      "name": "20/121825",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 265,
+      "name": "20/121864",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 266,
+      "name": "20/121942",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 267,
+      "name": "20/121903",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 268,
+      "name": "20/121981",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 269,
+      "name": "20/122059",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 270,
+      "name": "20/122020",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 271,
+      "name": "20/122098",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 272,
+      "name": "20/122137",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 273,
+      "name": "20/122176",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 274,
+      "name": "20/122215",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 275,
+      "name": "20/122254",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 276,
+      "name": "20/122332",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 277,
+      "name": "20/122371",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 278,
+      "name": "20/122293",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 279,
+      "name": "20/122410",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 280,
+      "name": "20/122488",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 281,
+      "name": "20/122449",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 282,
+      "name": "20/122566",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 283,
+      "name": "20/122527",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 284,
+      "name": "20/122605",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 285,
+      "name": "20/122644",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 286,
+      "name": "20/122683",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 287,
+      "name": "20/122722",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 288,
+      "name": "20/155550",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 289,
+      "name": "20/154116",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 290,
+      "name": "20/122761",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 291,
+      "name": "20/119728",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 292,
+      "name": "20/154833",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 293,
+      "name": "20/120350",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 294,
+      "name": "20/156267",
+      "primitives": 1
+    },
+    {
+      "type": "mesh",
+      "index": 295,
+      "name": "20/156984",
+      "primitives": 1
+    }
+  ],
+  "patterns": {
+    "1.1_": 54,
+    "1.2_": 28,
+    "1.3_": 28,
+    "2.1_": 53,
+    "2.2_": 28,
+    "2.3_": 20,
+    "3.1_": 53,
+    "3.2_": 28,
+    "3.3_": 5,
+    "Viga": 0,
+    "Pilar": 0,
+    "Laje": 0,
+    "Fundacao": 0,
+    "Terreo": 0,
+    "Superior": 0
+  },
+  "totalCollections": 592
+}

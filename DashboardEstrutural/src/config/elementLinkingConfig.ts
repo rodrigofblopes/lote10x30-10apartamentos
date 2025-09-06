@@ -17,7 +17,7 @@ export interface LinkingConfig {
   emissiveIntensity: number;
 }
 
-// Configuração principal de linking
+// Configuração principal de linking (restaurada para funcionamento)
 export const linkingConfig: LinkingConfig = {
   elements: [
     // Fundação
@@ -27,7 +27,7 @@ export const linkingConfig: LinkingConfig = {
       elementType: 'grupo',
       color: '#96ceb4',
       description: 'Grupo principal - Fundação',
-      searchPatterns: ['1_', '1.1_', '1.2_', '1.3_']
+      searchPatterns: ['1_', '1.1_', '1.2_', '1.3_', 'Fundacao', 'Fundação']
     },
     {
       budgetCode: '1.1',
@@ -35,7 +35,7 @@ export const linkingConfig: LinkingConfig = {
       elementType: 'viga',
       color: '#ff6b35',
       description: 'Vigas baldrame da fundação',
-      searchPatterns: ['1.1_', '1.1_.001', '1.1_.002', '1.1_.003']
+      searchPatterns: ['1.1_', '1.1_.001', '1.1_.002', '1.1_.003', 'Viga_Fundacao', 'Viga_Fundação']
     },
     {
       budgetCode: '1.2',
@@ -43,7 +43,7 @@ export const linkingConfig: LinkingConfig = {
       elementType: 'pilar',
       color: '#4ecdc4',
       description: 'Pilares da fundação',
-      searchPatterns: ['1.2_', '1.2_.001', '1.2_.002', '1.2_.003']
+      searchPatterns: ['1.2_', '1.2_.001', '1.2_.002', '1.2_.003', 'Pilar_Fundacao', 'Pilar_Fundação']
     },
     {
       budgetCode: '1.3',
@@ -51,7 +51,7 @@ export const linkingConfig: LinkingConfig = {
       elementType: 'fundacao',
       color: '#45b7d1',
       description: 'Sapatas e fundações',
-      searchPatterns: ['1.3_', '1.3_.001', '1.3_.002', '1.3_.003']
+      searchPatterns: ['1.3_', '1.3_.001', '1.3_.002', '1.3_.003', 'Sapata', 'Fundacao_Base']
     },
     
     // Térreo
@@ -61,7 +61,7 @@ export const linkingConfig: LinkingConfig = {
       elementType: 'grupo',
       color: '#96ceb4',
       description: 'Grupo principal - Térreo',
-      searchPatterns: ['2_', '2.1_', '2.2_', '2.3_']
+      searchPatterns: ['2_', '2.1_', '2.2_', '2.3_', 'Terreo', 'Térreo']
     },
     {
       budgetCode: '2.1',
@@ -69,7 +69,7 @@ export const linkingConfig: LinkingConfig = {
       elementType: 'viga',
       color: '#ff6b35',
       description: 'Vigas do pavimento térreo',
-      searchPatterns: ['2.1_', '2.1_.001', '2.1_.002', '2.1_.003', '2.1_.004']
+      searchPatterns: ['2.1_', '2.1_.001', '2.1_.002', '2.1_.003', '2.1_.004', 'Viga_Terreo', 'Viga_Térreo']
     },
     {
       budgetCode: '2.2',
@@ -77,7 +77,7 @@ export const linkingConfig: LinkingConfig = {
       elementType: 'pilar',
       color: '#4ecdc4',
       description: 'Pilares do pavimento térreo',
-      searchPatterns: ['2.2_', '2.2_.001', '2.2_.002', '2.2_.003', '2.2_.004']
+      searchPatterns: ['2.2_', '2.2_.001', '2.2_.002', '2.2_.003', '2.2_.004', 'Pilar_Terreo', 'Pilar_Térreo']
     },
     {
       budgetCode: '2.3',
@@ -85,7 +85,7 @@ export const linkingConfig: LinkingConfig = {
       elementType: 'laje',
       color: '#45b7d1',
       description: 'Lajes do pavimento térreo',
-      searchPatterns: ['2.3_', '2.3_.001', '2.3_.002', '2.3_.003']
+      searchPatterns: ['2.3_', '2.3_.001', '2.3_.002', '2.3_.003', 'Laje_Terreo', 'Laje_Térreo']
     },
     
     // Pavimento Superior
@@ -95,7 +95,7 @@ export const linkingConfig: LinkingConfig = {
       elementType: 'grupo',
       color: '#96ceb4',
       description: 'Grupo principal - Pavimento Superior',
-      searchPatterns: ['3_', '3.1_', '3.2_', '3.3_']
+      searchPatterns: ['3_', '3.1_', '3.2_', '3.3_', 'Pavimento_Superior', 'Superior']
     },
     {
       budgetCode: '3.1',
@@ -103,7 +103,7 @@ export const linkingConfig: LinkingConfig = {
       elementType: 'viga',
       color: '#ff6b35',
       description: 'Vigas do pavimento superior',
-      searchPatterns: ['3.1_', '3.1_.001', '3.1_.002', '3.1_.003', '3.1_.004']
+      searchPatterns: ['3.1_', '3.1_.001', '3.1_.002', '3.1_.003', '3.1_.004', 'Viga_Superior']
     },
     {
       budgetCode: '3.2',
@@ -111,7 +111,7 @@ export const linkingConfig: LinkingConfig = {
       elementType: 'pilar',
       color: '#4ecdc4',
       description: 'Pilares do pavimento superior',
-      searchPatterns: ['3.2_', '3.2_.001', '3.2_.002', '3.2_.003', '3.2_.004']
+      searchPatterns: ['3.2_', '3.2_.001', '3.2_.002', '3.2_.003', '3.2_.004', 'Pilar_Superior']
     },
     {
       budgetCode: '3.3',
@@ -119,7 +119,7 @@ export const linkingConfig: LinkingConfig = {
       elementType: 'laje',
       color: '#45b7d1',
       description: 'Lajes do pavimento superior',
-      searchPatterns: ['3.3_', '3.3_.001', '3.3_.002', '3.3_.003']
+      searchPatterns: ['3.3_', '3.3_.001', '3.3_.002', '3.3_.003', 'Laje_Superior']
     }
   ],
   

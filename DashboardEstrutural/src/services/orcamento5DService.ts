@@ -304,9 +304,25 @@ export const processarDadosCSV5D = (csvText: string): OrcamentoItem[] => {
     if (columns.length < 12) continue;
     
     const item = columns[0]?.trim();
-    const descricao = columns[1]?.trim();
-    const unidade = columns[2]?.trim();
+    const descricao = columns[1]?.trim() || '';
+    const unidade = columns[2]?.trim() || 'un';
     const quantidade = parseFloat(columns[3]?.replace(',', '.') || '0');
+    
+    // Debug: log para itens com quantidade > 0
+    if (quantidade > 0) {
+      console.log(`📊 Item com quantidade: "${item}" - ${descricao} = ${quantidade} ${unidade}`);
+    }
+    
+    // Limpar caracteres especiais da descrição
+    const descricaoLimpa = descricao
+      .replace(/[^\w\s.,-]/g, '') // Remove caracteres especiais
+      .replace(/\s+/g, ' ') // Remove espaços múltiplos
+      .trim();
+    
+    // Debug: log para itens com quantidade > 0
+    if (quantidade > 0) {
+      console.log(`📊 Item com quantidade: ${item} - ${descricao} = ${quantidade} ${unidade}`);
+    }
     
     // Valores totais (colunas 8, 9, 10)
     const maoDeObraTotal = parseFloat(columns[8]?.replace(',', '.') || '0');
@@ -347,17 +363,45 @@ export const processarDadosCSV5D = (csvText: string): OrcamentoItem[] => {
       else if (item.includes('3.3') || descricao.includes('Lajes')) subcategoria = 'Lajes';
     }
     
+    // Para planilha 5DEST (sintética), calcular quantidade baseada no valor total
+    let quantidadeFinal = quantidade;
+    let valorUnitario = 0;
+    
+    if (quantidade === 0 && totalFinal > 0) {
+      // Se não tem quantidade mas tem valor total, estimar quantidade
+      // Baseado em valores típicos de construção
+      if (descricao.toLowerCase().includes('viga')) {
+        quantidadeFinal = Math.round(totalFinal / 800); // ~R$ 800/m³ para vigas
+        valorUnitario = totalFinal / quantidadeFinal;
+      } else if (descricao.toLowerCase().includes('pilar')) {
+        quantidadeFinal = Math.round(totalFinal / 900); // ~R$ 900/m³ para pilares
+        valorUnitario = totalFinal / quantidadeFinal;
+      } else if (descricao.toLowerCase().includes('laje')) {
+        quantidadeFinal = Math.round(totalFinal / 700); // ~R$ 700/m³ para lajes
+        valorUnitario = totalFinal / quantidadeFinal;
+      } else if (descricao.toLowerCase().includes('fundação')) {
+        quantidadeFinal = Math.round(totalFinal / 750); // ~R$ 750/m³ para fundações
+        valorUnitario = totalFinal / quantidadeFinal;
+      } else {
+        // Valor padrão para outros itens
+        quantidadeFinal = Math.round(totalFinal / 500);
+        valorUnitario = totalFinal / quantidadeFinal;
+      }
+    } else if (quantidade > 0) {
+      valorUnitario = totalFinal / quantidade;
+    }
+    
     // Criar item com dados processados
     const itemProcessado = {
       id: item || `item-${i}`,
       codigo: '',
-      nome: descricao.length > 50 ? descricao.substring(0, 50) + '...' : descricao,
-      descricao: descricao,
+      nome: descricaoLimpa.length > 50 ? descricaoLimpa.substring(0, 50) + '...' : descricaoLimpa,
+      descricao: descricaoLimpa,
       categoria: categoria,
       subcategoria: subcategoria,
       unidade: unidade || 'un',
-      quantidade: quantidade,
-      valorUnitario: 0,
+      quantidade: quantidadeFinal,
+      valorUnitario: valorUnitario,
       maoDeObra: maoDeObraTotal,
       materiais: materiaisTotal,
       total: totalFinal,
@@ -375,30 +419,30 @@ export const processarDadosCSV5D = (csvText: string): OrcamentoItem[] => {
 
 export const carregarDados5D = async (): Promise<OrcamentoItem[]> => {
   try {
-    console.log('🔄 Tentando carregar 5DEST.xlsx...');
-    // Tentar carregar o arquivo 5DEST.xlsx
-    const response = await fetch('/5DEST.xlsx');
+    console.log('🔄 Tentando carregar 5DEST.csv (atualizada)...');
+    // Tentar carregar o arquivo 5DEST.csv atualizada
+    const response = await fetch('/5DEST.csv');
     console.log('📡 Response status:', response.status, response.ok);
     
     if (response.ok) {
-      const arrayBuffer = await response.arrayBuffer();
-      console.log('📊 ArrayBuffer size:', arrayBuffer.byteLength);
+      const csvText = await response.text();
+      console.log('📊 CSV carregado, tamanho:', csvText.length, 'caracteres');
       
-      const dadosProcessados = processarDadosExcel5D(arrayBuffer);
+      const dadosProcessados = processarDadosCSV5D(csvText);
       console.log('✅ Dados processados:', dadosProcessados.length, 'itens');
       
       if (dadosProcessados.length > 0) {
-        console.log('🎉 Retornando dados do Excel 5DEST.xlsx');
+        console.log('🎉 Retornando dados do CSV 5DEST.csv atualizada');
         return dadosProcessados;
       }
     } else {
-      console.error('❌ Erro ao carregar 5DEST.xlsx - Status:', response.status);
+      console.error('❌ Erro ao carregar 5DEST-utf8.csv - Status:', response.status);
     }
   } catch (error) {
-    console.error('❌ Erro ao carregar 5DEST.xlsx:', error);
+    console.error('❌ Erro ao carregar 5DEST-utf8.csv:', error);
   }
   
-  // Fallback para dados mockados se não conseguir carregar o Excel
+  // Fallback para dados mockados se não conseguir carregar o CSV
   console.log('🔄 Usando dados mockados como fallback...');
   await new Promise(resolve => setTimeout(resolve, 1000));
   return dadosMockados5D;
