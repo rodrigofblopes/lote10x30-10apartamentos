@@ -164,7 +164,7 @@ function usePlanilha3DLink(itens5D: any[]) {
         console.log(`📋 Item "${itemId}" → Elementos 3D: [${elementos3D.join(', ')}]`);
         
         // Verificar quais elementos 3D realmente existem no GLB
-        const elementosExistentes = elementos3D.filter(elemento => 
+        const elementosExistentes = elementos3D.filter((elemento: string) => 
           glbElements.some(glbElement => 
             glbElement.includes(elemento) || elemento.includes(glbElement)
           )
@@ -251,12 +251,10 @@ function usePlanilha3DLink(itens5D: any[]) {
         
         // Encontrar todos os elementos 3D correspondentes usando o CÓDIGO do item
         const allMatchingElements: string[] = [];
-        newSelection.forEach(selectedId => {
-          // Buscar pelo código do item, não pelo ID
-          const matches = elementMap.get(itemCodigo?.trim()) || [];
-          console.log(`🔍 Buscando elementos para código "${itemCodigo}":`, matches);
-          allMatchingElements.push(...matches);
-        });
+        // Buscar pelo código do item, não pelo ID
+        const matches = elementMap.get(itemCodigo?.trim()) || [];
+        console.log(`🔍 Buscando elementos para código "${itemCodigo}":`, matches);
+        allMatchingElements.push(...matches);
         
         console.log('🔗 ===== RESULTADO LINKING =====');
         console.log('🔗 Item selecionado:', item.descricao);
